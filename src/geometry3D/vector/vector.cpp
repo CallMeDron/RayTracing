@@ -18,25 +18,25 @@ TVector TVector::operator*(TSafeDouble n) const { return TVector{X * n, Y * n, Z
 TVector TVector::operator/(TSafeDouble n) const { return TVector{X / n, Y / n, Z / n}; }
 
 TVector& TVector::operator+=(const TVector& other) {
-  *this = *this + other;
-  return *this;
+    *this = *this + other;
+    return *this;
 }
 TVector& TVector::operator-=(const TVector& other) {
-  *this = *this - other;
-  return *this;
+    *this = *this - other;
+    return *this;
 }
 TVector& TVector::operator*=(TSafeDouble n) {
-  *this = *this * n;
-  return *this;
+    *this = *this * n;
+    return *this;
 }
 TVector& TVector::operator/=(TSafeDouble n) {
-  *this = *this / n;
-  return *this;
+    *this = *this / n;
+    return *this;
 }
 
 TSafeDouble TVector::operator*(const TVector& other) const { return X * other.X + Y * other.Y + Z * other.Z; }
 TVector TVector::operator^(const TVector& other) const {
-  return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
+    return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
 }
 
 TSafeDouble TVector::length() const { return std::sqrt(((X ^ 2) + (Y ^ 2) + (Z ^ 2)).Value); }
@@ -44,9 +44,9 @@ bool TVector::isZero() const { return X == TSafeDouble{0.0} && Y == TSafeDouble{
 
 void TVector::normalize() { *this /= this->length(); }
 TVector TVector::getNormalized() const {
-  TVector normalized{*this};
-  normalized.normalize();
-  return normalized;
+    TVector normalized{*this};
+    normalized.normalize();
+    return normalized;
 }
 
 TSafeDouble TVector::cos(const TVector& other) const { return (*this * other) / length() / other.length(); }
@@ -54,9 +54,9 @@ bool TVector::isParallel(const TVector& other) const { return cos(other) == TSaf
 bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == TSafeDouble{0.0}; }
 
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
-  std::cout << std::scientific;
-  std::cout << std::setprecision(1);
-  return os << "vector = {" << vector.X << ", " << vector.Y << ", " << vector.Z << "}\n";
+    std::cout << std::scientific;
+    std::cout << std::setprecision(1);
+    return os << "vector = {" << vector.X << ", " << vector.Y << ", " << vector.Z << "}\n";
 }
 void TVector::print() const { std::cout << *this; }
 
