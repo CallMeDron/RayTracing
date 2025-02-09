@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "MY: main CMake prepare",
+            "type": "shell",
+            "command": "if (Test-Path build) { Remove-Item -Recurse -Force build }; New-Item -ItemType Directory -Name build; cd build; cmake ..",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "MY: main build",
+            "type": "shell",
+            "command": "cmake --build build --config Release",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "dependsOn": "MY: main CMake prepare"
+        },
+        {
+            "label": "MY: tests CMake prepare",
+            "type": "shell",
+            "command": "if (Test-Path build) { Remove-Item -Recurse -Force build }; New-Item -ItemType Directory -Name build; cd build; cmake ..",
+            "options": {
+                "cwd": "${workspaceFolder}/tests"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "MY: tests build",
+            "type": "shell",
+            "command": "cmake --build build --config Release",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/tests"
+            },
+            "dependsOn": "MY: tests CMake prepare"
+        }
+    ]
+}

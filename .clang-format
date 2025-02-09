@@ -1,0 +1,5 @@
+BasedOnStyle: LLVM
+ReferenceAlignment: Left
+PointerAlignmen: Left
+ColumnLimit: 120
+BreakTemplateDeclarations: Leave
