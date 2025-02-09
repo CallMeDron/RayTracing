@@ -1,3 +1,4 @@
+#include "..\src\geometry3D\line\line.h"
 #include "..\src\geometry3D\point\point.h"
 #include "..\src\geometry3D\safeDouble\safeDouble.h"
 #include "..\src\geometry3D\vector\vector.h"
@@ -140,7 +141,7 @@ TEST(VectorTest, ProdAndDiv) {
     TVector y{3.0, 6.0, 9.0};
     EXPECT_EQ(x * 3.0, y);
     EXPECT_EQ(y / 3.0, x);
-    EXPECT_THROW(y / 1e-40, std::runtime_error);
+    EXPECT_THROW(y / 1e-16, std::runtime_error);
 }
 
 TEST(VectorTest, ScalarProd) {
@@ -190,7 +191,7 @@ TEST(VectorTest, Parallel) {
     TVector w{6.0, 10.0, 15.0};
     EXPECT_FALSE(x.isParallel(w));
     EXPECT_FALSE(w.isParallel(x));
-    TVector v{5.0 + 1e-50, 10.0 + 1e-50, 15.0 + 1e-50};
+    TVector v{5.0 + 1e-16, 10.0 + 1e-16, 15.0 + 1e-16};
     EXPECT_TRUE(v.isParallel(y));
 }
 
@@ -207,9 +208,87 @@ TEST(VectorTest, Perpendicular) {
     TVector w{6.0, 10.0, 15.0};
     EXPECT_FALSE(x.isPerpendicular(w));
     EXPECT_FALSE(w.isPerpendicular(x));
-    TVector v{0.0 + 1e-50, 1.0 + 1e-50, 0.0 + 1e-50};
+    TVector v{0.0 + 1e-16, 1.0 + 1e-16, 0.0 + 1e-16};
     EXPECT_TRUE(v.isPerpendicular(x));
 }
+
+TEST(LineTest, Cos) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector x{1.0, 2.0, 3.0};
+    TVector y{3.0, 2.0, 1.0};
+    TLine X{o, x};
+    TLine Y{o, y};
+    EXPECT_EQ(X.cos(Y), 5.0 / 7.0);
+    EXPECT_EQ(Y.cos(X), 5.0 / 7.0);
+}
+
+TEST(LineTest, Parallel) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector x{1.0, 2.0, 3.0};
+    TVector y{5.0, 10.0, 15.0};
+    TLine X{o, x};
+    TLine Y{o, y};
+    EXPECT_TRUE(X.isParallel(X));
+    EXPECT_TRUE(X.isParallel(Y));
+    EXPECT_TRUE(Y.isParallel(X));
+    TVector z{0.0, 0.0, 0.0};
+    EXPECT_THROW(TLine(o, z), std::runtime_error);
+    TVector w{6.0, 10.0, 15.0};
+    TLine W{o, w};
+    EXPECT_FALSE(X.isParallel(W));
+    EXPECT_FALSE(W.isParallel(X));
+    TVector v{5.0 + 1e-16, 10.0 + 1e-16, 15.0 + 1e-16};
+    TLine V{o, v};
+    EXPECT_TRUE(V.isParallel(Y));
+}
+
+TEST(LineTest, Perpendicular) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector x{1.0, 0.0, 0.0};
+    TVector y{0.0, 1.0, 0.0};
+    TVector z{0.0, 0.0, 1.0};
+    TLine X{o, x};
+    TLine Y{o, y};
+    TLine Z{o, z};
+    EXPECT_TRUE(X.isPerpendicular(Y));
+    EXPECT_TRUE(X.isPerpendicular(Z));
+    EXPECT_TRUE(Y.isPerpendicular(X));
+    EXPECT_TRUE(Y.isPerpendicular(Z));
+    EXPECT_TRUE(Z.isPerpendicular(X));
+    EXPECT_TRUE(Z.isPerpendicular(Y));
+    TVector w{6.0, 10.0, 15.0};
+    TLine W{o, w};
+    EXPECT_FALSE(X.isPerpendicular(W));
+    EXPECT_FALSE(W.isPerpendicular(X));
+    TVector v{0.0 + 1e-16, 1.0 + 1e-16, 0.0 + 1e-16};
+    TLine V{o, v};
+    EXPECT_TRUE(V.isPerpendicular(X));
+}
+
+TEST(LineTest, ContainsPoint) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector x{1.0, 0.0, 0.0};
+    TLine X{o, x};
+    EXPECT_TRUE(X.containsPoint(o));
+    TPoint w{1.0, 0.0, 0.0};
+    EXPECT_TRUE(X.containsPoint(w));
+    TPoint y{1.0 + 1e-14, 0.0 - 1e-14, 0.0 - 1e-14};
+    EXPECT_FALSE(X.containsPoint(y));
+    TPoint z{1.0 + 1e-16, 0.0 - 1e-16, 0.0 - 1e-16};
+    EXPECT_TRUE(X.containsPoint(z));
+}
+
+// TEST(LineTest, EqualAndNotEqual) {
+//     TPoint o{0.0, 0.0, 0.0};
+//     TVector x{1.0, 0.0, 0.0};
+//     TVector y{1.0 + 1e-14, 0.0 - 1e-14, 0.0 - 1e-14};
+//     TVector z{1.0 + 1e-16, 0.0 - 1e-16, 0.0 - 1e-16};
+//     TLine X{o, x};
+//     TLine Y{o, y};
+//     TLine Z{o, z};
+//     EXPECT_EQ(X, Z);
+//     EXPECT_NE(X, Y);
+// }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
