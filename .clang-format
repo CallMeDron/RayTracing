@@ -3,3 +3,4 @@ ReferenceAlignment: Left
 PointerAlignmen: Left
 ColumnLimit: 120
 BreakTemplateDeclarations: Leave
+IndentWidth: 4
