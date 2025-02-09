@@ -19,6 +19,7 @@ class TPoint {
     bool operator!=(const TPoint& other) const;
 
     TVector operator-(const TPoint& other) const;
+    TPoint operator+(const TVector& vector) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPoint& point);
     void print() const;

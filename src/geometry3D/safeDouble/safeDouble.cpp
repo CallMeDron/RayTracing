@@ -37,7 +37,7 @@ TSafeDouble TSafeDouble::operator/(const TSafeDouble& other) const {
     if (other != TSafeDouble{0.0}) {
         return TSafeDouble{Value / other.Value};
     } else {
-        throw std::runtime_error("Zero division error");
+        throw std::runtime_error("Error: division by 0");
     }
 }
 TSafeDouble TSafeDouble::operator^(const TSafeDouble& other) const { return TSafeDouble{std::pow(Value, other.Value)}; }

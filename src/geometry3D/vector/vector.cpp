@@ -1,7 +1,6 @@
 #include "vector.h"
 
 #include <iomanip>
-#include <stdexcept>
 
 namespace NGeometry3D {
 

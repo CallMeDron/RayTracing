@@ -108,6 +108,13 @@ TEST(PointTest, Diff) {
     EXPECT_EQ(x - y, z);
 }
 
+TEST(PointTest, Add) {
+    TPoint x{1.0, 2.0, 3.0};
+    TPoint y{1.0, 3.0, 3.0};
+    TVector z{0.0, 1.0, 0.0};
+    EXPECT_EQ(x + z, y);
+}
+
 TEST(VectorTest, Create) {
     TPoint x{1.0, 2.0, 3.0};
     TVector y{x};
