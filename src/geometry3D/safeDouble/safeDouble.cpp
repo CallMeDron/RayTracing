@@ -10,12 +10,14 @@ constexpr double ACCURACY = 1e-15;
 TSafeDouble::TSafeDouble() : Value(0.0) {}
 TSafeDouble::TSafeDouble(double v) : Value(v) {}
 
-TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const { return TSafeDouble{Value + other.Value}; }
-TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const { return TSafeDouble{Value - other.Value}; }
-TSafeDouble TSafeDouble::operator-() const { return TSafeDouble{-Value}; }
-
 bool TSafeDouble::operator>(const TSafeDouble& other) const { return (*this - other).Value > ACCURACY; }
 bool TSafeDouble::operator<(const TSafeDouble& other) const { return (*this - other).Value < -ACCURACY; }
+
+bool TSafeDouble::operator==(const TSafeDouble& other) const { return !(*this > other) && !(*this < other); }
+bool TSafeDouble::operator!=(const TSafeDouble& other) const { return !(*this == other); }
+
+bool TSafeDouble::operator>=(const TSafeDouble& other) const { return (*this > other || *this == other); }
+bool TSafeDouble::operator<=(const TSafeDouble& other) const { return (*this < other || *this == other); }
 
 TSafeDouble TSafeDouble::abs() const {
   if (*this > TSafeDouble{0.0}) {
@@ -27,9 +29,10 @@ TSafeDouble TSafeDouble::abs() const {
   }
 }
 
-bool TSafeDouble::operator==(const TSafeDouble& other) const { return !(*this > other) && !(*this < other); }
-bool TSafeDouble::operator!=(const TSafeDouble& other) const { return !(*this == other); }
+TSafeDouble TSafeDouble::operator-() const { return TSafeDouble{-Value}; }
 
+TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const { return TSafeDouble{Value + other.Value}; }
+TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const { return TSafeDouble{Value - other.Value}; }
 TSafeDouble TSafeDouble::operator*(const TSafeDouble& other) const { return TSafeDouble{Value * other.Value}; }
 TSafeDouble TSafeDouble::operator/(const TSafeDouble& other) const {
   if (other != TSafeDouble{0.0}) {
@@ -61,15 +64,12 @@ TSafeDouble& TSafeDouble::operator^=(const TSafeDouble& other) {
   return *this;
 }
 
-bool TSafeDouble::operator>=(const TSafeDouble& other) const { return (*this > other || *this == other); }
-bool TSafeDouble::operator<=(const TSafeDouble& other) const { return (*this < other || *this == other); }
-
 std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
   std::cout << std::scientific;
   std::cout << std::setprecision(1);
   return os << sdouble.Value;
 }
 
-void TSafeDouble::print() { std::cout << *this; }
+void TSafeDouble::print() const { std::cout << *this; }
 
 } // namespace NGeometry3D

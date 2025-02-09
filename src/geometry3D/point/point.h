@@ -18,10 +18,11 @@ public:
 
   bool operator==(const TPoint& other) const;
   bool operator!=(const TPoint& other) const;
+
   TVector operator-(const TPoint& other) const;
 
   friend std::ostream& operator<<(std::ostream& os, const TPoint& point);
-  void print();
+  void print() const;
 };
 
 } // namespace NGeometry3D

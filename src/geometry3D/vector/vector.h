@@ -23,35 +23,29 @@ public:
 
   TVector operator+(const TVector& other) const;
   TVector operator-(const TVector& other) const;
-
   TVector operator*(TSafeDouble n) const;
   TVector operator/(TSafeDouble n) const;
 
   TVector& operator+=(const TVector& other);
   TVector& operator-=(const TVector& other);
-
   TVector& operator*=(TSafeDouble n);
   TVector& operator/=(TSafeDouble n);
 
   TSafeDouble operator*(const TVector& other) const;
-
   TVector operator^(const TVector& other) const;
 
   TSafeDouble length() const;
+  bool isZero() const;
 
   void normalize();
-
   TVector getNormalized() const;
 
   TSafeDouble cos(const TVector& other) const;
-
   bool isParallel(const TVector& other) const;
   bool isPerpendicular(const TVector& other) const;
 
-  bool isZero() const;
-
   friend std::ostream& operator<<(std::ostream& os, const TVector& vector);
-  void print();
+  void print() const;
 };
 
 } // namespace NGeometry3D
