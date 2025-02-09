@@ -8,7 +8,6 @@ class TSafeDouble {
 public:
   double Value;
 
-  TSafeDouble();
   TSafeDouble(double v);
 
   bool operator>(const TSafeDouble& other) const;

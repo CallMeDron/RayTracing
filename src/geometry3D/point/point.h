@@ -13,7 +13,6 @@ class TPoint {
 public:
   TSafeDouble X, Y, Z;
 
-  TPoint();
   TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z);
 
   bool operator==(const TPoint& other) const;

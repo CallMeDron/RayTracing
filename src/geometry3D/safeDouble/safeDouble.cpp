@@ -7,7 +7,6 @@ namespace NGeometry3D {
 
 constexpr double ACCURACY = 1e-15;
 
-TSafeDouble::TSafeDouble() : Value(0.0) {}
 TSafeDouble::TSafeDouble(double v) : Value(v) {}
 
 bool TSafeDouble::operator>(const TSafeDouble& other) const { return (*this - other).Value > ACCURACY; }

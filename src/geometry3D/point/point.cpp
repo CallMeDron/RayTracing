@@ -5,7 +5,6 @@
 
 namespace NGeometry3D {
 
-TPoint::TPoint() : X(0.0), Y(0.0), Z(0.0) {}
 TPoint::TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 
 bool TPoint::operator==(const TPoint& other) const { return (X == other.X) && (Y == other.Y) && (Z == other.Z); }
