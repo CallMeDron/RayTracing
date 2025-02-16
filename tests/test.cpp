@@ -184,6 +184,7 @@ TEST(VectorTest, Parallel) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{5.0, 10.0, 15.0};
     EXPECT_TRUE(x.isParallel(x));
+    EXPECT_TRUE(x.isParallel(-x));
     EXPECT_TRUE(x.isParallel(y));
     EXPECT_TRUE(y.isParallel(x));
     TVector z{0.0, 0.0, 0.0};
@@ -210,6 +211,16 @@ TEST(VectorTest, Perpendicular) {
     EXPECT_FALSE(w.isPerpendicular(x));
     TVector v{0.0 + 1e-16, 1.0 + 1e-16, 0.0 + 1e-16};
     EXPECT_TRUE(v.isPerpendicular(x));
+}
+
+TEST(VectorTest, Projection) {
+    TVector x{1.0, 0.0, 0.0};
+    TVector y{0.0, 1.0, 0.0};
+    EXPECT_EQ(x.projectTo(x), x);
+    EXPECT_TRUE(x.projectTo(y).isZero());
+    TVector v{1.0, 2.0, 3.0};
+    TVector w{-3.0, 2.0, 7.0};
+    EXPECT_EQ(v.projectTo(w), TVector(-33.0 / 31.0, 22.0 / 31.0, 77.0 / 31.0));
 }
 
 TEST(LineTest, Cos) {
@@ -265,6 +276,22 @@ TEST(LineTest, Perpendicular) {
     EXPECT_TRUE(V.isPerpendicular(X));
 }
 
+TEST(LineTest, DistToPoint) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector w{1.0, 0.0, 0.0};
+    TLine W{o, w};
+    TPoint x{1.0, 0.0, 0.0};
+    EXPECT_EQ(W.distToPoint(x), 0.0);
+    TPoint y{0.0, 0.0, 0.0};
+    EXPECT_EQ(W.distToPoint(y), 0.0);
+    TPoint z{10000.0, 0.0, 0.0};
+    EXPECT_EQ(W.distToPoint(z), 0.0);
+    TPoint u{10000.0, 5.0, 0.0};
+    EXPECT_EQ(W.distToPoint(u), 5.0);
+    TPoint v{10000.0, 3.0, 4.0};
+    EXPECT_EQ(W.distToPoint(v), 5.0);
+}
+
 TEST(LineTest, ContainsPoint) {
     TPoint o{0.0, 0.0, 0.0};
     TVector x{1.0, 0.0, 0.0};
@@ -278,17 +305,63 @@ TEST(LineTest, ContainsPoint) {
     EXPECT_TRUE(X.containsPoint(z));
 }
 
-// TEST(LineTest, EqualAndNotEqual) {
-//     TPoint o{0.0, 0.0, 0.0};
-//     TVector x{1.0, 0.0, 0.0};
-//     TVector y{1.0 + 1e-14, 0.0 - 1e-14, 0.0 - 1e-14};
-//     TVector z{1.0 + 1e-16, 0.0 - 1e-16, 0.0 - 1e-16};
-//     TLine X{o, x};
-//     TLine Y{o, y};
-//     TLine Z{o, z};
-//     EXPECT_EQ(X, Z);
-//     EXPECT_NE(X, Y);
-// }
+TEST(LineTest, EqualAndNotEqual) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector x{1.0, 0.0, 0.0};
+    TVector y{1.0 + 1e-7, 0.0 - 1e-7, 0.0 - 1e-7};
+    TVector z{1.0 + 1e-8, 0.0 - 1e-8, 0.0 - 1e-8};
+    TLine X{o, x};
+    TLine Y{o, y};
+    TLine Z{o, z};
+    EXPECT_EQ(X, Z);
+    EXPECT_EQ(Z, X);
+    EXPECT_NE(X, Y);
+    EXPECT_NE(Y, X);
+    EXPECT_NE(Y, Z);
+    EXPECT_NE(Z, Y);
+}
+
+TEST(LineTest, Intersection) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TVector v1{1.0, 1.0, 1.0};
+    TLine l1{p1, v1};
+
+    TPoint p2{1.0, 0.0, 0.0};
+    TVector v2{0.0, 1.0, 1.0};
+    TLine l2{p2, v2};
+
+    EXPECT_EQ(l1.intersection(l2), TPoint(1.0, 1.0, 1.0));
+
+    TPoint p3{0.0, 0.0, 0.0};
+    TVector v3{1.0, 1.0, 1.0};
+    TLine l3{p3, v3};
+
+    TPoint p4{1.0, 0.0, 0.0};
+    TVector v4{1.0, 1.0, 1.0};
+    TLine l4{p4, v4};
+
+    EXPECT_EQ(l3.intersection(l4), std::nullopt);
+
+    TPoint p5{0.0, 0.0, 0.0};
+    TVector v5{1.0, 1.0, 1.0};
+    TLine l5{p5, v5};
+
+    TPoint p6{1.0, 1.0, 1.0};
+    TVector v6{1.0, 1.0, 1.0};
+    TLine l6{p6, v6};
+
+    EXPECT_THROW(l5.intersection(l6), std::runtime_error);
+
+    TPoint p7{1.0, 2.0, 3.0};
+    TVector v7{-1.0, -2.0, -3.0};
+    TLine l7{p7, v7};
+
+    TPoint p8{13.0, -4.0, 5.0};
+    TVector v8{-13.0, 4.0, -5.0};
+    TLine l8{p8, v8};
+
+    EXPECT_EQ(l7.intersection(l8), TPoint(0.0, 0.0, 0.0));
+}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
