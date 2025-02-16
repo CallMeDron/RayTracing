@@ -21,13 +21,16 @@ class TLine {
     bool isParallel(const TLine& other) const;
     bool isPerpendicular(const TLine& other) const;
 
-    // TSafeDouble distToPoint(const TPoint& point) const;
-    // bool containsPoint(const TPoint& point) const;
+    TSafeDouble distToPoint(const TPoint& point) const;
+    bool containsPoint(const TPoint& point) const;
 
-    // bool operator==(const TLine& other) const;
-    // bool operator!=(const TLine& other) const;
+    bool operator==(const TLine& other) const;
+    bool operator!=(const TLine& other) const;
 
-    // std::optional<TPoint> intersection(const TLine& other) const;
+    std::optional<TPoint> intersection(const TLine& other) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const TLine& line);
+    void print() const;
 };
 
 } // namespace NGeometry3D

@@ -43,7 +43,7 @@ TVector TVector::operator^(const TVector& other) const {
 TSafeDouble TVector::length() const { return std::sqrt(((X ^ 2) + (Y ^ 2) + (Z ^ 2)).Value); }
 bool TVector::isZero() const { return X == TSafeDouble{0.0} && Y == TSafeDouble{0.0} && Z == TSafeDouble{0.0}; }
 
-void TVector::normalize() { *this /= this->length(); }
+void TVector::normalize() { *this /= length(); }
 TVector TVector::getNormalized() const {
     TVector normalized{*this};
     normalized.normalize();
