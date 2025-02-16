@@ -45,6 +45,8 @@ class TVector {
     bool isParallel(const TVector& other) const;
     bool isPerpendicular(const TVector& other) const;
 
+    TVector projectTo(const TVector& other) const;
+
     friend std::ostream& operator<<(std::ostream& os, const TVector& vector);
     void print() const;
 };

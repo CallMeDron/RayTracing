@@ -54,6 +54,8 @@ TSafeDouble TVector::cos(const TVector& other) const { return (*this * other) / 
 bool TVector::isParallel(const TVector& other) const { return cos(other).abs() == TSafeDouble{1.0}; }
 bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == TSafeDouble{0.0}; }
 
+TVector TVector::projectTo(const TVector& other) const { return other * ((*this * other) / (other * other)); }
+
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
     std::cout << std::scientific;
     std::cout << std::setprecision(1);

@@ -213,6 +213,16 @@ TEST(VectorTest, Perpendicular) {
     EXPECT_TRUE(v.isPerpendicular(x));
 }
 
+TEST(VectorTest, Projection) {
+    TVector x{1.0, 0.0, 0.0};
+    TVector y{0.0, 1.0, 0.0};
+    EXPECT_EQ(x.projectTo(x), x);
+    EXPECT_TRUE(x.projectTo(y).isZero());
+    TVector v{1.0, 2.0, 3.0};
+    TVector w{-3.0, 2.0, 7.0};
+    EXPECT_EQ(v.projectTo(w), TVector(-33.0 / 31.0, 22.0 / 31.0, 77.0 / 31.0));
+}
+
 TEST(LineTest, Cos) {
     TPoint o{0.0, 0.0, 0.0};
     TVector x{1.0, 2.0, 3.0};
