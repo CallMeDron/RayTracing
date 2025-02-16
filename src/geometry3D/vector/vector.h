@@ -20,6 +20,8 @@ class TVector {
     bool operator==(const TVector& other) const;
     bool operator!=(const TVector& other) const;
 
+    TVector operator-() const;
+
     TVector operator+(const TVector& other) const;
     TVector operator-(const TVector& other) const;
     TVector operator*(TSafeDouble n) const;

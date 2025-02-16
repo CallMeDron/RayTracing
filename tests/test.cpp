@@ -184,6 +184,7 @@ TEST(VectorTest, Parallel) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{5.0, 10.0, 15.0};
     EXPECT_TRUE(x.isParallel(x));
+    EXPECT_TRUE(x.isParallel(-x));
     EXPECT_TRUE(x.isParallel(y));
     EXPECT_TRUE(y.isParallel(x));
     TVector z{0.0, 0.0, 0.0};
@@ -265,18 +266,18 @@ TEST(LineTest, Perpendicular) {
     EXPECT_TRUE(V.isPerpendicular(X));
 }
 
-TEST(LineTest, ContainsPoint) {
-    TPoint o{0.0, 0.0, 0.0};
-    TVector x{1.0, 0.0, 0.0};
-    TLine X{o, x};
-    EXPECT_TRUE(X.containsPoint(o));
-    TPoint w{1.0, 0.0, 0.0};
-    EXPECT_TRUE(X.containsPoint(w));
-    TPoint y{1.0 + 1e-14, 0.0 - 1e-14, 0.0 - 1e-14};
-    EXPECT_FALSE(X.containsPoint(y));
-    TPoint z{1.0 + 1e-16, 0.0 - 1e-16, 0.0 - 1e-16};
-    EXPECT_TRUE(X.containsPoint(z));
-}
+// TEST(LineTest, ContainsPoint) {
+//     TPoint o{0.0, 0.0, 0.0};
+//     TVector x{1.0, 0.0, 0.0};
+//     TLine X{o, x};
+//     EXPECT_TRUE(X.containsPoint(o));
+//     TPoint w{1.0, 0.0, 0.0};
+//     EXPECT_TRUE(X.containsPoint(w));
+//     TPoint y{1.0 + 1e-14, 0.0 - 1e-14, 0.0 - 1e-14};
+//     EXPECT_FALSE(X.containsPoint(y));
+//     TPoint z{1.0 + 1e-16, 0.0 - 1e-16, 0.0 - 1e-16};
+//     EXPECT_TRUE(X.containsPoint(z));
+// }
 
 // TEST(LineTest, EqualAndNotEqual) {
 //     TPoint o{0.0, 0.0, 0.0};

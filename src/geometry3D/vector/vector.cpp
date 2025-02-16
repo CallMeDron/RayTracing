@@ -11,6 +11,8 @@ TVector::TVector(const TPoint& start, const TPoint& end) : TVector{end - start} 
 bool TVector::operator==(const TVector& other) const { return (X == other.X) && (Y == other.Y) && (Z == other.Z); }
 bool TVector::operator!=(const TVector& other) const { return !(*this == other); }
 
+TVector TVector::operator-() const { return TVector{-X, -Y, -Z}; }
+
 TVector TVector::operator+(const TVector& other) const { return TVector{X + other.X, Y + other.Y, Z + other.Z}; }
 TVector TVector::operator-(const TVector& other) const { return TVector{X - other.X, Y - other.Y, Z - other.Z}; }
 TVector TVector::operator*(TSafeDouble n) const { return TVector{X * n, Y * n, Z * n}; }
@@ -49,7 +51,7 @@ TVector TVector::getNormalized() const {
 }
 
 TSafeDouble TVector::cos(const TVector& other) const { return (*this * other) / length() / other.length(); }
-bool TVector::isParallel(const TVector& other) const { return cos(other) == TSafeDouble{1.0}; }
+bool TVector::isParallel(const TVector& other) const { return cos(other).abs() == TSafeDouble{1.0}; }
 bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == TSafeDouble{0.0}; }
 
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
