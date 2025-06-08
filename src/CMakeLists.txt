@@ -24,7 +24,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/safeDouble/safeDouble.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/safe_double/safe_double.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/point/point.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/vector/vector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/line/line.cpp

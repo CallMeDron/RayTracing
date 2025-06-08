@@ -1,6 +1,6 @@
 #include "..\src\geometry3D\line\line.h"
 #include "..\src\geometry3D\point\point.h"
-#include "..\src\geometry3D\safeDouble\safeDouble.h"
+#include "..\src\geometry3D\safe_double\safe_double.h"
 #include "..\src\geometry3D\vector\vector.h"
 
 #include <gtest/gtest.h>

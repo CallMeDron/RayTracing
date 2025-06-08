@@ -1,4 +1,4 @@
-#include "safeDouble.h"
+#include "safe_double.h"
 
 #include <iomanip>
 #include <stdexcept>

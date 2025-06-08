@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../point/point.h"
-#include "../safeDouble/safeDouble.h"
+#include "../safe_double/safe_double.h"
 
 #include <iostream>
 

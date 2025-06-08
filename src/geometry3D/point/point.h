@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../safeDouble/safeDouble.h"
+#include "../safe_double/safe_double.h"
 #include "../vector/vector.h"
 
 #include <iostream>
