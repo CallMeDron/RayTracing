@@ -1,38 +1,40 @@
 #include "safe_double.h"
 
+#include <cmath>
 #include <iomanip>
 #include <stdexcept>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 constexpr double ACCURACY = 1e-15;
+constexpr unsigned COUT_PRECISION = 1;
 
 TSafeDouble::TSafeDouble(double v) : Value(v) {}
 
-bool TSafeDouble::operator>(const TSafeDouble& other) const { return (*this - other).Value > ACCURACY; }
-bool TSafeDouble::operator<(const TSafeDouble& other) const { return (*this - other).Value < -ACCURACY; }
+bool TSafeDouble::operator>(const TSafeDouble& other) const noexcept { return (Value - other.Value) > ACCURACY; }
+bool TSafeDouble::operator<(const TSafeDouble& other) const noexcept { return (Value - other.Value) < -ACCURACY; }
 
-bool TSafeDouble::operator==(const TSafeDouble& other) const { return !(*this > other) && !(*this < other); }
-bool TSafeDouble::operator!=(const TSafeDouble& other) const { return !(*this == other); }
+bool TSafeDouble::operator==(const TSafeDouble& other) const noexcept { return !(*this > other) && !(*this < other); }
+bool TSafeDouble::operator!=(const TSafeDouble& other) const noexcept { return !(*this == other); }
 
-bool TSafeDouble::operator>=(const TSafeDouble& other) const { return (*this > other || *this == other); }
-bool TSafeDouble::operator<=(const TSafeDouble& other) const { return (*this < other || *this == other); }
+bool TSafeDouble::operator>=(const TSafeDouble& other) const noexcept { return (*this > other) || (*this == other); }
+bool TSafeDouble::operator<=(const TSafeDouble& other) const noexcept { return (*this < other) || (*this == other); }
 
-TSafeDouble TSafeDouble::abs() const {
+TSafeDouble TSafeDouble::operator-() const noexcept { return TSafeDouble{-Value}; }
+
+TSafeDouble TSafeDouble::abs() const noexcept {
     if (*this > TSafeDouble{0.0}) {
-        return TSafeDouble{Value};
+        return *this;
     } else if (*this < TSafeDouble{0.0}) {
-        return TSafeDouble{-Value};
+        return -(*this);
     } else {
         return TSafeDouble{0.0};
     }
 }
 
-TSafeDouble TSafeDouble::operator-() const { return TSafeDouble{-Value}; }
-
-TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const { return TSafeDouble{Value + other.Value}; }
-TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const { return TSafeDouble{Value - other.Value}; }
-TSafeDouble TSafeDouble::operator*(const TSafeDouble& other) const { return TSafeDouble{Value * other.Value}; }
+TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const noexcept { return TSafeDouble{Value + other.Value}; }
+TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const noexcept { return TSafeDouble{Value - other.Value}; }
+TSafeDouble TSafeDouble::operator*(const TSafeDouble& other) const noexcept { return TSafeDouble{Value * other.Value}; }
 TSafeDouble TSafeDouble::operator/(const TSafeDouble& other) const {
     if (other != TSafeDouble{0.0}) {
         return TSafeDouble{Value / other.Value};
@@ -40,17 +42,16 @@ TSafeDouble TSafeDouble::operator/(const TSafeDouble& other) const {
         throw std::runtime_error("Error: division by 0");
     }
 }
-TSafeDouble TSafeDouble::operator^(const TSafeDouble& other) const { return TSafeDouble{std::pow(Value, other.Value)}; }
 
-TSafeDouble& TSafeDouble::operator+=(const TSafeDouble& other) {
+TSafeDouble& TSafeDouble::operator+=(const TSafeDouble& other) noexcept {
     *this = *this + other;
     return *this;
 }
-TSafeDouble& TSafeDouble::operator-=(const TSafeDouble& other) {
+TSafeDouble& TSafeDouble::operator-=(const TSafeDouble& other) noexcept {
     *this = *this - other;
     return *this;
 }
-TSafeDouble& TSafeDouble::operator*=(const TSafeDouble& other) {
+TSafeDouble& TSafeDouble::operator*=(const TSafeDouble& other) noexcept {
     *this = *this * other;
     return *this;
 }
@@ -58,17 +59,15 @@ TSafeDouble& TSafeDouble::operator/=(const TSafeDouble& other) {
     *this = *this / other;
     return *this;
 }
-TSafeDouble& TSafeDouble::operator^=(const TSafeDouble& other) {
-    *this = *this ^ other;
-    return *this;
-}
+
+TSafeDouble TSafeDouble::pow(const TSafeDouble& exponent) const { return TSafeDouble{std::pow(Value, exponent.Value)}; }
 
 std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
-    std::cout << std::scientific;
-    std::cout << std::setprecision(1);
+    os << std::scientific;
+    os << std::setprecision(COUT_PRECISION);
     return os << sdouble.Value;
 }
 
 void TSafeDouble::print() const { std::cout << *this; }
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib

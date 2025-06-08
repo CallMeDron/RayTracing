@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace NGeometry3D;
+using namespace NRayTracingLib;
 
 TEST(SafeDoubleTest, Equal) {
     TSafeDouble x = 0.0;
@@ -88,11 +88,11 @@ TEST(SafeDoubleTest, Power) {
     TSafeDouble x = 2.0;
     TSafeDouble y = 4.0;
     TSafeDouble z = 16.0;
-    EXPECT_EQ(x ^ y, z);
+    EXPECT_EQ(x.pow(y), z);
     TSafeDouble u = 4.0;
     TSafeDouble v = 0.5;
     TSafeDouble w = 2.0;
-    EXPECT_EQ(u ^ v, w);
+    EXPECT_EQ(u.pow(v), w);
 }
 
 TEST(PointTest, Equal) {

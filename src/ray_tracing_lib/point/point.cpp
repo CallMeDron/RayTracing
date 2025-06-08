@@ -2,7 +2,7 @@
 
 #include <iomanip>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 TPoint::TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 
@@ -13,11 +13,9 @@ TVector TPoint::operator-(const TPoint& other) const { return TVector{X - other.
 TPoint TPoint::operator+(const TVector& vector) const { return TPoint{X + vector.X, Y + vector.Y, Z + vector.Z}; }
 
 std::ostream& operator<<(std::ostream& os, const TPoint& point) {
-    std::cout << std::scientific;
-    std::cout << std::setprecision(1);
     return os << "point = {" << point.X << ", " << point.Y << ", " << point.Z << "}\n";
 }
 
 void TPoint::print() const { std::cout << *this; }
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib

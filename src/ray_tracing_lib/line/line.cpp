@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <optional>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 TLine::TLine(const TPoint& point1, const TPoint& point2) : Point1(point1), Point2(point2), Vector(point2 - point1) {
     if (Vector.isZero()) {
@@ -61,10 +61,8 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const TLine& line) {
-    std::cout << std::scientific;
-    std::cout << std::setprecision(1);
     return os << "line:\n" << line.Point1 << line.Point2 << line.Vector;
 }
 void TLine::print() const { std::cout << *this; }
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib

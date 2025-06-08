@@ -2,7 +2,7 @@
 
 #include <iomanip>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 TVector::TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 TVector::TVector(const TPoint& point) : X(point.X), Y(point.Y), Z(point.Z) {}
@@ -40,7 +40,7 @@ TVector TVector::operator^(const TVector& other) const {
     return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
 }
 
-TSafeDouble TVector::length() const { return std::sqrt(((X ^ 2) + (Y ^ 2) + (Z ^ 2)).Value); }
+TSafeDouble TVector::length() const { return std::sqrt(((X.pow(2)) + (Y.pow(2)) + (Z.pow(2))).Value); }
 bool TVector::isZero() const { return X == TSafeDouble{0.0} && Y == TSafeDouble{0.0} && Z == TSafeDouble{0.0}; }
 
 void TVector::normalize() { *this /= length(); }
@@ -57,10 +57,8 @@ bool TVector::isPerpendicular(const TVector& other) const { return cos(other) ==
 TVector TVector::projectTo(const TVector& other) const { return other * ((*this * other) / (other * other)); }
 
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
-    std::cout << std::scientific;
-    std::cout << std::setprecision(1);
     return os << "vector = {" << vector.X << ", " << vector.Y << ", " << vector.Z << "}\n";
 }
 void TVector::print() const { std::cout << *this; }
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib

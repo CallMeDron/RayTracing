@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 class TVector;
 
@@ -25,4 +25,4 @@ class TPoint {
     void print() const;
 };
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib
