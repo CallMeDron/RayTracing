@@ -1,6 +1,5 @@
 #include "line.h"
 
-#include <iomanip>
 #include <optional>
 
 namespace NRayTracingLib {

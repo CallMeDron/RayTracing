@@ -8,6 +8,7 @@
 namespace NRayTracingLib {
 
 class TVector;
+class TLine;
 
 class TPoint {
   public:
@@ -23,6 +24,9 @@ class TPoint {
 
     friend std::ostream& operator<<(std::ostream& os, const TPoint& point);
     void print() const;
+
+    TSafeDouble distToPoint(const TPoint& point) const noexcept;
+    TSafeDouble distToLine(const TLine& line) const noexcept;
 };
 
 } // namespace NRayTracingLib

@@ -1,7 +1,5 @@
 #include "vector.h"
 
-#include <iomanip>
-
 namespace NRayTracingLib {
 
 TVector::TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
@@ -40,7 +38,7 @@ TVector TVector::operator^(const TVector& other) const {
     return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
 }
 
-TSafeDouble TVector::length() const { return std::sqrt(((X.pow(2)) + (Y.pow(2)) + (Z.pow(2))).Value); }
+TSafeDouble TVector::length() const { return ((X.pow(2)) + (Y.pow(2)) + (Z.pow(2))).pow(0.5); }
 bool TVector::isZero() const { return X == TSafeDouble{0.0} && Y == TSafeDouble{0.0} && Z == TSafeDouble{0.0}; }
 
 void TVector::normalize() { *this /= length(); }

@@ -1,6 +1,6 @@
 #include "point.h"
 
-#include <iomanip>
+#include "../line/line.h"
 
 namespace NRayTracingLib {
 
@@ -21,5 +21,10 @@ std::ostream& operator<<(std::ostream& os, const TPoint& point) {
 }
 
 void TPoint::print() const { std::cout << *this; }
+
+TSafeDouble TPoint::distToPoint(const TPoint& point) const noexcept {
+    return ((X - point.X).pow(2) + (Y - point.Y).pow(2) + (Z - point.Z).pow(2)).pow(0.5);
+}
+TSafeDouble TPoint::distToLine(const TLine& line) const noexcept { return line.distToPoint(*this); }
 
 } // namespace NRayTracingLib

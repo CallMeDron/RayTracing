@@ -150,42 +150,59 @@ TEST(TSafeDoubleTest, PowMethod) {
     EXPECT_DOUBLE_EQ(c.Value, 8.0);
 }
 
-class TPointTest : public ::testing::Test {
-  protected:
-    TPoint point1{1.0, 2.0, 3.0};
-    TPoint point2{1.0, 2.0, 3.0};
-    TPoint point3{4.0, 5.0, 6.0};
-    TVector vector{1.0, 1.0, 1.0};
-};
+TEST(TPointTest, EqualityOperators) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0, 2.0, 3.0};
+    TPoint p3{1.0, 2.0, 4.0};
 
-TEST_F(TPointTest, Constructor) {
-    EXPECT_EQ(point1.X, 1.0);
-    EXPECT_EQ(point1.Y, 2.0);
-    EXPECT_EQ(point1.Z, 3.0);
+    EXPECT_TRUE(p1 == p2);
+    EXPECT_FALSE(p1 != p2);
+    EXPECT_FALSE(p1 == p3);
+    EXPECT_TRUE(p1 != p3);
 }
 
-TEST_F(TPointTest, EqualityOperator) {
-    EXPECT_TRUE(point1 == point2);
-    EXPECT_FALSE(point1 == point3);
+TEST(TPointTest, OperatorMinus) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{0.5, 1.5, 2.0};
+
+    TVector v = p1 - p2;
+    EXPECT_DOUBLE_EQ(v.X.Value, 0.5);
+    EXPECT_DOUBLE_EQ(v.Y.Value, 0.5);
+    EXPECT_DOUBLE_EQ(v.Z.Value, 1.0);
 }
 
-TEST_F(TPointTest, InequalityOperator) {
-    EXPECT_TRUE(point1 != point3);
-    EXPECT_FALSE(point1 != point2);
+TEST(TPointTest, OperatorPlus) {
+    TPoint p{1.0, 2.0, 3.0};
+    TVector v{0.5, 0.5, 0.5};
+
+    TPoint p2 = p + v;
+    EXPECT_DOUBLE_EQ(p2.X.Value, 1.5);
+    EXPECT_DOUBLE_EQ(p2.Y.Value, 2.5);
+    EXPECT_DOUBLE_EQ(p2.Z.Value, 3.5);
 }
 
-TEST_F(TPointTest, SubtractionOperator) {
-    TVector result = point1 - point3;
-    EXPECT_EQ(result.X, -3.0);
-    EXPECT_EQ(result.Y, -3.0);
-    EXPECT_EQ(result.Z, -3.0);
+TEST(TPointTest, DistToPoint) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{3.0, 4.0, 0.0};
+
+    auto dist = p1.distToPoint(p2);
+    EXPECT_DOUBLE_EQ(dist.Value, 5.0);
 }
 
-TEST_F(TPointTest, AdditionOperator) {
-    TPoint result = point1 + vector;
-    EXPECT_EQ(result.X, 2.0);
-    EXPECT_EQ(result.Y, 3.0);
-    EXPECT_EQ(result.Z, 4.0);
+TEST(TPointTest, DistToLine) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector w{1.0, 0.0, 0.0};
+    TLine W{o, w};
+    TPoint x{1.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(x.distToLine(W).Value, 0.0);
+    TPoint y{0.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(y.distToLine(W).Value, 0.0);
+    TPoint z{10000.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(z.distToLine(W).Value, 0.0);
+    TPoint u{10000.0, 5.0, 0.0};
+    EXPECT_DOUBLE_EQ(u.distToLine(W).Value, 5.0);
+    TPoint v{10000.0, 3.0, 4.0};
+    EXPECT_DOUBLE_EQ(v.distToLine(W).Value, 5.0);
 }
 
 TEST(VectorTest, Create) {
