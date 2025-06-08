@@ -4,4 +4,4 @@
 
 using namespace NGeometry3D;
 
-int main() {}
+int main() { std::cout << "Hello wordl!"; }

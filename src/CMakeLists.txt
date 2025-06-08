@@ -1,18 +1,33 @@
+# Указываем минимально необходимую версию CMake
 cmake_minimum_required(VERSION 3.14)
+
+# Включаем новую политику CMP0135
 cmake_policy(SET CMP0135 NEW)
 
-project(RayTracing)
+# Объявляем проект с именем RayTracing и указываем, что используем C++
+project(RayTracing LANGUAGES CXX)
 
+# Если используем компилятор MSVC (Visual Studio)
+if(MSVC)
+    # Настраиваем использование динамической версии стандартной библиотеки времени выполнения (MultiThreaded DLL)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+endif()
+
+# Устанавливаем стандарт C++17
 set(CMAKE_CXX_STANDARD 17)
+
+# Требуем, чтобы стандарт был именно C++17, без понижения
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-############################################### main block
+# Отключаем расширения компилятора (например, Microsoft-specific extensions)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(SOURCES
-    main.cpp
-    geometry3D/safeDouble/safeDouble.cpp
-    geometry3D/point/point.cpp
-    geometry3D/vector/vector.cpp
-    geometry3D/line/line.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/safeDouble/safeDouble.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/point/point.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/vector/vector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry3D/line/line.cpp
 )
+
 add_executable(main ${SOURCES})
-###############################################

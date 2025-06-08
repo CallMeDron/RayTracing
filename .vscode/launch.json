@@ -14,7 +14,7 @@
             "name": "MY: tests launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "build/Release/test.exe",
+            "program": "build/Release/tests.exe",
             "cwd": "${workspaceFolder}/tests",
             "console": "integratedTerminal",
             "preLaunchTask": "MY: tests build"
