@@ -1,7 +1,7 @@
-#include "..\src\geometry3D\line\line.h"
-#include "..\src\geometry3D\point\point.h"
-#include "..\src\geometry3D\safe_double\safe_double.h"
-#include "..\src\geometry3D\vector\vector.h"
+#include "..\src\ray_tracing_lib\line\line.h"
+#include "..\src\ray_tracing_lib\point\point.h"
+#include "..\src\ray_tracing_lib\safe_double\safe_double.h"
+#include "..\src\ray_tracing_lib\vector\vector.h"
 
 #include <gtest/gtest.h>
 
