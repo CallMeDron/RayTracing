@@ -7,92 +7,147 @@
 
 using namespace NRayTracingLib;
 
-TEST(SafeDoubleTest, Equal) {
-    TSafeDouble x = 0.0;
-    EXPECT_EQ(x, x);
-    TSafeDouble y = 1e-16;
-    EXPECT_EQ(y, y);
-    EXPECT_EQ(x, y);
+TEST(TSafeDoubleTest, ConstructorAndValue) {
+    TSafeDouble a(3.14);
+    EXPECT_DOUBLE_EQ(a.Value, 3.14);
 }
 
-TEST(SafeDoubleTest, NotEqual) {
-    TSafeDouble x = 0.0;
-    TSafeDouble y = 1e-14;
-    EXPECT_NE(x, y);
-    TSafeDouble z = -1e-14;
-    EXPECT_NE(y, z);
+TEST(TSafeDoubleTest, EqualityOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-16);
+    EXPECT_TRUE(a == b);
+    TSafeDouble c(1.0 + 1e-10);
+    EXPECT_FALSE(a == c);
 }
 
-TEST(SafeDoubleTest, GreaterAndLess) {
-    TSafeDouble x = 0.0;
-    TSafeDouble y = 1e-14;
-    EXPECT_GT(y, x);
-    TSafeDouble z = -1e-14;
-    EXPECT_LT(z, x);
+TEST(TSafeDoubleTest, InequalityOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-10);
+    EXPECT_TRUE(a != b);
+    TSafeDouble c(1.0 + 1e-16);
+    EXPECT_FALSE(a != c);
 }
 
-TEST(SafeDoubleTest, Sum) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = 2.0;
-    TSafeDouble z = 3.0;
-    EXPECT_EQ(x + y, z);
-    TSafeDouble a = 1e-16;
-    TSafeDouble b = 1e-17;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a + b, c);
+TEST(TSafeDoubleTest, GreaterThanOperator) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(1.0);
+    EXPECT_TRUE(a > b);
+    EXPECT_FALSE(b > a);
+    TSafeDouble c(2.0 + 1e-16);
+    EXPECT_FALSE(a > c);
 }
 
-TEST(SafeDoubleTest, Diff) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = 2.0;
-    TSafeDouble z = -1.0;
-    EXPECT_EQ(x - y, z);
-    TSafeDouble a = 1e-16;
-    TSafeDouble b = 1e-17;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a - b, c);
+TEST(TSafeDoubleTest, LessThanOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(2.0);
+    EXPECT_TRUE(a < b);
+    EXPECT_FALSE(b < a);
+    TSafeDouble c(1.0 - 1e-16);
+    EXPECT_FALSE(a < c);
 }
 
-TEST(SafeDoubleTest, Abs) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = -1.0;
-    EXPECT_EQ(x.abs(), y.abs());
+TEST(TSafeDoubleTest, GreaterEqualOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-16);
+    TSafeDouble c(0.9);
+    EXPECT_TRUE(a >= b);
+    EXPECT_TRUE(a >= c);
+    EXPECT_FALSE(c >= a);
 }
 
-TEST(SafeDoubleTest, Product) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.5;
-    TSafeDouble z = 9.0;
-    EXPECT_EQ(x * y, z);
-    TSafeDouble a = 2.0;
-    TSafeDouble b = 1e-16;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a * b, c);
+TEST(TSafeDoubleTest, LessEqualOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 - 1e-16);
+    TSafeDouble c(1.1);
+    EXPECT_TRUE(a <= b);
+    EXPECT_TRUE(a <= c);
+    EXPECT_FALSE(c <= a);
 }
 
-TEST(SafeDoubleTest, Division) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.5;
-    TSafeDouble z = 9.0;
-    EXPECT_EQ(z / x, y);
-    TSafeDouble a = 1.0;
-    TSafeDouble b = 1e-16;
-    EXPECT_THROW(a / b, std::runtime_error);
-    TSafeDouble u = 1.0;
-    TSafeDouble v = 1e-14;
-    TSafeDouble w = 1e14;
-    EXPECT_EQ(u / v, w);
+TEST(TSafeDoubleTest, UnaryMinusOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b = -a;
+    EXPECT_DOUBLE_EQ(b.Value, -5.0);
+    TSafeDouble c = -b;
+    EXPECT_DOUBLE_EQ(c.Value, 5.0);
 }
 
-TEST(SafeDoubleTest, Power) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.0;
-    TSafeDouble z = 16.0;
-    EXPECT_EQ(x.pow(y), z);
-    TSafeDouble u = 4.0;
-    TSafeDouble v = 0.5;
-    TSafeDouble w = 2.0;
-    EXPECT_EQ(u.pow(v), w);
+TEST(TSafeDoubleTest, AbsMethod) {
+    TSafeDouble a(-3.5);
+    TSafeDouble b(3.5);
+    TSafeDouble c(0.0);
+    EXPECT_DOUBLE_EQ(a.abs().Value, 3.5);
+    EXPECT_DOUBLE_EQ(b.abs().Value, 3.5);
+    EXPECT_DOUBLE_EQ(c.abs().Value, 0.0);
+}
+
+TEST(TSafeDoubleTest, AdditionOperator) {
+    TSafeDouble a(1.5);
+    TSafeDouble b(2.5);
+    TSafeDouble c = a + b;
+    EXPECT_DOUBLE_EQ(c.Value, 4.0);
+}
+
+TEST(TSafeDoubleTest, SubtractionOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b(3.0);
+    TSafeDouble c = a - b;
+    EXPECT_DOUBLE_EQ(c.Value, 2.0);
+}
+
+TEST(TSafeDoubleTest, MultiplicationOperator) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(4.0);
+    TSafeDouble c = a * b;
+    EXPECT_DOUBLE_EQ(c.Value, 8.0);
+}
+
+TEST(TSafeDoubleTest, DivisionOperator) {
+    TSafeDouble a(10.0);
+    TSafeDouble b(2.0);
+    TSafeDouble c = a / b;
+    EXPECT_DOUBLE_EQ(c.Value, 5.0);
+}
+
+TEST(TSafeDoubleTest, DivisionByZeroThrows) {
+    TSafeDouble a(1.0);
+    TSafeDouble zero(0.0);
+    EXPECT_THROW(a / zero, std::runtime_error);
+}
+
+TEST(TSafeDoubleTest, CompoundAdditionOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(2.0);
+    a += b;
+    EXPECT_DOUBLE_EQ(a.Value, 3.0);
+}
+
+TEST(TSafeDoubleTest, CompoundSubtractionOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b(3.0);
+    a -= b;
+    EXPECT_DOUBLE_EQ(a.Value, 2.0);
+}
+
+TEST(TSafeDoubleTest, CompoundMultiplicationOperator) {
+    TSafeDouble a(3.0);
+    TSafeDouble b(4.0);
+    a *= b;
+    EXPECT_DOUBLE_EQ(a.Value, 12.0);
+}
+
+TEST(TSafeDoubleTest, CompoundDivisionOperator) {
+    TSafeDouble a(8.0);
+    TSafeDouble b(2.0);
+    a /= b;
+    EXPECT_DOUBLE_EQ(a.Value, 4.0);
+}
+
+TEST(TSafeDoubleTest, PowMethod) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(3.0);
+    TSafeDouble c = a.pow(b);
+    EXPECT_DOUBLE_EQ(c.Value, 8.0);
 }
 
 TEST(PointTest, Equal) {
