@@ -6,7 +6,7 @@
 #include <iostream>
 #include <optional>
 
-namespace NGeometry3D {
+namespace NRayTracingLib {
 
 class TLine {
   public:
@@ -33,4 +33,4 @@ class TLine {
     void print() const;
 };
 
-} // namespace NGeometry3D
+} // namespace NRayTracingLib

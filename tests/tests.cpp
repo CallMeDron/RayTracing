@@ -1,122 +1,211 @@
-#include "..\src\geometry3D\line\line.h"
-#include "..\src\geometry3D\point\point.h"
-#include "..\src\geometry3D\safeDouble\safeDouble.h"
-#include "..\src\geometry3D\vector\vector.h"
+#include "..\src\ray_tracing_lib\line\line.h"
+#include "..\src\ray_tracing_lib\point\point.h"
+#include "..\src\ray_tracing_lib\safe_double\safe_double.h"
+#include "..\src\ray_tracing_lib\vector\vector.h"
 
 #include <gtest/gtest.h>
 
-using namespace NGeometry3D;
+using namespace NRayTracingLib;
 
-TEST(SafeDoubleTest, Equal) {
-    TSafeDouble x = 0.0;
-    EXPECT_EQ(x, x);
-    TSafeDouble y = 1e-16;
-    EXPECT_EQ(y, y);
-    EXPECT_EQ(x, y);
+TEST(TSafeDoubleTest, ConstructorAndValue) {
+    TSafeDouble a(3.14);
+    EXPECT_DOUBLE_EQ(a.Value, 3.14);
 }
 
-TEST(SafeDoubleTest, NotEqual) {
-    TSafeDouble x = 0.0;
-    TSafeDouble y = 1e-14;
-    EXPECT_NE(x, y);
-    TSafeDouble z = -1e-14;
-    EXPECT_NE(y, z);
+TEST(TSafeDoubleTest, EqualityOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-16);
+    EXPECT_TRUE(a == b);
+    TSafeDouble c(1.0 + 1e-10);
+    EXPECT_FALSE(a == c);
 }
 
-TEST(SafeDoubleTest, GreaterAndLess) {
-    TSafeDouble x = 0.0;
-    TSafeDouble y = 1e-14;
-    EXPECT_GT(y, x);
-    TSafeDouble z = -1e-14;
-    EXPECT_LT(z, x);
+TEST(TSafeDoubleTest, InequalityOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-10);
+    EXPECT_TRUE(a != b);
+    TSafeDouble c(1.0 + 1e-16);
+    EXPECT_FALSE(a != c);
 }
 
-TEST(SafeDoubleTest, Sum) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = 2.0;
-    TSafeDouble z = 3.0;
-    EXPECT_EQ(x + y, z);
-    TSafeDouble a = 1e-16;
-    TSafeDouble b = 1e-17;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a + b, c);
+TEST(TSafeDoubleTest, GreaterThanOperator) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(1.0);
+    EXPECT_TRUE(a > b);
+    EXPECT_FALSE(b > a);
+    TSafeDouble c(2.0 + 1e-16);
+    EXPECT_FALSE(a > c);
 }
 
-TEST(SafeDoubleTest, Diff) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = 2.0;
-    TSafeDouble z = -1.0;
-    EXPECT_EQ(x - y, z);
-    TSafeDouble a = 1e-16;
-    TSafeDouble b = 1e-17;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a - b, c);
+TEST(TSafeDoubleTest, LessThanOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(2.0);
+    EXPECT_TRUE(a < b);
+    EXPECT_FALSE(b < a);
+    TSafeDouble c(1.0 - 1e-16);
+    EXPECT_FALSE(a < c);
 }
 
-TEST(SafeDoubleTest, Abs) {
-    TSafeDouble x = 1.0;
-    TSafeDouble y = -1.0;
-    EXPECT_EQ(x.abs(), y.abs());
+TEST(TSafeDoubleTest, GreaterEqualOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 + 1e-16);
+    TSafeDouble c(0.9);
+    EXPECT_TRUE(a >= b);
+    EXPECT_TRUE(a >= c);
+    EXPECT_FALSE(c >= a);
 }
 
-TEST(SafeDoubleTest, Product) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.5;
-    TSafeDouble z = 9.0;
-    EXPECT_EQ(x * y, z);
-    TSafeDouble a = 2.0;
-    TSafeDouble b = 1e-16;
-    TSafeDouble c = 0.0;
-    EXPECT_EQ(a * b, c);
+TEST(TSafeDoubleTest, LessEqualOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(1.0 - 1e-16);
+    TSafeDouble c(1.1);
+    EXPECT_TRUE(a <= b);
+    EXPECT_TRUE(a <= c);
+    EXPECT_FALSE(c <= a);
 }
 
-TEST(SafeDoubleTest, Division) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.5;
-    TSafeDouble z = 9.0;
-    EXPECT_EQ(z / x, y);
-    TSafeDouble a = 1.0;
-    TSafeDouble b = 1e-16;
-    EXPECT_THROW(a / b, std::runtime_error);
-    TSafeDouble u = 1.0;
-    TSafeDouble v = 1e-14;
-    TSafeDouble w = 1e14;
-    EXPECT_EQ(u / v, w);
+TEST(TSafeDoubleTest, UnaryMinusOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b = -a;
+    EXPECT_DOUBLE_EQ(b.Value, -5.0);
+    TSafeDouble c = -b;
+    EXPECT_DOUBLE_EQ(c.Value, 5.0);
 }
 
-TEST(SafeDoubleTest, Power) {
-    TSafeDouble x = 2.0;
-    TSafeDouble y = 4.0;
-    TSafeDouble z = 16.0;
-    EXPECT_EQ(x ^ y, z);
-    TSafeDouble u = 4.0;
-    TSafeDouble v = 0.5;
-    TSafeDouble w = 2.0;
-    EXPECT_EQ(u ^ v, w);
+TEST(TSafeDoubleTest, AbsMethod) {
+    TSafeDouble a(-3.5);
+    TSafeDouble b(3.5);
+    TSafeDouble c(0.0);
+    EXPECT_DOUBLE_EQ(a.abs().Value, 3.5);
+    EXPECT_DOUBLE_EQ(b.abs().Value, 3.5);
+    EXPECT_DOUBLE_EQ(c.abs().Value, 0.0);
 }
 
-TEST(PointTest, Equal) {
-    TPoint x{1.0, 0.0, 3.0};
-    TPoint y{1.0, 1e-16, 3.0};
-    EXPECT_EQ(x, y);
-    EXPECT_EQ(x, x);
+TEST(TSafeDoubleTest, AdditionOperator) {
+    TSafeDouble a(1.5);
+    TSafeDouble b(2.5);
+    TSafeDouble c = a + b;
+    EXPECT_DOUBLE_EQ(c.Value, 4.0);
 }
 
-TEST(PointTest, Diff) {
-    TPoint x{1.0, 2.0, 3.0};
-    TPoint y{1.0, 1.0, 3.0};
-    TVector z{0.0, 1.0, 0.0};
-    EXPECT_EQ(x - y, z);
+TEST(TSafeDoubleTest, SubtractionOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b(3.0);
+    TSafeDouble c = a - b;
+    EXPECT_DOUBLE_EQ(c.Value, 2.0);
 }
 
-TEST(PointTest, Add) {
-    TPoint x{1.0, 2.0, 3.0};
-    TPoint y{1.0, 3.0, 3.0};
-    TVector z{0.0, 1.0, 0.0};
-    EXPECT_EQ(x + z, y);
+TEST(TSafeDoubleTest, MultiplicationOperator) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(4.0);
+    TSafeDouble c = a * b;
+    EXPECT_DOUBLE_EQ(c.Value, 8.0);
 }
 
-TEST(VectorTest, Create) {
+TEST(TSafeDoubleTest, DivisionOperator) {
+    TSafeDouble a(10.0);
+    TSafeDouble b(2.0);
+    TSafeDouble c = a / b;
+    EXPECT_DOUBLE_EQ(c.Value, 5.0);
+}
+
+TEST(TSafeDoubleTest, DivisionByZeroThrows) {
+    TSafeDouble a(1.0);
+    TSafeDouble zero(0.0);
+    EXPECT_THROW(a / zero, std::runtime_error);
+}
+
+TEST(TSafeDoubleTest, CompoundAdditionOperator) {
+    TSafeDouble a(1.0);
+    TSafeDouble b(2.0);
+    a += b;
+    EXPECT_DOUBLE_EQ(a.Value, 3.0);
+}
+
+TEST(TSafeDoubleTest, CompoundSubtractionOperator) {
+    TSafeDouble a(5.0);
+    TSafeDouble b(3.0);
+    a -= b;
+    EXPECT_DOUBLE_EQ(a.Value, 2.0);
+}
+
+TEST(TSafeDoubleTest, CompoundMultiplicationOperator) {
+    TSafeDouble a(3.0);
+    TSafeDouble b(4.0);
+    a *= b;
+    EXPECT_DOUBLE_EQ(a.Value, 12.0);
+}
+
+TEST(TSafeDoubleTest, CompoundDivisionOperator) {
+    TSafeDouble a(8.0);
+    TSafeDouble b(2.0);
+    a /= b;
+    EXPECT_DOUBLE_EQ(a.Value, 4.0);
+}
+
+TEST(TSafeDoubleTest, PowMethod) {
+    TSafeDouble a(2.0);
+    TSafeDouble b(3.0);
+    TSafeDouble c = a.pow(b);
+    EXPECT_DOUBLE_EQ(c.Value, 8.0);
+}
+
+TEST(TPointTest, EqualityOperators) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0, 2.0, 3.0};
+    TPoint p3{1.0, 2.0, 4.0};
+
+    EXPECT_TRUE(p1 == p2);
+    EXPECT_FALSE(p1 != p2);
+    EXPECT_FALSE(p1 == p3);
+    EXPECT_TRUE(p1 != p3);
+}
+
+TEST(TPointTest, OperatorMinus) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{0.5, 1.5, 2.0};
+
+    TVector v = p1 - p2;
+    EXPECT_DOUBLE_EQ(v.X.Value, 0.5);
+    EXPECT_DOUBLE_EQ(v.Y.Value, 0.5);
+    EXPECT_DOUBLE_EQ(v.Z.Value, 1.0);
+}
+
+TEST(TPointTest, OperatorPlus) {
+    TPoint p{1.0, 2.0, 3.0};
+    TVector v{0.5, 0.5, 0.5};
+
+    TPoint p2 = p + v;
+    EXPECT_DOUBLE_EQ(p2.X.Value, 1.5);
+    EXPECT_DOUBLE_EQ(p2.Y.Value, 2.5);
+    EXPECT_DOUBLE_EQ(p2.Z.Value, 3.5);
+}
+
+TEST(TPointTest, DistToPoint) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{3.0, 4.0, 0.0};
+
+    auto dist = p1.distToPoint(p2);
+    EXPECT_DOUBLE_EQ(dist.Value, 5.0);
+}
+
+TEST(TPointTest, DistToLine) {
+    TPoint o{0.0, 0.0, 0.0};
+    TVector w{1.0, 0.0, 0.0};
+    TLine W{o, w};
+    TPoint x{1.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(x.distToLine(W).Value, 0.0);
+    TPoint y{0.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(y.distToLine(W).Value, 0.0);
+    TPoint z{10000.0, 0.0, 0.0};
+    EXPECT_DOUBLE_EQ(z.distToLine(W).Value, 0.0);
+    TPoint u{10000.0, 5.0, 0.0};
+    EXPECT_DOUBLE_EQ(u.distToLine(W).Value, 5.0);
+    TPoint v{10000.0, 3.0, 4.0};
+    EXPECT_DOUBLE_EQ(v.distToLine(W).Value, 5.0);
+}
+
+TEST(TVectorTest, Create) {
     TPoint x{1.0, 2.0, 3.0};
     TVector y{x};
     TVector z{1.0, 2.0, 3.0};
@@ -127,7 +216,7 @@ TEST(VectorTest, Create) {
     EXPECT_EQ(TVector(a, b), c);
 }
 
-TEST(VectorTest, SumAndDiff) {
+TEST(TVectorTest, SumAndDiff) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{4.0, 3.0, 2.0};
     TVector z{5.0, 5.0, 5.0};
@@ -136,7 +225,7 @@ TEST(VectorTest, SumAndDiff) {
     EXPECT_EQ(x - y, w);
 }
 
-TEST(VectorTest, ProdAndDiv) {
+TEST(TVectorTest, ProdAndDiv) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 6.0, 9.0};
     EXPECT_EQ(x * 3.0, y);
@@ -144,25 +233,25 @@ TEST(VectorTest, ProdAndDiv) {
     EXPECT_THROW(y / 1e-16, std::runtime_error);
 }
 
-TEST(VectorTest, ScalarProd) {
+TEST(TVectorTest, ScalarProd) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 6.0, 9.0};
     EXPECT_EQ(x * y, 42.0);
 }
 
-TEST(VectorTest, VectorProd) {
+TEST(TVectorTest, VectorProd) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 2.0, 1.0};
     TVector z{-4.0, 8.0, -4.0};
     EXPECT_EQ(x ^ y, z);
 }
 
-TEST(VectorTest, Length) {
+TEST(TVectorTest, Length) {
     TVector x{0.0, 3.0, 4.0};
     EXPECT_EQ(x.length(), 5.0);
 }
 
-TEST(VectorTest, Normalization) {
+TEST(TVectorTest, Normalization) {
     TVector x{0.0, 3.0, 4.0};
     x.normalize();
     TVector y{0.0, 0.6, 0.8};
@@ -173,14 +262,14 @@ TEST(VectorTest, Normalization) {
     EXPECT_THROW(w.getNormalized(), std::runtime_error);
 }
 
-TEST(VectorTest, Cos) {
+TEST(TVectorTest, Cos) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 2.0, 1.0};
     EXPECT_EQ(x.cos(y), 5.0 / 7.0);
     EXPECT_EQ(y.cos(x), 5.0 / 7.0);
 }
 
-TEST(VectorTest, Parallel) {
+TEST(TVectorTest, Parallel) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{5.0, 10.0, 15.0};
     EXPECT_TRUE(x.isParallel(x));
@@ -196,7 +285,7 @@ TEST(VectorTest, Parallel) {
     EXPECT_TRUE(v.isParallel(y));
 }
 
-TEST(VectorTest, Perpendicular) {
+TEST(TVectorTest, Perpendicular) {
     TVector x{1.0, 0.0, 0.0};
     TVector y{0.0, 1.0, 0.0};
     TVector z{0.0, 0.0, 1.0};
@@ -213,7 +302,7 @@ TEST(VectorTest, Perpendicular) {
     EXPECT_TRUE(v.isPerpendicular(x));
 }
 
-TEST(VectorTest, Projection) {
+TEST(TVectorTest, Projection) {
     TVector x{1.0, 0.0, 0.0};
     TVector y{0.0, 1.0, 0.0};
     EXPECT_EQ(x.projectTo(x), x);
