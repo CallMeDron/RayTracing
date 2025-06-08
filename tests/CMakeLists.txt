@@ -28,6 +28,7 @@ add_library(raytracing_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/point/point.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/vector/vector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/line/line.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/plane/plane.cpp
 )
 
 # Добавляем каталог с заголовочными файлами в пути поиска для raytracing_lib (публично)
