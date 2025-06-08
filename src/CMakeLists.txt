@@ -28,6 +28,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/ray_tracing_lib/point/point.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ray_tracing_lib/vector/vector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ray_tracing_lib/line/line.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ray_tracing_lib/plane/plane.cpp
 )
 
 add_executable(main ${SOURCES})
