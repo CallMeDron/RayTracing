@@ -205,7 +205,7 @@ TEST(TPointTest, DistToLine) {
     EXPECT_DOUBLE_EQ(v.distToLine(W).Value, 5.0);
 }
 
-TEST(VectorTest, Create) {
+TEST(TVectorTest, Create) {
     TPoint x{1.0, 2.0, 3.0};
     TVector y{x};
     TVector z{1.0, 2.0, 3.0};
@@ -216,7 +216,7 @@ TEST(VectorTest, Create) {
     EXPECT_EQ(TVector(a, b), c);
 }
 
-TEST(VectorTest, SumAndDiff) {
+TEST(TVectorTest, SumAndDiff) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{4.0, 3.0, 2.0};
     TVector z{5.0, 5.0, 5.0};
@@ -225,7 +225,7 @@ TEST(VectorTest, SumAndDiff) {
     EXPECT_EQ(x - y, w);
 }
 
-TEST(VectorTest, ProdAndDiv) {
+TEST(TVectorTest, ProdAndDiv) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 6.0, 9.0};
     EXPECT_EQ(x * 3.0, y);
@@ -233,25 +233,25 @@ TEST(VectorTest, ProdAndDiv) {
     EXPECT_THROW(y / 1e-16, std::runtime_error);
 }
 
-TEST(VectorTest, ScalarProd) {
+TEST(TVectorTest, ScalarProd) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 6.0, 9.0};
     EXPECT_EQ(x * y, 42.0);
 }
 
-TEST(VectorTest, VectorProd) {
+TEST(TVectorTest, VectorProd) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 2.0, 1.0};
     TVector z{-4.0, 8.0, -4.0};
     EXPECT_EQ(x ^ y, z);
 }
 
-TEST(VectorTest, Length) {
+TEST(TVectorTest, Length) {
     TVector x{0.0, 3.0, 4.0};
     EXPECT_EQ(x.length(), 5.0);
 }
 
-TEST(VectorTest, Normalization) {
+TEST(TVectorTest, Normalization) {
     TVector x{0.0, 3.0, 4.0};
     x.normalize();
     TVector y{0.0, 0.6, 0.8};
@@ -262,14 +262,14 @@ TEST(VectorTest, Normalization) {
     EXPECT_THROW(w.getNormalized(), std::runtime_error);
 }
 
-TEST(VectorTest, Cos) {
+TEST(TVectorTest, Cos) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{3.0, 2.0, 1.0};
     EXPECT_EQ(x.cos(y), 5.0 / 7.0);
     EXPECT_EQ(y.cos(x), 5.0 / 7.0);
 }
 
-TEST(VectorTest, Parallel) {
+TEST(TVectorTest, Parallel) {
     TVector x{1.0, 2.0, 3.0};
     TVector y{5.0, 10.0, 15.0};
     EXPECT_TRUE(x.isParallel(x));
@@ -285,7 +285,7 @@ TEST(VectorTest, Parallel) {
     EXPECT_TRUE(v.isParallel(y));
 }
 
-TEST(VectorTest, Perpendicular) {
+TEST(TVectorTest, Perpendicular) {
     TVector x{1.0, 0.0, 0.0};
     TVector y{0.0, 1.0, 0.0};
     TVector z{0.0, 0.0, 1.0};
@@ -302,7 +302,7 @@ TEST(VectorTest, Perpendicular) {
     EXPECT_TRUE(v.isPerpendicular(x));
 }
 
-TEST(VectorTest, Projection) {
+TEST(TVectorTest, Projection) {
     TVector x{1.0, 0.0, 0.0};
     TVector y{0.0, 1.0, 0.0};
     EXPECT_EQ(x.projectTo(x), x);
