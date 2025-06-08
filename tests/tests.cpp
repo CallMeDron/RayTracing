@@ -150,25 +150,42 @@ TEST(TSafeDoubleTest, PowMethod) {
     EXPECT_DOUBLE_EQ(c.Value, 8.0);
 }
 
-TEST(PointTest, Equal) {
-    TPoint x{1.0, 0.0, 3.0};
-    TPoint y{1.0, 1e-16, 3.0};
-    EXPECT_EQ(x, y);
-    EXPECT_EQ(x, x);
+class TPointTest : public ::testing::Test {
+  protected:
+    TPoint point1{1.0, 2.0, 3.0};
+    TPoint point2{1.0, 2.0, 3.0};
+    TPoint point3{4.0, 5.0, 6.0};
+    TVector vector{1.0, 1.0, 1.0};
+};
+
+TEST_F(TPointTest, Constructor) {
+    EXPECT_EQ(point1.X, 1.0);
+    EXPECT_EQ(point1.Y, 2.0);
+    EXPECT_EQ(point1.Z, 3.0);
 }
 
-TEST(PointTest, Diff) {
-    TPoint x{1.0, 2.0, 3.0};
-    TPoint y{1.0, 1.0, 3.0};
-    TVector z{0.0, 1.0, 0.0};
-    EXPECT_EQ(x - y, z);
+TEST_F(TPointTest, EqualityOperator) {
+    EXPECT_TRUE(point1 == point2);
+    EXPECT_FALSE(point1 == point3);
 }
 
-TEST(PointTest, Add) {
-    TPoint x{1.0, 2.0, 3.0};
-    TPoint y{1.0, 3.0, 3.0};
-    TVector z{0.0, 1.0, 0.0};
-    EXPECT_EQ(x + z, y);
+TEST_F(TPointTest, InequalityOperator) {
+    EXPECT_TRUE(point1 != point3);
+    EXPECT_FALSE(point1 != point2);
+}
+
+TEST_F(TPointTest, SubtractionOperator) {
+    TVector result = point1 - point3;
+    EXPECT_EQ(result.X, -3.0);
+    EXPECT_EQ(result.Y, -3.0);
+    EXPECT_EQ(result.Z, -3.0);
+}
+
+TEST_F(TPointTest, AdditionOperator) {
+    TPoint result = point1 + vector;
+    EXPECT_EQ(result.X, 2.0);
+    EXPECT_EQ(result.Y, 3.0);
+    EXPECT_EQ(result.Z, 4.0);
 }
 
 TEST(VectorTest, Create) {

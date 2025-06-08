@@ -15,11 +15,11 @@ class TPoint {
 
     TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z);
 
-    bool operator==(const TPoint& other) const;
-    bool operator!=(const TPoint& other) const;
+    bool operator==(const TPoint& other) const noexcept;
+    bool operator!=(const TPoint& other) const noexcept;
 
-    TVector operator-(const TPoint& other) const;
-    TPoint operator+(const TVector& vector) const;
+    TVector operator-(const TPoint& other) const noexcept;
+    TPoint operator+(const TVector& vector) const noexcept;
 
     friend std::ostream& operator<<(std::ostream& os, const TPoint& point);
     void print() const;
