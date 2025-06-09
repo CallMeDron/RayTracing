@@ -14,7 +14,8 @@ class TPoint {
   public:
     TSafeDouble X, Y, Z;
 
-    TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z);
+    TPoint();
+    explicit TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z);
 
     bool operator==(const TPoint& other) const noexcept;
     bool operator!=(const TPoint& other) const noexcept;

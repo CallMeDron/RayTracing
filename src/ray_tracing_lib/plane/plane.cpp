@@ -6,6 +6,7 @@
 
 namespace NRayTracingLib {
 
+TPlane::TPlane(const TPoint& point, const TVector& normal) : Point(TPoint{0, 0, 0}), Normal(TVector{1, 0, 0}) {}
 TPlane::TPlane(const TPoint& point, const TVector& normal) : Point(point), Normal(normal) {
     if (Normal.isZero()) {
         throw std::runtime_error("Error: creating plane by point and normal vector");
@@ -33,7 +34,7 @@ TPlane::TPlane(const TPoint& point, const TLine& line)
     }
     Normal.normalize();
 }
-TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Normal(0, 0, 0) {
+TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Normal(TVector{0, 0, 0}) {
     std::optional<TPoint> intersection = line1.intersection(line2);
 
     if (intersection.has_value()) {
@@ -52,6 +53,9 @@ TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Nor
 
 TSafeDouble TPlane::distToPoint(const TPoint& point) const noexcept { return ((point - Point) * Normal).abs(); }
 bool TPlane::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == TSafeDouble{0}; }
+bool TPlane::containsLine(const TLine& line) const {
+    return containsPoint(line.Point) && Normal.isPerpendicular(line.Vector);
+}
 
 bool TPlane::operator==(const TPlane& other) const {
     return Normal.isParallel(other.Normal) && containsPoint(other.Point);
@@ -62,7 +66,64 @@ TSafeDouble TPlane::cos(const TPlane& other) const { return Normal.cos(other.Nor
 bool TPlane::isParallel(const TPlane& other) const { return Normal.isParallel(other.Normal); }
 bool TPlane::isPerpendicular(const TPlane& other) const { return Normal.isPerpendicular(other.Normal); }
 
-// std::optional<TPoint> intersection(const TLine& line) const {}
-// std::optional<TLine> intersection(const TPlane& plane) const {}
+std::optional<TPoint> TPlane::intersection(const TLine& line) const {
+    if (Normal.isPerpendicular(line.Vector)) {
+        if (containsLine(line)) {
+            throw std::runtime_error("Error: itersection of plane and line in it");
+        } else {
+            return std::nullopt;
+        }
+    }
+
+    return line.Point + line.Vector * (((Point - line.Point) * Normal) / (line.Vector * Normal));
+}
+std::optional<TLine> TPlane::intersection(const TPlane& plane) const {
+    if (Normal.isParallel(plane.Normal)) {
+        if (*this == plane) {
+            throw std::runtime_error("Error: intersection of equal planes");
+        } else {
+            return std::nullopt;
+        }
+    }
+
+    TVector direction = Normal ^ plane.Normal;
+
+    const TSafeDouble A1 = Normal.X;
+    const TSafeDouble B1 = Normal.Y;
+    const TSafeDouble C1 = Normal.Z;
+    const TSafeDouble D1 = -(A1 * Point.X + B1 * Point.Y + C1 * Point.Z);
+
+    const TSafeDouble A2 = plane.Normal.X;
+    const TSafeDouble B2 = plane.Normal.Y;
+    const TSafeDouble C2 = plane.Normal.Z;
+    const TSafeDouble D2 = -(A2 * plane.Point.X + B2 * plane.Point.Y + C2 * plane.Point.Z);
+
+    TSafeDouble x, y, z;
+
+    if (direction.Z != TSafeDouble{0}) {
+        TSafeDouble det = A1 * B2 - A2 * B1;
+        if (det == TSafeDouble{0}) {
+            throw std::runtime_error("Degenerate system while computing plane intersection (z = 0)");
+        }
+        x = (B1 * D2 - B2 * D1) / det;
+        y = (A2 * D1 - A1 * D2) / det;
+    } else if (direction.Y != TSafeDouble{0}) {
+        TSafeDouble det = A1 * C2 - A2 * C1;
+        if (det == TSafeDouble{0}) {
+            throw std::runtime_error("Degenerate system while computing plane intersection (y = 0)");
+        }
+        x = (C1 * D2 - C2 * D1) / det;
+        z = (A2 * D1 - A1 * D2) / det;
+    } else {
+        TSafeDouble det = B1 * C2 - B2 * C1;
+        if (det == TSafeDouble{0}) {
+            throw std::runtime_error("Degenerate system while computing plane intersection (x = 0)");
+        }
+        y = (C1 * D2 - C2 * D1) / det;
+        z = (B2 * D1 - B1 * D2) / det;
+    }
+
+    return TLine{TPoint{x, y, z}, direction};
+}
 
 } // namespace NRayTracingLib

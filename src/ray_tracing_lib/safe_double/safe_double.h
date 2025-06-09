@@ -8,6 +8,8 @@ class TSafeDouble {
   public:
     double Value;
 
+    TSafeDouble();
+    TSafeDouble(int v);
     TSafeDouble(double v);
 
     bool operator>(const TSafeDouble& other) const noexcept;

@@ -13,8 +13,8 @@ class TLine {
     TPoint Point;
     TVector Vector;
 
-    TLine(const TPoint& point1, const TPoint& point2);
-    TLine(const TPoint& point, const TVector& vector);
+    explicit TLine(const TPoint& point1, const TPoint& point2);
+    explicit TLine(const TPoint& point, const TVector& vector);
 
     TSafeDouble cos(const TLine& other) const;
     bool isParallel(const TLine& other) const;
