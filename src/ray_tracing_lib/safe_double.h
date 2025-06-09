@@ -10,6 +10,7 @@ class TSafeDouble {
 
     TSafeDouble();
     TSafeDouble(int v);
+    TSafeDouble(size_t v);
     TSafeDouble(double v);
 
     bool operator>(const TSafeDouble& other) const noexcept;

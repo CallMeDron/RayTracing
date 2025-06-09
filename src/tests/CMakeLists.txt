@@ -26,12 +26,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Создаем статическую или динамическую библиотеку raytracing_lib из перечисленных исходных файлов
 add_library(raytracing_lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/safe_double.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/point.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/vector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/line.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/plane.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/polygon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/safe_double.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/point.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/vector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/line.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/plane.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ray_tracing_lib/polygon.cpp
 )
 
 # Добавляем каталог с заголовочными файлами в пути поиска для raytracing_lib (публично)

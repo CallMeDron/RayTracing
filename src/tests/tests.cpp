@@ -1,9 +1,9 @@
-#include "..\src\ray_tracing_lib\line.h"
-#include "..\src\ray_tracing_lib\plane.h"
-#include "..\src\ray_tracing_lib\point.h"
-#include "..\src\ray_tracing_lib\polygon.h"
-#include "..\src\ray_tracing_lib\safe_double.h"
-#include "..\src\ray_tracing_lib\vector.h"
+#include "..\ray_tracing_lib\line.h"
+#include "..\ray_tracing_lib\plane.h"
+#include "..\ray_tracing_lib\point.h"
+#include "..\ray_tracing_lib\polygon.h"
+#include "..\ray_tracing_lib\safe_double.h"
+#include "..\ray_tracing_lib\vector.h"
 
 #include <gtest/gtest.h>
 

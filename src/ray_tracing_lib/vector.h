@@ -13,6 +13,7 @@ class TVector {
   public:
     TSafeDouble X, Y, Z;
 
+    TVector();
     explicit TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z);
     explicit TVector(const TPoint& point);
     explicit TVector(const TPoint& start, const TPoint& end);
