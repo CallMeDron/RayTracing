@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../safe_double/safe_double.h"
-#include "../vector/vector.h"
+#include "safe_double.h"
+#include "vector.h"
 
+#include <functional>
 #include <iostream>
 
 namespace NRayTracingLib {
@@ -31,3 +32,19 @@ class TPoint {
 };
 
 } // namespace NRayTracingLib
+
+namespace std {
+
+template <>
+struct hash<NRayTracingLib::TPoint> {
+    size_t operator()(const NRayTracingLib::TPoint& point) const {
+        size_t seed = 0;
+        auto hashFunction = std::hash<double>();
+        for (const auto& arg : {point.X, point.Y, point.Z}) {
+            seed ^= hashFunction(arg.Value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+};
+
+} // namespace std

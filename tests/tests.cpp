@@ -1,8 +1,9 @@
-#include "..\src\ray_tracing_lib\line\line.h"
-#include "..\src\ray_tracing_lib\plane\plane.h"
-#include "..\src\ray_tracing_lib\point\point.h"
-#include "..\src\ray_tracing_lib\safe_double\safe_double.h"
-#include "..\src\ray_tracing_lib\vector\vector.h"
+#include "..\src\ray_tracing_lib\line.h"
+#include "..\src\ray_tracing_lib\plane.h"
+#include "..\src\ray_tracing_lib\point.h"
+#include "..\src\ray_tracing_lib\polygon.h"
+#include "..\src\ray_tracing_lib\safe_double.h"
+#include "..\src\ray_tracing_lib\vector.h"
 
 #include <gtest/gtest.h>
 
@@ -805,6 +806,36 @@ TEST(TPlanePlaneIntersection, PlanesAreParallelNoIntersection) {
 
     auto result = plane1.intersection(plane2);
     EXPECT_FALSE(result.has_value());
+}
+
+TEST(TPolygonTest, CreatesPolygonWithUniquePointsSuccessfully) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0), TPoint(1.0, 0.0, 0.0), TPoint(0.0, 1.0, 0.0),
+        TPoint(1.0, 1.0, 0.0), TPoint(0.0, 0.0, 0.0),
+    };
+
+    EXPECT_NO_THROW({ TPolygon polygon(points); });
+}
+
+TEST(TPolygonTest, ThrowsWhenLessThanThreeUniquePoints) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(0.0, 0.0, 0.0),
+    };
+
+    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+}
+
+TEST(TPolygonTest, ThrowsWhenPointsNotOnSamePlane) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(1.0, 0.0, 0.0),
+        TPoint(0.0, 1.0, 0.0),
+        TPoint(0.0, 0.0, 1.0),
+    };
+
+    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
 }
 
 int main(int argc, char **argv) {

@@ -11,12 +11,14 @@ project(RayTracing LANGUAGES CXX)
 if(MSVC)
     # Настраиваем использование динамической версии стандартной библиотеки времени выполнения (MultiThreaded DLL)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+    # Вручную прокидываем значение стандарта из Cmake
+    add_compile_options(/Zc:__cplusplus)
 endif()
 
-# Устанавливаем стандарт C++17
-set(CMAKE_CXX_STANDARD 17)
+# Устанавливаем стандарт C++20
+set(CMAKE_CXX_STANDARD 20)
 
-# Требуем, чтобы стандарт был именно C++17, без понижения
+# Требуем, чтобы стандарт был именно C++20, без понижения
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Отключаем расширения компилятора (например, Microsoft-specific extensions)
@@ -24,11 +26,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Создаем статическую или динамическую библиотеку raytracing_lib из перечисленных исходных файлов
 add_library(raytracing_lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/safe_double/safe_double.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/point/point.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/vector/vector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/line/line.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/plane/plane.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/safe_double.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/point.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/vector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/line.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/plane.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/ray_tracing_lib/polygon.cpp
 )
 
 # Добавляем каталог с заголовочными файлами в пути поиска для raytracing_lib (публично)

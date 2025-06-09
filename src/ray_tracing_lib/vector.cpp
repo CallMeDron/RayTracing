@@ -2,7 +2,6 @@
 
 namespace NRayTracingLib {
 
-TVector::TVector() : X(0.0), Y(0.0), Z(0.0) {}
 TVector::TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 TVector::TVector(const TPoint& point) : X(point.X), Y(point.Y), Z(point.Z) {}
 TVector::TVector(const TPoint& start, const TPoint& end) : TVector{end - start} {}

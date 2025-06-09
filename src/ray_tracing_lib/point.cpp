@@ -1,6 +1,5 @@
 #include "point.h"
-
-#include "../line/line.h"
+#include "line.h"
 
 namespace NRayTracingLib {
 

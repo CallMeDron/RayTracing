@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../point/point.h"
-#include "../vector/vector.h"
+#include "point.h"
+#include "vector.h"
 
 #include <iostream>
 #include <optional>
@@ -15,7 +15,6 @@ class TPlane {
     TPoint Point;
     TVector Normal;
 
-    TPlane();
     explicit TPlane(const TPoint& point, const TVector& normal);
     explicit TPlane(const TPoint& point, const TVector& vector1, const TVector& vector2);
     explicit TPlane(const TPoint& point1, const TPoint& point2, const TPoint& point3);
