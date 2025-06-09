@@ -15,7 +15,7 @@ class TPlane {
     TPoint Point;
     TVector Normal;
 
-    TPlane(const TPoint& point, const TVector& normal);
+    TPlane();
     explicit TPlane(const TPoint& point, const TVector& normal);
     explicit TPlane(const TPoint& point, const TVector& vector1, const TVector& vector2);
     explicit TPlane(const TPoint& point1, const TPoint& point2, const TPoint& point3);
