@@ -6,9 +6,4 @@
 
 using namespace NRayTracingLib;
 
-int main() {
-    TPoint x{1, 2, 3};
-    TPoint y{4, 5, -9};
-    TLine line(x, y);
-    std::cout << line;
-}
+int main() { std::cout << TPlane(TPoint{0, 1, 2}, TVector{3, 4, 5}); }
