@@ -8,11 +8,13 @@ TLine::TLine(const TPoint& point1, const TPoint& point2) : Point(point1), Vector
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
+    Vector.normalize();
 }
 TLine::TLine(const TPoint& point, const TVector& vector) : Point(point), Vector(vector) {
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
+    Vector.normalize();
 }
 
 TSafeDouble TLine::cos(const TLine& other) const { return Vector.cos(other.Vector); }
@@ -54,11 +56,13 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
     TSafeDouble t = det2x2(b1, a12, b2, a22) / det;
     TSafeDouble s = det2x2(a11, b1, a21, b2) / det;
 
-    if (t * a31 + s * a32 != b3) {
+    const TPoint result{Point.X + t * a11, Point.Y + t * a21, Point.Z + t * a31};
+
+    if (other.distToPoint(result) > (10 * ACCURACY)) {
         return std::nullopt;
     }
 
-    return TPoint{Point.X + t * a11, Point.Y + t * a21, Point.Z + t * a31};
+    return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const TLine& line) { return os << "line:\n" << line.Point << line.Vector; }

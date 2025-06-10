@@ -6,9 +6,9 @@
 
 namespace NRayTracingLib {
 
-constexpr double ACCURACY = 1e-15;
-constexpr unsigned COUT_PRECISION = 1;
-
+TSafeDouble::TSafeDouble() : Value(0.0) {}
+TSafeDouble::TSafeDouble(int v) : Value(static_cast<double>(v)) {}
+TSafeDouble::TSafeDouble(size_t v) : Value(static_cast<double>(v)) {}
 TSafeDouble::TSafeDouble(double v) : Value(v) {}
 
 bool TSafeDouble::operator>(const TSafeDouble& other) const noexcept { return (Value - other.Value) > ACCURACY; }
@@ -63,7 +63,6 @@ TSafeDouble& TSafeDouble::operator/=(const TSafeDouble& other) {
 TSafeDouble TSafeDouble::pow(const TSafeDouble& exponent) const { return TSafeDouble{std::pow(Value, exponent.Value)}; }
 
 std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
-    os << std::scientific;
     os << std::setprecision(COUT_PRECISION);
     return os << sdouble.Value;
 }

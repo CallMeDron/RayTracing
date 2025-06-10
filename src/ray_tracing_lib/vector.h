@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../point/point.h"
-#include "../safe_double/safe_double.h"
+#include "point.h"
+#include "safe_double.h"
 
 #include <iostream>
 
@@ -13,9 +13,10 @@ class TVector {
   public:
     TSafeDouble X, Y, Z;
 
-    TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z);
+    TVector();
+    explicit TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z);
     explicit TVector(const TPoint& point);
-    TVector(const TPoint& start, const TPoint& end);
+    explicit TVector(const TPoint& start, const TPoint& end);
 
     bool operator==(const TVector& other) const noexcept;
     bool operator!=(const TVector& other) const noexcept;

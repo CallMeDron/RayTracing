@@ -1,10 +1,11 @@
 #include "point.h"
-
-#include "../line/line.h"
+#include "line.h"
 
 namespace NRayTracingLib {
 
+TPoint::TPoint() : X(0), Y(0), Z(0) {}
 TPoint::TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
+TPoint::TPoint(const TVector& vector) : X(vector.X), Y(vector.Y), Z(vector.Z) {}
 
 bool TPoint::operator==(const TPoint& other) const noexcept {
     return (X == other.X) && (Y == other.Y) && (Z == other.Z);

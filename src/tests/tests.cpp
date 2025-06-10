@@ -1,10 +1,12 @@
-#include "..\src\ray_tracing_lib\line\line.h"
-#include "..\src\ray_tracing_lib\plane\plane.h"
-#include "..\src\ray_tracing_lib\point\point.h"
-#include "..\src\ray_tracing_lib\safe_double\safe_double.h"
-#include "..\src\ray_tracing_lib\vector\vector.h"
+#include "..\ray_tracing_lib\line.h"
+#include "..\ray_tracing_lib\plane.h"
+#include "..\ray_tracing_lib\point.h"
+#include "..\ray_tracing_lib\polygon.h"
+#include "..\ray_tracing_lib\safe_double.h"
+#include "..\ray_tracing_lib\vector.h"
 
 #include <gtest/gtest.h>
+#include <unordered_set>
 
 using namespace NRayTracingLib;
 
@@ -17,25 +19,25 @@ TEST(TSafeDouble, Constructor_SetsValueCorrectly) {
 
 TEST(TSafeDouble, EqualityOperator_WithinTolerance_ReturnsTrue) {
     TSafeDouble a(1.0);
-    TSafeDouble b(1.0 + 1e-16);
+    TSafeDouble b(1.0 + (ACCURACY / 10));
     EXPECT_TRUE(a == b);
 }
 
 TEST(TSafeDouble, EqualityOperator_OutsideTolerance_ReturnsFalse) {
     TSafeDouble a(1.0);
-    TSafeDouble c(1.0 + 1e-10);
+    TSafeDouble c(1.0 + (ACCURACY * 10));
     EXPECT_FALSE(a == c);
 }
 
 TEST(TSafeDouble, InequalityOperator_OutsideTolerance_ReturnsTrue) {
     TSafeDouble a(1.0);
-    TSafeDouble b(1.0 + 1e-10);
+    TSafeDouble b(1.0 + (ACCURACY * 10));
     EXPECT_TRUE(a != b);
 }
 
 TEST(TSafeDouble, InequalityOperator_WithinTolerance_ReturnsFalse) {
     TSafeDouble a(1.0);
-    TSafeDouble c(1.0 + 1e-16);
+    TSafeDouble c(1.0 + (ACCURACY / 10));
     EXPECT_FALSE(a != c);
 }
 
@@ -44,7 +46,7 @@ TEST(TSafeDouble, GreaterThanOperator_CorrectBehavior) {
     TSafeDouble b(1.0);
     EXPECT_TRUE(a > b);
     EXPECT_FALSE(b > a);
-    TSafeDouble c(2.0 + 1e-16);
+    TSafeDouble c(2.0 + (ACCURACY / 10));
     EXPECT_FALSE(a > c);
 }
 
@@ -53,13 +55,13 @@ TEST(TSafeDouble, LessThanOperator_CorrectBehavior) {
     TSafeDouble b(2.0);
     EXPECT_TRUE(a < b);
     EXPECT_FALSE(b < a);
-    TSafeDouble c(1.0 - 1e-16);
+    TSafeDouble c(1.0 - (ACCURACY / 10));
     EXPECT_FALSE(a < c);
 }
 
 TEST(TSafeDouble, GreaterEqualOperator_CorrectBehavior) {
     TSafeDouble a(1.0);
-    TSafeDouble b(1.0 + 1e-16);
+    TSafeDouble b(1.0 + (ACCURACY / 10));
     TSafeDouble c(0.9);
     EXPECT_TRUE(a >= b);
     EXPECT_TRUE(a >= c);
@@ -68,7 +70,7 @@ TEST(TSafeDouble, GreaterEqualOperator_CorrectBehavior) {
 
 TEST(TSafeDouble, LessEqualOperator_CorrectBehavior) {
     TSafeDouble a(1.0);
-    TSafeDouble b(1.0 - 1e-16);
+    TSafeDouble b(1.0 - (ACCURACY / 10));
     TSafeDouble c(1.1);
     EXPECT_TRUE(a <= b);
     EXPECT_TRUE(a <= c);
@@ -242,7 +244,7 @@ TEST(TVector, MultiplicationAndDivision_ByScalar_WorksCorrectly) {
     TVector b{3.0, 6.0, 9.0};
     EXPECT_EQ(a * 3.0, b);
     EXPECT_EQ(b / 3.0, a);
-    EXPECT_THROW(b / 1e-16, std::runtime_error);
+    EXPECT_THROW(b / (ACCURACY / 10), std::runtime_error);
 }
 
 TEST(TVector, ScalarProduct_ComputesCorrectly) {
@@ -298,7 +300,7 @@ TEST(TVector, IsParallel_ReturnsCorrectly) {
     EXPECT_FALSE(a.isParallel(c));
     EXPECT_FALSE(c.isParallel(a));
 
-    TVector d{5.0 + 1e-16, 10.0 + 1e-16, 15.0 + 1e-16};
+    TVector d{5.0 + (ACCURACY / 10), 10.0 + (ACCURACY / 10), 15.0 + (ACCURACY / 10)};
     EXPECT_TRUE(d.isParallel(b));
 }
 
@@ -317,7 +319,7 @@ TEST(TVector, IsPerpendicular_ReturnsCorrectly) {
     EXPECT_FALSE(x.isPerpendicular(w));
     EXPECT_FALSE(w.isPerpendicular(x));
 
-    TVector v{0.0 + 1e-16, 1.0 + 1e-16, 0.0 + 1e-16};
+    TVector v{0.0 + (ACCURACY / 10), 1.0 + (ACCURACY / 10), 0.0 + (ACCURACY / 10)};
     EXPECT_TRUE(v.isPerpendicular(x));
 }
 
@@ -363,7 +365,7 @@ TEST(TLine, IsParallel_ReturnsCorrectly) {
     EXPECT_FALSE(lineX.isParallel(lineW));
     EXPECT_FALSE(lineW.isParallel(lineX));
 
-    TVector v{5.0 + 1e-16, 10.0 + 1e-16, 15.0 + 1e-16};
+    TVector v{5.0 + (ACCURACY / 10), 10.0 + (ACCURACY / 10), 15.0 + (ACCURACY / 10)};
     TLine lineV{origin, v};
     EXPECT_TRUE(lineV.isParallel(lineY));
 }
@@ -388,7 +390,7 @@ TEST(TLine, IsPerpendicular_ReturnsCorrectly) {
     EXPECT_FALSE(lineX.isPerpendicular(lineW));
     EXPECT_FALSE(lineW.isPerpendicular(lineX));
 
-    TVector v{0.0 + 1e-16, 1.0 + 1e-16, 0.0 + 1e-16};
+    TVector v{0.0 + (ACCURACY / 10), 1.0 + (ACCURACY / 10), 0.0 + (ACCURACY / 10)};
     TLine lineV{origin, v};
     EXPECT_TRUE(lineV.isPerpendicular(lineX));
 }
@@ -412,15 +414,15 @@ TEST(TLine, ContainsPoint_ReturnsCorrectly) {
 
     EXPECT_TRUE(line.containsPoint(origin));
     EXPECT_TRUE(line.containsPoint(TPoint{1.0, 0.0, 0.0}));
-    EXPECT_FALSE(line.containsPoint(TPoint{1.0 + 1e-14, -1e-14, -1e-14}));
-    EXPECT_TRUE(line.containsPoint(TPoint{1.0 + 1e-16, -1e-16, -1e-16}));
+    EXPECT_FALSE(line.containsPoint(TPoint{1.0 + (ACCURACY * 10), -(ACCURACY * 10), -(ACCURACY * 10)}));
+    EXPECT_TRUE(line.containsPoint(TPoint{1.0 + (ACCURACY / 10), -(ACCURACY / 10), -(ACCURACY / 10)}));
 }
 
 TEST(TLine, EqualityOperators_WorkCorrectly) {
     TPoint origin{0.0, 0.0, 0.0};
     TVector x{1.0, 0.0, 0.0};
-    TVector y{1.0 + 1e-7, -1e-7, -1e-7};
-    TVector z{1.0 + 1e-8, -1e-8, -1e-8};
+    TVector y{1.0 + 0.01, -0.01, -0.01};
+    TVector z{1.0 + (ACCURACY / 10), -(ACCURACY / 10), -(ACCURACY / 10)};
     TLine lineX{origin, x};
     TLine lineY{origin, y};
     TLine lineZ{origin, z};
@@ -611,6 +613,27 @@ TEST(TPlane, PlaneDefinedByPointAndTwoVectors) {
     EXPECT_EQ(plane.distToPoint(offPlane), TSafeDouble{5});
 }
 
+TEST(TPlane, LineLiesInPlane) {
+    TPlane plane(TPoint(0, 0, 0), TVector(0, 0, 1));
+    TLine line(TPoint(1, 2, 0), TVector(1, 0, 0));
+
+    EXPECT_TRUE(plane.containsLine(line));
+}
+
+TEST(TPlane, LineParallelButNotInPlane) {
+    TPlane plane(TPoint(0, 0, 0), TVector(0, 0, 1));
+    TLine line(TPoint(1, 2, 1), TVector(1, 0, 0));
+
+    EXPECT_FALSE(plane.containsLine(line));
+}
+
+TEST(TPlane, LineIntersectsButNotInPlane) {
+    TPlane plane(TPoint(0, 0, 0), TVector(0, 0, 1));
+    TLine line(TPoint(0, 0, 1), TVector(0, 0, -1));
+
+    EXPECT_FALSE(plane.containsLine(line));
+}
+
 TEST(TPlaneEquality, IdenticalPlanesAreEqual) {
     TPoint p{0, 0, 0};
     TVector n{0, 0, 1};
@@ -668,7 +691,7 @@ TEST(TPlaneEquality, NonParallelNormals) {
 
 TEST(TPlaneEquality, NearEqualPlanesWithTolerance) {
     TPoint p1{0, 0, 0};
-    TPoint p2{1e-7, -1e-7, 0};
+    TPoint p2{(ACCURACY * 10), -(ACCURACY * 10), 0};
     TVector n1{0, 0, 1};
     TVector n2{0, 0, 1.0000001};
     TPlane plane1(p1, n1);
@@ -680,13 +703,208 @@ TEST(TPlaneEquality, NearEqualPlanesWithTolerance) {
 
 TEST(TPlaneEquality, NearDifferentPlanesBeyondTolerance) {
     TPoint p1{0, 0, 0};
-    TPoint p2{0, 0, 1e-3};
+    TPoint p2{0, 0, (ACCURACY * 10)};
     TVector n{0, 0, 1};
     TPlane plane1(p1, n);
     TPlane plane2(p2, n);
 
     EXPECT_FALSE(plane1 == plane2);
     EXPECT_TRUE(plane1 != plane2);
+}
+
+TEST(PlaneLineIntersectionTest, IntersectsAtSinglePoint) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TLine line{TPoint{1, 1, 1}, TVector{0, 0, -1}};
+
+    auto result = plane.intersection(line);
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result.value(), (TPoint{1, 1, 0}));
+}
+
+TEST(PlaneLineIntersectionTest, ParallelNoIntersection) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TLine line{TPoint{0, 0, 1}, TVector{1, 0, 0}};
+
+    auto result = plane.intersection(line);
+    EXPECT_FALSE(result.has_value());
+}
+
+TEST(PlaneLineIntersectionTest, LineLiesInPlane) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TLine line{TPoint{1, 1, 0}, TVector{1, 0, 0}};
+
+    EXPECT_THROW(plane.intersection(line), std::runtime_error);
+}
+
+TEST(PlaneLineIntersectionTest, PerpendicularIntersection) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 1, 0}};
+    TLine line{TPoint{0, 1, 0}, TVector{0, -1, 0}};
+
+    auto result = plane.intersection(line);
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+}
+
+TEST(PlaneLineIntersectionTest, IntersectionAtOrigin) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{-1, 1, 1}};
+    TLine line{TPoint{1, -1, 0}, TVector{-1, 1, 0}};
+
+    auto result = plane.intersection(line);
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+}
+
+TEST(PlaneLineIntersectionTest, SkewLineIntersects) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 1, 0}};
+    TLine line{TPoint{1, 1, 1}, TVector{-1, -1, -1}};
+
+    auto result = plane.intersection(line);
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+}
+
+TEST(PlaneLineIntersectionTest, LineParallelAndAbovePlane) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 1, 0}};
+    TLine line{TPoint{0, 1, 0}, TVector{1, 0, 0}};
+
+    auto result = plane.intersection(line);
+    EXPECT_FALSE(result.has_value());
+}
+
+TEST(PlaneLineIntersectionTest, LineParallelAndInPlane) {
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 1, 0}};
+    TLine line{TPoint{1, 0, 1}, TVector{1, 0, 0}};
+
+    EXPECT_THROW(plane.intersection(line), std::runtime_error);
+}
+
+TEST(TPlanePlaneIntersection, IntersectsInLine) {
+    TPlane plane1{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TPlane plane2{TPoint{0, 0, 1}, TVector{0, 1, -1}};
+
+    auto result = plane1.intersection(plane2);
+    ASSERT_TRUE(result.has_value());
+
+    TPoint p = result->Point;
+    EXPECT_EQ(p.Z, TSafeDouble(0.0));
+
+    TSafeDouble val = (p.X * plane2.Normal.X + p.Y * plane2.Normal.Y + p.Z * plane2.Normal.Z);
+    TSafeDouble d =
+        plane2.Normal.X * plane2.Point.X + plane2.Normal.Y * plane2.Point.Y + plane2.Normal.Z * plane2.Point.Z;
+    EXPECT_EQ(val, d);
+}
+
+TEST(TPlanePlaneIntersection, PlanesAreEqual) {
+    TPlane plane1{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TPlane plane2{TPoint{1, 1, 0}, TVector{0, 0, 1}};
+
+    EXPECT_THROW(plane1.intersection(plane2), std::runtime_error);
+}
+
+TEST(TPlanePlaneIntersection, PlanesAreParallelNoIntersection) {
+    TPlane plane1{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    TPlane plane2{TPoint{0, 0, 1}, TVector{0, 0, 1}};
+
+    auto result = plane1.intersection(plane2);
+    EXPECT_FALSE(result.has_value());
+}
+
+TEST(TPolygonTest, CreatesPolygonWithUniquePointsSuccessfully) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0), TPoint(1.0, 0.0, 0.0), TPoint(0.0, 1.0, 0.0),
+        TPoint(1.0, 1.0, 0.0), TPoint(0.0, 0.0, 0.0),
+    };
+
+    EXPECT_NO_THROW({ TPolygon polygon(points); });
+}
+
+TEST(TPolygonTest, ThrowsWhenLessThanThreeUniquePoints) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(0.0, 0.0, 0.0),
+    };
+
+    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+}
+
+TEST(TPolygonTest, ThrowsWhenPointsNotOnSamePlane) {
+    std::vector<TPoint> points = {
+        TPoint(0.0, 0.0, 0.0),
+        TPoint(1.0, 0.0, 0.0),
+        TPoint(0.0, 1.0, 0.0),
+        TPoint(0.0, 0.0, 1.0),
+    };
+
+    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+}
+
+TEST(TPointHashing, InsertAndFindExactSame) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1.234, 5.678, 9.1011);
+
+    pointSet.insert(p1);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    EXPECT_NE(pointSet.find(p1), pointSet.end());
+}
+
+TEST(TPointHashing, InsertAndFindClosePoints) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1, 2, 3);
+    TPoint p2(1 + ACCURACY / 10, 2, 3);
+
+    pointSet.insert(p1);
+
+    EXPECT_TRUE(pointSet.contains(p2));
+}
+
+TEST(TPointHashing, DifferentPointsNotFound) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1.0, 2.0, 3.0);
+    TPoint p2(1.0 + 10 * ACCURACY, 2.0, 3.0);
+
+    pointSet.insert(p1);
+
+    EXPECT_FALSE(pointSet.contains(p2));
+}
+
+TEST(TPointHashing, InsertMultipleDifferentPoints) {
+    std::unordered_set<TPoint> pointSet;
+
+    TPoint p1(0.0, 0.0, 0.0);
+    TPoint p2(0.0 + ACCURACY * 0.5, 0.0, 0.0);
+    TPoint p3(0.0 + 2 * ACCURACY, 0.0, 0.0);
+
+    std::cout << (p1 == p2) << "\t" << (p2 == p3) << "\t" << (p3 == p1) << "\n";
+    std::cout << std::hash<TPoint>{}(p1) << "\t" << std::hash<TPoint>{}(p2) << "\t" << std::hash<TPoint>{}(p3) << "\n";
+
+    pointSet.insert(p1);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    pointSet.insert(p2);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    pointSet.insert(p3);
+    EXPECT_EQ(pointSet.size(), 2u);
+}
+
+TEST(TPointHashing, HashIsConsistentForEquivalentPoints) {
+    TPoint p1(123.456789, 987.654321, 0.123456);
+    TPoint p2 = p1;
+    TPoint p3(123.456789 + ACCURACY * 0.1, 987.654321 - ACCURACY * 0.05, 0.123456 + ACCURACY * 0.09);
+
+    std::hash<TPoint> hasher;
+    EXPECT_EQ(hasher(p1), hasher(p2));
+    EXPECT_EQ(hasher(p1), hasher(p3));
+}
+
+TEST(TPointHashing, HashIsDifferentForDistinctPoints) {
+    TPoint p1(1.0, 2.0, 3.0);
+    TPoint p2(1.0 + 10 * ACCURACY, 2.0, 3.0);
+
+    std::hash<TPoint> hasher;
+    EXPECT_NE(hasher(p1), hasher(p2));
 }
 
 int main(int argc, char **argv) {
