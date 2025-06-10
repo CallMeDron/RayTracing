@@ -2,22 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "MY: main launch",
+            "name": "Run Tests",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "build/Release/main.exe",
-            "cwd": "${workspaceFolder}/src",
+            "program": "${workspaceFolder}/src/build/tests/Release/tests.exe",
+            "cwd": "${workspaceFolder}/src/build",
             "console": "integratedTerminal",
-            "preLaunchTask": "MY: main build"
+            "preLaunchTask": "Build"
         },
         {
-            "name": "MY: tests launch",
+            "name": "Run Main",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "build/Release/tests.exe",
-            "cwd": "${workspaceFolder}/src/tests",
+            "program": "${workspaceFolder}/src/build/Release/main.exe",
+            "cwd": "${workspaceFolder}/src/build",
             "console": "integratedTerminal",
-            "preLaunchTask": "MY: tests build"
+            "preLaunchTask": "Build"
         }
     ]
 }
