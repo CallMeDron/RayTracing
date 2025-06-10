@@ -6,11 +6,22 @@
 
 namespace NRayTracingLib {
 
+using TPoints = std::vector<TPoint>;
+
 class TPolygon {
   public:
-    std::vector<TPoint> Points;
+    TPoints Points;
 
-    explicit TPolygon(std::vector<TPoint> points);
+    explicit TPolygon(const TPoints& points);
+
+    //   private:
+    //     void SortByPolarAngle(const TPlane& plane);
+    //     void RemoveExtraPoints();
+};
+
+class TRectangle : TPolygon {
+  public:
+    explicit TRectangle(const TPoints& points);
 };
 
 } // namespace NRayTracingLib
