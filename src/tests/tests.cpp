@@ -876,9 +876,6 @@ TEST(TPointHashing, InsertMultipleDifferentPoints) {
     TPoint p2(0.0 + ACCURACY * 0.5, 0.0, 0.0);
     TPoint p3(0.0 + 2 * ACCURACY, 0.0, 0.0);
 
-    std::cout << (p1 == p2) << "\t" << (p2 == p3) << "\t" << (p3 == p1) << "\n";
-    std::cout << std::hash<TPoint>{}(p1) << "\t" << std::hash<TPoint>{}(p2) << "\t" << std::hash<TPoint>{}(p3) << "\n";
-
     pointSet.insert(p1);
     EXPECT_EQ(pointSet.size(), 1u);
 

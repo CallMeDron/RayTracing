@@ -1,5 +1,6 @@
 #pragma once
 
+#include "plane.h"
 #include "point.h"
 
 #include <vector>
@@ -14,12 +15,14 @@ class TPolygon {
 
     explicit TPolygon(const TPoints& points);
 
-    //   private:
-    //     void SortByPolarAngle(const TPlane& plane);
-    //     void RemoveExtraPoints();
+  private:
+    bool IsLine() const;
+    void SortByPolarAngle(const TPlane& plane);
+    void RemoveExtraPoints();
+    bool IsConvex() const;
 };
 
-class TRectangle : TPolygon {
+class TRectangle : public TPolygon {
   public:
     explicit TRectangle(const TPoints& points);
 };
