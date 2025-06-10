@@ -4,6 +4,9 @@
 
 namespace NRayTracingLib {
 
+constexpr double ACCURACY = 1e-9;
+constexpr unsigned COUT_PRECISION = 10;
+
 class TSafeDouble {
   public:
     double Value;

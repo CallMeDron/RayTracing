@@ -17,6 +17,7 @@ class TPoint {
 
     TPoint();
     explicit TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z);
+    explicit TPoint(const TVector& vector);
 
     bool operator==(const TPoint& other) const noexcept;
     bool operator!=(const TPoint& other) const noexcept;
