@@ -4,6 +4,9 @@
 
 namespace NRayTracingLib {
 
+// affects the maximum range of coordinate values
+// ACCURACY = 1e-9 allows use abs to 9.22×10^9
+// ACCURACY = 1e-16 allows use abs to 922
 constexpr double ACCURACY = 1e-9;
 constexpr unsigned COUT_PRECISION = 10;
 

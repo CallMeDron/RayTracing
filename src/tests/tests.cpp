@@ -6,6 +6,7 @@
 #include "..\ray_tracing_lib\vector.h"
 
 #include <gtest/gtest.h>
+#include <unordered_set>
 
 using namespace NRayTracingLib;
 
@@ -836,6 +837,74 @@ TEST(TPolygonTest, ThrowsWhenPointsNotOnSamePlane) {
     };
 
     EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+}
+
+TEST(TPointHashing, InsertAndFindExactSame) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1.234, 5.678, 9.1011);
+
+    pointSet.insert(p1);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    EXPECT_NE(pointSet.find(p1), pointSet.end());
+}
+
+TEST(TPointHashing, InsertAndFindClosePoints) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1, 2, 3);
+    TPoint p2(1 + ACCURACY / 10, 2, 3);
+
+    pointSet.insert(p1);
+
+    EXPECT_TRUE(pointSet.contains(p2));
+}
+
+TEST(TPointHashing, DifferentPointsNotFound) {
+    std::unordered_set<TPoint> pointSet;
+    TPoint p1(1.0, 2.0, 3.0);
+    TPoint p2(1.0 + 10 * ACCURACY, 2.0, 3.0);
+
+    pointSet.insert(p1);
+
+    EXPECT_FALSE(pointSet.contains(p2));
+}
+
+TEST(TPointHashing, InsertMultipleDifferentPoints) {
+    std::unordered_set<TPoint> pointSet;
+
+    TPoint p1(0.0, 0.0, 0.0);
+    TPoint p2(0.0 + ACCURACY * 0.5, 0.0, 0.0);
+    TPoint p3(0.0 + 2 * ACCURACY, 0.0, 0.0);
+
+    std::cout << (p1 == p2) << "\t" << (p2 == p3) << "\t" << (p3 == p1) << "\n";
+    std::cout << std::hash<TPoint>{}(p1) << "\t" << std::hash<TPoint>{}(p2) << "\t" << std::hash<TPoint>{}(p3) << "\n";
+
+    pointSet.insert(p1);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    pointSet.insert(p2);
+    EXPECT_EQ(pointSet.size(), 1u);
+
+    pointSet.insert(p3);
+    EXPECT_EQ(pointSet.size(), 2u);
+}
+
+TEST(TPointHashing, HashIsConsistentForEquivalentPoints) {
+    TPoint p1(123.456789, 987.654321, 0.123456);
+    TPoint p2 = p1;
+    TPoint p3(123.456789 + ACCURACY * 0.1, 987.654321 - ACCURACY * 0.05, 0.123456 + ACCURACY * 0.09);
+
+    std::hash<TPoint> hasher;
+    EXPECT_EQ(hasher(p1), hasher(p2));
+    EXPECT_EQ(hasher(p1), hasher(p3));
+}
+
+TEST(TPointHashing, HashIsDifferentForDistinctPoints) {
+    TPoint p1(1.0, 2.0, 3.0);
+    TPoint p2(1.0 + 10 * ACCURACY, 2.0, 3.0);
+
+    std::hash<TPoint> hasher;
+    EXPECT_NE(hasher(p1), hasher(p2));
 }
 
 int main(int argc, char **argv) {

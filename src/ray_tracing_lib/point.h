@@ -40,9 +40,10 @@ template <>
 struct hash<NRayTracingLib::TPoint> {
     size_t operator()(const NRayTracingLib::TPoint& point) const {
         size_t seed = 0;
-        auto hashFunction = std::hash<double>();
+        auto hashFunction = std::hash<int64_t>();
         for (const auto& arg : {point.X, point.Y, point.Z}) {
-            seed ^= hashFunction(arg.Value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            int64_t rounded = static_cast<int64_t>(std::llround(arg.Value / (NRayTracingLib::ACCURACY * 2)));
+            seed ^= hashFunction(rounded) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
         return seed;
     }
