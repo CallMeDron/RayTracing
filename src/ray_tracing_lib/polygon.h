@@ -3,28 +3,31 @@
 #include "plane.h"
 #include "point.h"
 
+#include <unordered_set>
 #include <vector>
 
 namespace NRayTracingLib {
 
-using TPoints = std::vector<TPoint>;
-
 class TPolygon {
   public:
-    TPoints Points;
+    explicit TPolygon(const std::unordered_set<TPoint>& points);
 
-    explicit TPolygon(const TPoints& points);
+    std::vector<TPoint> GetPoints() const;
 
-  private:
-    bool IsLine() const;
+  protected:
+    std::vector<TPoint> Points_;
+
+    void PrimalInit(const std::unordered_set<TPoint>& points);
+    TPlane FindAnyPlane() const;
+    void CheckComplanarity(const TPlane& plane) const;
     void SortByPolarAngle(const TPlane& plane);
     void RemoveExtraPoints();
-    bool IsConvex() const;
+    void ConvexityCheck() const;
 };
 
 class TRectangle : public TPolygon {
   public:
-    explicit TRectangle(const TPoints& points);
+    explicit TRectangle(const std::unordered_set<TPoint>& points);
 };
 
 } // namespace NRayTracingLib

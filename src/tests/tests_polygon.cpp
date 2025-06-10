@@ -1,43 +1,83 @@
 #include "..\ray_tracing_lib\line.h"
-#include "..\ray_tracing_lib\plane.h"
-#include "..\ray_tracing_lib\point.h"
 #include "..\ray_tracing_lib\polygon.h"
-#include "..\ray_tracing_lib\safe_double.h"
-#include "..\ray_tracing_lib\vector.h"
 
+#include <cmath>
 #include <gtest/gtest.h>
 #include <unordered_set>
 
 using namespace NRayTracingLib;
 
-//=== TPolygon tests ===
+const double TINY = ACCURACY / 2.0;
+const double NOT_TINY = ACCURACY * 2.0;
 
-TEST(TPolygon, CreatesPolygonWithUniquePointsSuccessfully) {
-    std::vector<TPoint> points = {
-        TPoint(0.0, 0.0, 0.0), TPoint(1.0, 0.0, 0.0), TPoint(0.0, 1.0, 0.0),
-        TPoint(1.0, 1.0, 0.0), TPoint(0.0, 0.0, 0.0),
-    };
+//=== TPolygon Tests ===
 
-    EXPECT_NO_THROW({ TPolygon polygon(points); });
+TEST(TPolygonTest, InitializationFailsWithLessThanThreePoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
 }
 
-TEST(TPolygon, ThrowsWhenLessThanThreeUniquePoints) {
-    std::vector<TPoint> points = {
-        TPoint(0.0, 0.0, 0.0),
-        TPoint(0.0, 0.0, 0.0),
-        TPoint(0.0, 0.0, 0.0),
-    };
-
-    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+TEST(TPolygonTest, ValidTriangle) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.GetPoints().size(), 3u);
 }
 
-TEST(TPolygon, ThrowsWhenPointsNotOnSamePlane) {
-    std::vector<TPoint> points = {
-        TPoint(0.0, 0.0, 0.0),
-        TPoint(1.0, 0.0, 0.0),
-        TPoint(0.0, 1.0, 0.0),
-        TPoint(0.0, 0.0, 1.0),
-    };
+TEST(TPolygonTest, ValidRectangle) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(1, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.GetPoints().size(), 4u);
+}
 
-    EXPECT_THROW({ TPolygon polygon(points); }, std::runtime_error);
+TEST(TPolygonTest, CheckPlanarityFail) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(0, 0, 1)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygonTest, SortByPolarAngleWorksCorrectly) {
+    std::unordered_set<TPoint> points = {TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(-1, 0, 0), TPoint(0, -1, 0)};
+    TPolygon p(points);
+
+    std::vector<std::vector<TPoint>> expectedVariants;
+    expectedVariants.push_back({TPoint(-1, 0, 0), TPoint(0, 1, 0), TPoint(1, 0, 0), TPoint(0, -1, 0)});
+    expectedVariants.push_back({TPoint(0, -1, 0), TPoint(-1, 0, 0), TPoint(0, 1, 0), TPoint(1, 0, 0)});
+    expectedVariants.push_back({TPoint(1, 0, 0), TPoint(0, -1, 0), TPoint(-1, 0, 0), TPoint(0, 1, 0)});
+    expectedVariants.push_back({TPoint(0, 1, 0), TPoint(1, 0, 0), TPoint(0, -1, 0), TPoint(-1, 0, 0)});
+    expectedVariants.push_back({TPoint(-1, 0, 0), TPoint(0, -1, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)});
+    expectedVariants.push_back({TPoint(0, -1, 0), TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(-1, 0, 0)});
+    expectedVariants.push_back({TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(-1, 0, 0), TPoint(0, -1, 0)});
+    expectedVariants.push_back({TPoint(0, 1, 0), TPoint(-1, 0, 0), TPoint(0, -1, 0), TPoint(1, 0, 0)});
+
+    bool condition = false;
+    for (const auto& expected : expectedVariants) {
+        condition |= (p.GetPoints() == expected);
+    }
+
+    EXPECT_TRUE(condition);
+}
+
+TEST(TPolygonTest, RemoveExtraPointsRemovesCollinearPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 1, 0), TPoint(2, 2, 0), TPoint(0, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.GetPoints().size(), 3u);
+    for (const auto& point : p.GetPoints()) {
+        EXPECT_NE(point, TPoint(1, 1, 0));
+    }
+}
+
+TEST(TPolygonTest, NonConvexPolygonThrows) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(2, 0, 0), TPoint(1, 1, 0), TPoint(2, 2, 0),
+                                         TPoint(0, 2, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygonTest, PointsOnLineThrows) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 1, 0), TPoint(2, 2, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygonTest, FullCreationProcess) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 1, 0), TPoint(0, 1, 0),
+                                         TPoint(0.5, 0.5, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
 }

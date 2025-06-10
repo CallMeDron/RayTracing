@@ -43,6 +43,7 @@ class TVector {
     TVector getNormalized() const;
 
     TSafeDouble cos(const TVector& other) const;
+    TSafeDouble sin(const TVector& other) const;
     bool isParallel(const TVector& other) const;
     bool isPerpendicular(const TVector& other) const;
 

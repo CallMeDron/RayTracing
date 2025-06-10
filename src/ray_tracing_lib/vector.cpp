@@ -58,6 +58,7 @@ TVector TVector::getNormalized() const {
 }
 
 TSafeDouble TVector::cos(const TVector& other) const { return (*this * other) / length() / other.length(); }
+TSafeDouble TVector::sin(const TVector& other) const { return (*this ^ other).length() / length() / other.length(); }
 bool TVector::isParallel(const TVector& other) const { return cos(other).abs() == TSafeDouble{1.0}; }
 bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == TSafeDouble{0.0}; }
 
