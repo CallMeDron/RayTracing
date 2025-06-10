@@ -152,6 +152,15 @@ TPolygon::TPolygon(const std::unordered_set<TPoint>& points) {
 
 std::vector<TPoint> TPolygon::GetPoints() const { return Points_; }
 
+std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
+    os << "polygon:\n";
+    for (const auto& point : polygon.GetPoints()) {
+        os << point;
+    }
+    return os;
+}
+void TPolygon::print() const { std::cout << *this; }
+
 TRectangle::TRectangle(const std::unordered_set<TPoint>& points) : TPolygon(points) {
     if (Points_.size() != 4) {
         throw std::runtime_error("Rectangle must have exactly 4 points");

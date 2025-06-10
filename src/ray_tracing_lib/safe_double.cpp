@@ -66,7 +66,6 @@ std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
     os << std::setprecision(COUT_PRECISION);
     return os << sdouble.Value;
 }
-
 void TSafeDouble::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib

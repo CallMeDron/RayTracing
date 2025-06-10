@@ -3,6 +3,7 @@
 #include "plane.h"
 #include "point.h"
 
+#include <iostream>
 #include <unordered_set>
 #include <vector>
 
@@ -13,6 +14,9 @@ class TPolygon {
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
     std::vector<TPoint> GetPoints() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
+    void print() const;
 
   protected:
     std::vector<TPoint> Points_;

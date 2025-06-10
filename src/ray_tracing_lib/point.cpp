@@ -20,7 +20,6 @@ TPoint TPoint::operator+(const TVector& vector) const noexcept {
 std::ostream& operator<<(std::ostream& os, const TPoint& point) {
     return os << "point = {" << point.X << ", " << point.Y << ", " << point.Z << "}\n";
 }
-
 void TPoint::print() const { std::cout << *this; }
 
 TSafeDouble TPoint::distToPoint(const TPoint& point) const noexcept {
