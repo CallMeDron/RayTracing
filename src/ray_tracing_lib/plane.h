@@ -1,5 +1,6 @@
 #pragma once
 
+#include "object.h"
 #include "point.h"
 #include "vector.h"
 
@@ -10,11 +11,12 @@ namespace NRayTracingLib {
 
 class TLine;
 
-class TPlane {
+class TPlane : TObject {
   public:
     TPoint Point;
     TVector Normal;
 
+    explicit TPlane();
     explicit TPlane(const TPoint& point, const TVector& normal);
     explicit TPlane(const TPoint& point, const TVector& vector1, const TVector& vector2);
     explicit TPlane(const TPoint& point1, const TPoint& point2, const TPoint& point3);
@@ -32,7 +34,7 @@ class TPlane {
     bool isParallel(const TPlane& other) const;
     bool isPerpendicular(const TPlane& other) const;
 
-    std::optional<TPoint> intersection(const TLine& line) const;
+    std::optional<TPoint> intersection(const TLine& line) const override;
     std::optional<TLine> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPlane& plane);

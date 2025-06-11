@@ -5,6 +5,7 @@
 
 namespace NRayTracingLib {
 
+TPlane::TPlane() : Point(), Normal() {}
 TPlane::TPlane(const TPoint& point, const TVector& normal) : Point(point), Normal(normal) {
     if (Normal.isZero()) {
         throw std::runtime_error("Error: creating plane by point and normal vector");

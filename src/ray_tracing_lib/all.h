@@ -3,6 +3,7 @@
 #include "angle.h"
 #include "camera.h"
 #include "line.h"
+#include "object.h"
 #include "plane.h"
 #include "point.h"
 #include "polygon.h"

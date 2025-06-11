@@ -1,5 +1,6 @@
 #pragma once
 
+#include "object.h"
 #include "plane.h"
 #include "point.h"
 
@@ -9,22 +10,28 @@
 
 namespace NRayTracingLib {
 
-class TPolygon {
+class TPolygon : TObject {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
     std::vector<TPoint> getPoints() const;
+    TPlane getPlane() const;
+
+    bool containsPoint(const TPoint& point) const;
+
+    std::optional<TPoint> intersection(const TLine& line) const override;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
     void print() const;
 
   protected:
     std::vector<TPoint> Points_;
+    TPlane Plane_;
 
     void primalInit(const std::unordered_set<TPoint>& points);
-    TPlane findAnyPlane() const;
-    void checkComplanarity(const TPlane& plane) const;
-    void sortByPolarAngle(const TPlane& plane);
+    void findAnyPlane();
+    void checkComplanarity() const;
+    void sortByPolarAngle();
     void removeExtraPoints();
     void convexityCheck() const;
 };
