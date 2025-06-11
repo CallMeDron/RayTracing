@@ -6,11 +6,11 @@
 
 namespace NRayTracingLib {
 
-class TObject {
+class TFigure {
   public:
     virtual std::optional<TPoint> intersection(const TLine& line) const = 0;
 
-    virtual ~TObject() = default;
+    virtual ~TFigure() = default;
 };
 
 } // namespace NRayTracingLib

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "object.h"
+#include "figure.h"
 #include "point.h"
 #include "vector.h"
 
@@ -11,7 +11,7 @@ namespace NRayTracingLib {
 
 class TLine;
 
-class TPlane : TObject {
+class TPlane : TFigure {
   public:
     TPoint Point;
     TVector Normal;

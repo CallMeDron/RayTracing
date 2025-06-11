@@ -1,6 +1,6 @@
 #pragma once
 
-#include "object.h"
+#include "figure.h"
 #include "plane.h"
 #include "point.h"
 
@@ -10,7 +10,7 @@
 
 namespace NRayTracingLib {
 
-class TPolygon : TObject {
+class TPolygon : TFigure {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
