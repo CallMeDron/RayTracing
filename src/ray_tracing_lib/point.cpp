@@ -3,7 +3,7 @@
 
 namespace NRayTracingLib {
 
-TPoint::TPoint() : X(0), Y(0), Z(0) {}
+TPoint::TPoint() : X(0.0), Y(0.0), Z(0.0) {}
 TPoint::TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 TPoint::TPoint(const TVector& vector) : X(vector.X), Y(vector.Y), Z(vector.Z) {}
 
@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const TPoint& point) {
 void TPoint::print() const { std::cout << *this; }
 
 TSafeDouble TPoint::distToPoint(const TPoint& point) const noexcept {
-    return ((X - point.X).pow(2) + (Y - point.Y).pow(2) + (Z - point.Z).pow(2)).pow(0.5);
+    return ((X - point.X).pow(2.0) + (Y - point.Y).pow(2.0) + (Z - point.Z).pow(2.0)).pow(0.5);
 }
 TSafeDouble TPoint::distToLine(const TLine& line) const noexcept { return line.distToPoint(*this); }
 

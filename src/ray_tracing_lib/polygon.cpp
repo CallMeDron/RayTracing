@@ -7,7 +7,7 @@
 
 namespace NRayTracingLib {
 
-void TPolygon::PrimalInit(const std::unordered_set<TPoint>& points) {
+void TPolygon::primalInit(const std::unordered_set<TPoint>& points) {
     if (points.size() < 3) {
         throw std::runtime_error("Error: creating polygon by < 3 unique points");
     }
@@ -23,7 +23,7 @@ void TPolygon::PrimalInit(const std::unordered_set<TPoint>& points) {
     });
 }
 
-TPlane TPolygon::FindAnyPlane() const {
+TPlane TPolygon::findAnyPlane() const {
     const TLine line{Points_[0], Points_[1]};
     TPoint thirdPoint;
     bool thirdPointFound = false;
@@ -41,7 +41,7 @@ TPlane TPolygon::FindAnyPlane() const {
     return TPlane{Points_[0], Points_[1], thirdPoint};
 }
 
-void TPolygon::CheckComplanarity(const TPlane& plane) const {
+void TPolygon::checkComplanarity(const TPlane& plane) const {
     for (size_t i = 3; i < Points_.size(); i++) {
         if (!plane.containsPoint(Points_[i])) {
             throw std::runtime_error("Error: creating polygon by points that do not lie in the same plane");
@@ -49,7 +49,7 @@ void TPolygon::CheckComplanarity(const TPlane& plane) const {
     }
 }
 
-void TPolygon::SortByPolarAngle(const TPlane& plane) {
+void TPolygon::sortByPolarAngle(const TPlane& plane) {
     TVector centerVector;
     for (const auto& point : Points_) {
         centerVector += TVector{point};
@@ -84,7 +84,7 @@ void TPolygon::SortByPolarAngle(const TPlane& plane) {
     }
 }
 
-void TPolygon::RemoveExtraPoints() {
+void TPolygon::removeExtraPoints() {
     std::unordered_set<size_t> extraPoints;
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
@@ -113,7 +113,7 @@ void TPolygon::RemoveExtraPoints() {
     Points_ = cleanPoints;
 }
 
-void TPolygon::ConvexityCheck() const {
+void TPolygon::convexityCheck() const {
     std::unordered_set<bool> anglesSigns;
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
@@ -123,7 +123,7 @@ void TPolygon::ConvexityCheck() const {
         const TVector lhs = Points_[i] - Points_[prevIdx];
         const TVector rhs = Points_[nextIdx] - Points_[i];
 
-        anglesSigns.insert(lhs.sin(rhs) > TSafeDouble{0});
+        anglesSigns.insert(lhs.sin(rhs) > 0.0);
         if (anglesSigns.size() > 1) {
             throw std::runtime_error("Error: creating not convex polygon");
         }
@@ -131,30 +131,30 @@ void TPolygon::ConvexityCheck() const {
 }
 
 TPolygon::TPolygon(const std::unordered_set<TPoint>& points) {
-    PrimalInit(points);
+    primalInit(points);
     // now we have >= 3 unique points, independency from order and Points_[0] is not a center
 
-    const TPlane plane = FindAnyPlane();
+    const TPlane plane = findAnyPlane();
     // now we know what not all points lie on the same line
 
-    CheckComplanarity(plane);
+    checkComplanarity(plane);
     // now we know what all points lie on the same plane
 
-    SortByPolarAngle(plane);
+    sortByPolarAngle(plane);
     // now all points are sorted by polar angle from center
 
-    RemoveExtraPoints();
+    removeExtraPoints();
     // now all points are edges
 
-    ConvexityCheck();
+    convexityCheck();
     // now all points make up a сonvexity polygon
 }
 
-std::vector<TPoint> TPolygon::GetPoints() const { return Points_; }
+std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
 
 std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     os << "polygon:\n";
-    for (const auto& point : polygon.GetPoints()) {
+    for (const auto& point : polygon.getPoints()) {
         os << point;
     }
     return os;

@@ -32,7 +32,7 @@ TPlane::TPlane(const TPoint& point, const TLine& line)
     }
     Normal.normalize();
 }
-TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Normal(TVector{0, 0, 0}) {
+TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Normal(TVector{0.0, 0.0, 0.0}) {
     std::optional<TPoint> intersection = line1.intersection(line2);
 
     if (intersection.has_value()) {
@@ -50,7 +50,7 @@ TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Nor
 }
 
 TSafeDouble TPlane::distToPoint(const TPoint& point) const noexcept { return ((point - Point) * Normal).abs(); }
-bool TPlane::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == TSafeDouble{0}; }
+bool TPlane::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == 0.0; }
 bool TPlane::containsLine(const TLine& line) const {
     return containsPoint(line.Point) && Normal.isPerpendicular(line.Vector);
 }
@@ -98,23 +98,23 @@ std::optional<TLine> TPlane::intersection(const TPlane& plane) const {
 
     TSafeDouble x, y, z;
 
-    if (direction.Z != TSafeDouble{0}) {
+    if (direction.Z != 0.0) {
         TSafeDouble det = A1 * B2 - A2 * B1;
-        if (det == TSafeDouble{0}) {
+        if (det == 0.0) {
             throw std::runtime_error("Degenerate system while computing plane intersection (z = 0)");
         }
         x = (B1 * D2 - B2 * D1) / det;
         y = (A2 * D1 - A1 * D2) / det;
-    } else if (direction.Y != TSafeDouble{0}) {
+    } else if (direction.Y != 0.0) {
         TSafeDouble det = A1 * C2 - A2 * C1;
-        if (det == TSafeDouble{0}) {
+        if (det == 0.0) {
             throw std::runtime_error("Degenerate system while computing plane intersection (y = 0)");
         }
         x = (C1 * D2 - C2 * D1) / det;
         z = (A2 * D1 - A1 * D2) / det;
     } else {
         TSafeDouble det = B1 * C2 - B2 * C1;
-        if (det == TSafeDouble{0}) {
+        if (det == 0.0) {
             throw std::runtime_error("Degenerate system while computing plane intersection (x = 0)");
         }
         y = (C1 * D2 - C2 * D1) / det;

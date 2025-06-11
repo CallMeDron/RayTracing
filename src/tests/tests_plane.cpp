@@ -1,5 +1,4 @@
-#include "..\ray_tracing_lib\line.h"
-#include "..\ray_tracing_lib\plane.h"
+#include "../ray_tracing_lib/all.h"
 
 #include <gtest/gtest.h>
 
@@ -73,7 +72,7 @@ TEST(TPlane, Constructor_TwoLines_Parallel_NoThrows) {
     TLine line1{p1, v};
     TPoint p2{0, 1, 0};
     TLine lineParallel{p2, v};
-    EXPECT_NO_THROW(TPlane(line1, lineParallel), std::runtime_error);
+    EXPECT_NO_THROW(TPlane(line1, lineParallel));
 }
 
 TEST(TPlane, PointLiesOnPlane) {
@@ -81,7 +80,7 @@ TEST(TPlane, PointLiesOnPlane) {
     TVector n{0, 0, 1};
     TPlane plane(p, n);
     TPoint onPlane{1, 2, 0};
-    EXPECT_EQ(plane.distToPoint(onPlane), TSafeDouble{0});
+    EXPECT_EQ(plane.distToPoint(onPlane), 0);
     EXPECT_TRUE(plane.containsPoint(onPlane));
 }
 
@@ -90,7 +89,7 @@ TEST(TPlane, PointAbovePlane) {
     TVector n{0, 0, 1};
     TPlane plane(p, n);
     TPoint above{0, 0, 5};
-    EXPECT_EQ(plane.distToPoint(above), TSafeDouble{5});
+    EXPECT_EQ(plane.distToPoint(above), 5);
     EXPECT_FALSE(plane.containsPoint(above));
 }
 
@@ -99,7 +98,7 @@ TEST(TPlane, PointBelowPlane) {
     TVector n{0, 0, 1};
     TPlane plane(p, n);
     TPoint below{0, 0, -3};
-    EXPECT_EQ(plane.distToPoint(below), TSafeDouble{3});
+    EXPECT_EQ(plane.distToPoint(below), 3);
     EXPECT_FALSE(plane.containsPoint(below));
 }
 
@@ -109,8 +108,8 @@ TEST(TPlane, DistanceIsSymmetric) {
     TPlane plane(p, n);
     TPoint above{0, 0, 2};
     TPoint below{0, 0, -2};
-    EXPECT_EQ(plane.distToPoint(above), TSafeDouble{2});
-    EXPECT_EQ(plane.distToPoint(below), TSafeDouble{2});
+    EXPECT_EQ(plane.distToPoint(above), 2);
+    EXPECT_EQ(plane.distToPoint(below), 2);
 }
 
 TEST(TPlane, PlaneDefinedByThreePoints) {
@@ -122,7 +121,7 @@ TEST(TPlane, PlaneDefinedByThreePoints) {
     TPoint offPlane{0.5, 0.5, 1};
     EXPECT_TRUE(plane.containsPoint(onPlane));
     EXPECT_FALSE(plane.containsPoint(offPlane));
-    EXPECT_EQ(plane.distToPoint(offPlane), TSafeDouble{1});
+    EXPECT_EQ(plane.distToPoint(offPlane), 1);
 }
 
 TEST(TPlane, PlaneDefinedByPointAndTwoVectors) {
@@ -134,7 +133,7 @@ TEST(TPlane, PlaneDefinedByPointAndTwoVectors) {
     TPoint offPlane{2, 3, 5};
     EXPECT_TRUE(plane.containsPoint(onPlane));
     EXPECT_FALSE(plane.containsPoint(offPlane));
-    EXPECT_EQ(plane.distToPoint(offPlane), TSafeDouble{5});
+    EXPECT_EQ(plane.distToPoint(offPlane), 5);
 }
 
 TEST(TPlane, LineLiesInPlane2) {
@@ -268,7 +267,7 @@ TEST(TPlane, TPlanePlaneIntersectsInLine) {
     auto result = plane1.intersection(plane2);
     ASSERT_TRUE(result.has_value());
     TPoint p = result->Point;
-    EXPECT_EQ(p.Z, TSafeDouble{0});
+    EXPECT_EQ(p.Z, 0);
     TSafeDouble val = (p.X * plane2.Normal.X + p.Y * plane2.Normal.Y + p.Z * plane2.Normal.Z);
     TSafeDouble d =
         plane2.Normal.X * plane2.Point.X + plane2.Normal.Y * plane2.Point.Y + plane2.Normal.Z * plane2.Point.Z;

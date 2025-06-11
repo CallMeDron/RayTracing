@@ -1,5 +1,4 @@
-#include "..\ray_tracing_lib\line.h"
-#include "..\ray_tracing_lib\polygon.h"
+#include "../ray_tracing_lib/all.h"
 
 #include <cmath>
 #include <gtest/gtest.h>
@@ -20,13 +19,13 @@ TEST(TPolygonTest, InitializationFailsWithLessThanThreePoints) {
 TEST(TPolygonTest, ValidTriangle) {
     std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)};
     TPolygon p(points);
-    EXPECT_EQ(p.GetPoints().size(), 3u);
+    EXPECT_EQ(p.getPoints().size(), 3u);
 }
 
 TEST(TPolygonTest, ValidRectangle) {
     std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(1, 1, 0)};
     TPolygon p(points);
-    EXPECT_EQ(p.GetPoints().size(), 4u);
+    EXPECT_EQ(p.getPoints().size(), 4u);
 }
 
 TEST(TPolygonTest, CheckPlanarityFail) {
@@ -50,7 +49,7 @@ TEST(TPolygonTest, SortByPolarAngleWorksCorrectly) {
 
     bool condition = false;
     for (const auto& expected : expectedVariants) {
-        condition |= (p.GetPoints() == expected);
+        condition |= (p.getPoints() == expected);
     }
 
     EXPECT_TRUE(condition);
@@ -59,8 +58,8 @@ TEST(TPolygonTest, SortByPolarAngleWorksCorrectly) {
 TEST(TPolygonTest, RemoveExtraPointsRemovesCollinearPoints) {
     std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 1, 0), TPoint(2, 2, 0), TPoint(0, 1, 0)};
     TPolygon p(points);
-    EXPECT_EQ(p.GetPoints().size(), 3u);
-    for (const auto& point : p.GetPoints()) {
+    EXPECT_EQ(p.getPoints().size(), 3u);
+    for (const auto& point : p.getPoints()) {
         EXPECT_NE(point, TPoint(1, 1, 0));
     }
 }
