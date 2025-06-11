@@ -1,10 +1,11 @@
 set(RAY_TRACING_LIB_SOURCES
-    safe_double.cpp
-    point.cpp
-    vector.cpp
+    angle.cpp
     line.cpp
     plane.cpp
+    point.cpp
     polygon.cpp
+    safe_double.cpp
+    vector.cpp
 )
 
 add_library(raytracing_lib STATIC ${RAY_TRACING_LIB_SOURCES})

@@ -13,7 +13,7 @@ class TPolygon {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
-    std::vector<TPoint> GetPoints() const;
+    std::vector<TPoint> getPoints() const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
     void print() const;
@@ -21,12 +21,12 @@ class TPolygon {
   protected:
     std::vector<TPoint> Points_;
 
-    void PrimalInit(const std::unordered_set<TPoint>& points);
-    TPlane FindAnyPlane() const;
-    void CheckComplanarity(const TPlane& plane) const;
-    void SortByPolarAngle(const TPlane& plane);
-    void RemoveExtraPoints();
-    void ConvexityCheck() const;
+    void primalInit(const std::unordered_set<TPoint>& points);
+    TPlane findAnyPlane() const;
+    void checkComplanarity(const TPlane& plane) const;
+    void sortByPolarAngle(const TPlane& plane);
+    void removeExtraPoints();
+    void convexityCheck() const;
 };
 
 class TRectangle : public TPolygon {
