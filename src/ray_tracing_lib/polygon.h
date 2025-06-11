@@ -16,6 +16,8 @@ class TPolygon : TObject {
 
     std::vector<TPoint> getPoints() const;
     TPlane getPlane() const;
+    bool getEdgesIsEqual() const;
+    bool getAnglesIsEqual() const;
 
     bool containsPoint(const TPoint& point) const;
 
@@ -27,18 +29,15 @@ class TPolygon : TObject {
   protected:
     std::vector<TPoint> Points_;
     TPlane Plane_;
+    bool EdgesIsEqual_ = true;
+    bool AnglesIsEqual_ = true;
 
     void primalInit(const std::unordered_set<TPoint>& points);
     void findAnyPlane();
     void checkComplanarity() const;
     void sortByPolarAngle();
     void removeExtraPoints();
-    void convexityCheck() const;
-};
-
-class TRectangle : public TPolygon {
-  public:
-    explicit TRectangle(const std::unordered_set<TPoint>& points);
+    void checkConvexityAndType();
 };
 
 } // namespace NRayTracingLib

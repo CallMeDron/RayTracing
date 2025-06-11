@@ -93,7 +93,11 @@ void ExpectOptionalPointsEqual(const std::optional<TPoint>& expected, const std:
 
 TPolygon CreateSquare() {
     std::unordered_set<TPoint> pts = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 1, 0), TPoint(0, 1, 0)};
-    return TPolygon(pts);
+    TPolygon square = TPolygon(pts);
+    EXPECT_TRUE(square.getPoints().size() == 4u);
+    EXPECT_TRUE(square.getEdgesIsEqual());
+    EXPECT_TRUE(square.getAnglesIsEqual());
+    return square;
 }
 
 TEST(TPolygon, ContainsPointInside) {
@@ -151,4 +155,68 @@ TEST(TPolygon, IntersectionLineTangentToPolygonEdge) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0, 0.5, 0), TPoint(1, 0.5, 0));
     EXPECT_THROW(square.intersection(line), std::runtime_error);
+}
+
+TEST(TPolygon, ValidRectangleXYPlane) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(0, 3, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_TRUE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, ValidRectangle3DOrientation) {
+    std::unordered_set<TPoint> points = {TPoint(1, 1, 1), TPoint(5, 1, 1), TPoint(5, 4, 1), TPoint(1, 4, 1)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_TRUE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, InvalidNotFourPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 1, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 3u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_FALSE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, NotAllAnglesRight) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(2, 2, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_FALSE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, NonPerpendicularAngles) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(0, 3.5, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_FALSE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, ObliqueRectangleIn3D) {
+    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 0, 3), TPoint(4, 3, 3), TPoint(0, 3, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_TRUE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, SlightNumericalDeviation) {
+    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(0, 3 + TINY, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_TRUE(polygon.getAnglesIsEqual());
+}
+
+TEST(TPolygon, ObliqueRectangleWithDiagonalSides) {
+    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 1, 0), TPoint(4, 4, 0), TPoint(0, 3, 0)};
+    TPolygon polygon(points);
+    EXPECT_TRUE(polygon.getPoints().size() == 4u);
+    EXPECT_FALSE(polygon.getEdgesIsEqual());
+    EXPECT_FALSE(polygon.getAnglesIsEqual());
 }

@@ -1,4 +1,5 @@
 #include "polygon.h"
+#include "angle.h"
 #include "line.h"
 
 #include <algorithm>
@@ -113,8 +114,10 @@ void TPolygon::removeExtraPoints() {
     Points_ = cleanPoints;
 }
 
-void TPolygon::convexityCheck() const {
+void TPolygon::checkConvexityAndType() {
     std::unordered_set<bool> anglesSigns;
+    TSafeDouble regularLength = (Points_[1] - Points_[0]).length();
+    TSafeDouble regularCos = TAngle{360.0 / Points_.size()}.cos();
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
         size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
@@ -126,6 +129,14 @@ void TPolygon::convexityCheck() const {
         anglesSigns.insert(lhs.sin(rhs) > 0.0);
         if (anglesSigns.size() > 1) {
             throw std::runtime_error("Error: creating not convex polygon");
+        }
+
+        if (lhs.length() != regularLength) {
+            EdgesIsEqual_ = false;
+        }
+
+        if (lhs.cos(rhs) != regularCos) {
+            AnglesIsEqual_ = false;
         }
     }
 }
@@ -146,12 +157,14 @@ TPolygon::TPolygon(const std::unordered_set<TPoint>& points) {
     removeExtraPoints();
     // now all points are edges
 
-    convexityCheck();
+    checkConvexityAndType();
     // now all points make up a сonvexity polygon
 }
 
 std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
 TPlane TPolygon::getPlane() const { return Plane_; }
+bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
+bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
 
 bool TPolygon::containsPoint(const TPoint& point) const {
     if (!Plane_.containsPoint(point)) {
@@ -191,11 +204,5 @@ std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     return os;
 }
 void TPolygon::print() const { std::cout << *this; }
-
-TRectangle::TRectangle(const std::unordered_set<TPoint>& points) : TPolygon(points) {
-    if (Points_.size() != 4) {
-        throw std::runtime_error("Rectangle must have exactly 4 points");
-    }
-}
 
 } // namespace NRayTracingLib
