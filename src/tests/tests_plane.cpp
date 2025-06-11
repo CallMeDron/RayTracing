@@ -1,4 +1,4 @@
-#include "..\ray_tracing_lib\all.h"
+#include "../ray_tracing_lib/all.h"
 
 #include <gtest/gtest.h>
 
@@ -72,7 +72,7 @@ TEST(TPlane, Constructor_TwoLines_Parallel_NoThrows) {
     TLine line1{p1, v};
     TPoint p2{0, 1, 0};
     TLine lineParallel{p2, v};
-    EXPECT_NO_THROW(TPlane(line1, lineParallel), std::runtime_error);
+    EXPECT_NO_THROW(TPlane(line1, lineParallel));
 }
 
 TEST(TPlane, PointLiesOnPlane) {
