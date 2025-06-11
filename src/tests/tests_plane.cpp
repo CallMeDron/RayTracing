@@ -1,5 +1,4 @@
-#include "..\ray_tracing_lib\line.h"
-#include "..\ray_tracing_lib\plane.h"
+#include "..\ray_tracing_lib\all.h"
 
 #include <gtest/gtest.h>
 

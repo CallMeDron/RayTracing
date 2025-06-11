@@ -1,14 +1,12 @@
-#include "ray_tracing_lib\line.h"
-#include "ray_tracing_lib\plane.h"
-#include "ray_tracing_lib\point.h"
-#include "ray_tracing_lib\polygon.h"
-#include "ray_tracing_lib\safe_double.h"
-#include "ray_tracing_lib\vector.h"
+#include "ray_tracing_lib\all.h"
 
 using namespace NRayTracingLib;
 
-// struct TConfig {
-//     TPoint CameraPosition = TPoint{0, 0, 0};
-// };
+struct TCamera {
+    TPoint Position = TPoint{0, 0, 0};
+    TVector Direction = TVector{1, 0, 0};
+    std::pair<TAngle, TAngle> ViewAngles{120.0, 90.0};
+    std::pair<uint16_t, uint16_t> Resolution{600, 450};
+};
 
 int main() { std::cout << TPolygon({TPoint{0, 1, 0}, TPoint{1, 0, 0}, TPoint{1, 2, 2}, TPoint{2, 1, 2}}); }

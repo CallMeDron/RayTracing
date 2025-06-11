@@ -1,4 +1,4 @@
-#include "..\ray_tracing_lib\vector.h"
+#include "..\ray_tracing_lib\all.h"
 
 #include <gtest/gtest.h>
 

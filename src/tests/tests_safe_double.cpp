@@ -1,4 +1,4 @@
-#include "..\ray_tracing_lib\safe_double.h"
+#include "..\ray_tracing_lib\all.h"
 
 #include <gtest/gtest.h>
 
