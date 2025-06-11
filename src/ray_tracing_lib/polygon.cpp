@@ -123,7 +123,7 @@ void TPolygon::ConvexityCheck() const {
         const TVector lhs = Points_[i] - Points_[prevIdx];
         const TVector rhs = Points_[nextIdx] - Points_[i];
 
-        anglesSigns.insert(lhs.sin(rhs) > TSafeDouble{0});
+        anglesSigns.insert(lhs.sin(rhs) > 0.0);
         if (anglesSigns.size() > 1) {
             throw std::runtime_error("Error: creating not convex polygon");
         }

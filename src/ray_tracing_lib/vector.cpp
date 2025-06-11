@@ -45,10 +45,8 @@ TVector TVector::operator^(const TVector& other) const noexcept {
     return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
 }
 
-TSafeDouble TVector::length() const noexcept { return ((X.pow(2)) + (Y.pow(2)) + (Z.pow(2))).pow(0.5); }
-bool TVector::isZero() const noexcept {
-    return X == TSafeDouble{0.0} && Y == TSafeDouble{0.0} && Z == TSafeDouble{0.0};
-}
+TSafeDouble TVector::length() const noexcept { return ((X.pow(2.0)) + (Y.pow(2.0)) + (Z.pow(2.0))).pow(0.5); }
+bool TVector::isZero() const noexcept { return X == 0.0 && Y == 0.0 && Z == 0.0; }
 
 void TVector::normalize() { *this /= length(); }
 TVector TVector::getNormalized() const {
@@ -59,8 +57,8 @@ TVector TVector::getNormalized() const {
 
 TSafeDouble TVector::cos(const TVector& other) const { return (*this * other) / length() / other.length(); }
 TSafeDouble TVector::sin(const TVector& other) const { return (*this ^ other).length() / length() / other.length(); }
-bool TVector::isParallel(const TVector& other) const { return cos(other).abs() == TSafeDouble{1.0}; }
-bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == TSafeDouble{0.0}; }
+bool TVector::isParallel(const TVector& other) const { return cos(other).abs() == 1.0; }
+bool TVector::isPerpendicular(const TVector& other) const { return cos(other) == 0.0; }
 
 TVector TVector::projectTo(const TVector& other) const {
     if (isZero() || other.isZero()) {

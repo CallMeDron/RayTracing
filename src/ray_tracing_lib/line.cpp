@@ -24,11 +24,11 @@ bool TLine::isPerpendicular(const TLine& other) const { return Vector.isPerpendi
 TSafeDouble TLine::distToPoint(const TPoint& point) const noexcept {
     const TVector vectorToPoint{Point, point};
     if (vectorToPoint.isZero()) {
-        return TSafeDouble{0.0};
+        return 0.0;
     }
     return (vectorToPoint - vectorToPoint.projectTo(Vector)).length();
 }
-bool TLine::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == TSafeDouble{0.0}; }
+bool TLine::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == 0.0; }
 
 bool TLine::operator==(const TLine& other) const {
     return Vector.isParallel(other.Vector) && containsPoint(other.Point);
@@ -49,7 +49,7 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
     TSafeDouble a31 = Vector.Z, a32 = -other.Vector.Z, b3 = other.Point.Z - Point.Z;
 
     TSafeDouble det = det2x2(a11, a12, a21, a22);
-    if (det == TSafeDouble{0.0}) {
+    if (det == 0.0) {
         return std::nullopt;
     }
 
@@ -58,7 +58,7 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
 
     const TPoint result{Point.X + t * a11, Point.Y + t * a21, Point.Z + t * a31};
 
-    if (other.distToPoint(result) > (10 * ACCURACY)) {
+    if (other.distToPoint(result) > (10.0 * ACCURACY)) {
         return std::nullopt;
     }
 

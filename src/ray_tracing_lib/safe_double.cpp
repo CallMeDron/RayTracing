@@ -20,24 +20,24 @@ bool TSafeDouble::operator!=(const TSafeDouble& other) const noexcept { return !
 bool TSafeDouble::operator>=(const TSafeDouble& other) const noexcept { return (*this > other) || (*this == other); }
 bool TSafeDouble::operator<=(const TSafeDouble& other) const noexcept { return (*this < other) || (*this == other); }
 
-TSafeDouble TSafeDouble::operator-() const noexcept { return TSafeDouble{-Value}; }
+TSafeDouble TSafeDouble::operator-() const noexcept { return -Value; }
 
 TSafeDouble TSafeDouble::abs() const noexcept {
-    if (*this > TSafeDouble{0.0}) {
+    if (*this > 0.0) {
         return *this;
-    } else if (*this < TSafeDouble{0.0}) {
+    } else if (*this < 0.0) {
         return -(*this);
     } else {
-        return TSafeDouble{0.0};
+        return 0.0;
     }
 }
 
-TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const noexcept { return TSafeDouble{Value + other.Value}; }
-TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const noexcept { return TSafeDouble{Value - other.Value}; }
-TSafeDouble TSafeDouble::operator*(const TSafeDouble& other) const noexcept { return TSafeDouble{Value * other.Value}; }
+TSafeDouble TSafeDouble::operator+(const TSafeDouble& other) const noexcept { return Value + other.Value; }
+TSafeDouble TSafeDouble::operator-(const TSafeDouble& other) const noexcept { return Value - other.Value; }
+TSafeDouble TSafeDouble::operator*(const TSafeDouble& other) const noexcept { return Value * other.Value; }
 TSafeDouble TSafeDouble::operator/(const TSafeDouble& other) const {
-    if (other != TSafeDouble{0.0}) {
-        return TSafeDouble{Value / other.Value};
+    if (other != 0.0) {
+        return Value / other.Value;
     } else {
         throw std::runtime_error("Error: division by 0");
     }
@@ -60,7 +60,7 @@ TSafeDouble& TSafeDouble::operator/=(const TSafeDouble& other) {
     return *this;
 }
 
-TSafeDouble TSafeDouble::pow(const TSafeDouble& exponent) const { return TSafeDouble{std::pow(Value, exponent.Value)}; }
+TSafeDouble TSafeDouble::pow(const TSafeDouble& exponent) const { return std::pow(Value, exponent.Value); }
 
 std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
     os << std::setprecision(COUT_PRECISION);
