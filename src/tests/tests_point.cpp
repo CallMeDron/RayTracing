@@ -5,8 +5,8 @@
 
 using namespace NRayTracingLib;
 
-const double TINY = ACCURACY / 2.0;
-const double NOT_TINY = ACCURACY * 2.0;
+static constexpr double TINY = ACCURACY / 2.0;
+static constexpr double NOT_TINY = ACCURACY * 2.0;
 
 //=== TPoint Tests ===
 

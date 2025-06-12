@@ -21,21 +21,21 @@ TSafeDouble TLine::cos(const TLine& other) const { return Vector.cos(other.Vecto
 bool TLine::isParallel(const TLine& other) const { return Vector.isParallel(other.Vector); }
 bool TLine::isPerpendicular(const TLine& other) const { return Vector.isPerpendicular(other.Vector); }
 
-TSafeDouble TLine::distToPoint(const TPoint& point) const noexcept {
+TSafeDouble TLine::distToPoint(const TPoint& point) const {
     const TVector vectorToPoint{Point, point};
     if (vectorToPoint.isZero()) {
         return 0.0;
     }
     return (vectorToPoint - vectorToPoint.projectTo(Vector)).length();
 }
-bool TLine::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == 0.0; }
+bool TLine::containsPoint(const TPoint& point) const { return distToPoint(point) == 0.0; }
 
 bool TLine::operator==(const TLine& other) const {
     return Vector.isParallel(other.Vector) && containsPoint(other.Point);
 }
 bool TLine::operator!=(const TLine& other) const { return !(*this == other); }
 
-static TSafeDouble det2x2(TSafeDouble a11, TSafeDouble a12, TSafeDouble a21, TSafeDouble a22) noexcept {
+static TSafeDouble det2x2(TSafeDouble a11, TSafeDouble a12, TSafeDouble a21, TSafeDouble a22) {
     return a11 * a22 - a12 * a21;
 }
 

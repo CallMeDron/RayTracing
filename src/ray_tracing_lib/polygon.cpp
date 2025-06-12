@@ -13,15 +13,7 @@ void TPolygon::primalInit(const std::unordered_set<TPoint>& points) {
         throw std::runtime_error("Error: creating polygon by < 3 unique points");
     }
     Points_ = std::vector<TPoint>(points.begin(), points.end());
-    std::sort(Points_.begin(), Points_.end(), [](const TPoint& lhs, const TPoint& rhs) {
-        if (lhs.X != rhs.X) {
-            return lhs.X < rhs.X;
-        }
-        if (lhs.Y != rhs.Y) {
-            return lhs.Y < rhs.Y;
-        }
-        return lhs.Z < rhs.Z;
-    });
+    std::sort(Points_.begin(), Points_.end());
 }
 
 void TPolygon::findAnyPlane() {

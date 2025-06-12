@@ -7,31 +7,25 @@ TVector::TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z)
 TVector::TVector(const TPoint& point) : X(point.X), Y(point.Y), Z(point.Z) {}
 TVector::TVector(const TPoint& start, const TPoint& end) : TVector{end - start} {}
 
-bool TVector::operator==(const TVector& other) const noexcept {
-    return (X == other.X) && (Y == other.Y) && (Z == other.Z);
-}
-bool TVector::operator!=(const TVector& other) const noexcept { return !(*this == other); }
+bool TVector::operator==(const TVector& other) const { return (X == other.X) && (Y == other.Y) && (Z == other.Z); }
+bool TVector::operator!=(const TVector& other) const { return !(*this == other); }
 
-TVector TVector::operator-() const noexcept { return TVector{-X, -Y, -Z}; }
+TVector TVector::operator-() const { return TVector{-X, -Y, -Z}; }
 
-TVector TVector::operator+(const TVector& other) const noexcept {
-    return TVector{X + other.X, Y + other.Y, Z + other.Z};
-}
-TVector TVector::operator-(const TVector& other) const noexcept {
-    return TVector{X - other.X, Y - other.Y, Z - other.Z};
-}
-TVector TVector::operator*(TSafeDouble n) const noexcept { return TVector{X * n, Y * n, Z * n}; }
+TVector TVector::operator+(const TVector& other) const { return TVector{X + other.X, Y + other.Y, Z + other.Z}; }
+TVector TVector::operator-(const TVector& other) const { return TVector{X - other.X, Y - other.Y, Z - other.Z}; }
+TVector TVector::operator*(TSafeDouble n) const { return TVector{X * n, Y * n, Z * n}; }
 TVector TVector::operator/(TSafeDouble n) const { return TVector{X / n, Y / n, Z / n}; }
 
-TVector& TVector::operator+=(const TVector& other) noexcept {
+TVector& TVector::operator+=(const TVector& other) {
     *this = *this + other;
     return *this;
 }
-TVector& TVector::operator-=(const TVector& other) noexcept {
+TVector& TVector::operator-=(const TVector& other) {
     *this = *this - other;
     return *this;
 }
-TVector& TVector::operator*=(TSafeDouble n) noexcept {
+TVector& TVector::operator*=(TSafeDouble n) {
     *this = *this * n;
     return *this;
 }
@@ -40,13 +34,13 @@ TVector& TVector::operator/=(TSafeDouble n) {
     return *this;
 }
 
-TSafeDouble TVector::operator*(const TVector& other) const noexcept { return X * other.X + Y * other.Y + Z * other.Z; }
-TVector TVector::operator^(const TVector& other) const noexcept {
+TSafeDouble TVector::operator*(const TVector& other) const { return X * other.X + Y * other.Y + Z * other.Z; }
+TVector TVector::operator^(const TVector& other) const {
     return TVector{Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X};
 }
 
-TSafeDouble TVector::length() const noexcept { return ((X.pow(2.0)) + (Y.pow(2.0)) + (Z.pow(2.0))).pow(0.5); }
-bool TVector::isZero() const noexcept { return X == 0.0 && Y == 0.0 && Z == 0.0; }
+TSafeDouble TVector::length() const { return ((X.pow(2.0)) + (Y.pow(2.0)) + (Z.pow(2.0))).pow(0.5); }
+bool TVector::isZero() const { return X == 0.0 && Y == 0.0 && Z == 0.0; }
 
 void TVector::normalize() { *this /= length(); }
 TVector TVector::getNormalized() const {

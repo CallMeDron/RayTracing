@@ -23,8 +23,8 @@ class TPlane : TFigure {
     explicit TPlane(const TPoint& point, const TLine& line);
     explicit TPlane(const TLine& line1, const TLine& line2);
 
-    TSafeDouble distToPoint(const TPoint& point) const noexcept;
-    bool containsPoint(const TPoint& point) const noexcept;
+    TSafeDouble distToPoint(const TPoint& point) const;
+    bool containsPoint(const TPoint& point) const;
     bool containsLine(const TLine& line) const;
 
     bool operator==(const TPlane& other) const;

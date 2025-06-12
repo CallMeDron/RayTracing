@@ -50,8 +50,8 @@ TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Nor
     Normal.normalize();
 }
 
-TSafeDouble TPlane::distToPoint(const TPoint& point) const noexcept { return ((point - Point) * Normal).abs(); }
-bool TPlane::containsPoint(const TPoint& point) const noexcept { return distToPoint(point) == 0.0; }
+TSafeDouble TPlane::distToPoint(const TPoint& point) const { return ((point - Point) * Normal).abs(); }
+bool TPlane::containsPoint(const TPoint& point) const { return distToPoint(point) == 0.0; }
 bool TPlane::containsLine(const TLine& line) const {
     return containsPoint(line.Point) && Normal.isPerpendicular(line.Vector);
 }
