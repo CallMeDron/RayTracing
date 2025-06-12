@@ -20,8 +20,8 @@ class TLine {
     bool isParallel(const TLine& other) const;
     bool isPerpendicular(const TLine& other) const;
 
-    TSafeDouble distToPoint(const TPoint& point) const noexcept;
-    bool containsPoint(const TPoint& point) const noexcept;
+    TSafeDouble distToPoint(const TPoint& point) const;
+    bool containsPoint(const TPoint& point) const;
 
     bool operator==(const TLine& other) const;
     bool operator!=(const TLine& other) const;

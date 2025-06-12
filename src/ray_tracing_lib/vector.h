@@ -18,26 +18,26 @@ class TVector {
     explicit TVector(const TPoint& point);
     explicit TVector(const TPoint& start, const TPoint& end);
 
-    bool operator==(const TVector& other) const noexcept;
-    bool operator!=(const TVector& other) const noexcept;
+    bool operator==(const TVector& other) const;
+    bool operator!=(const TVector& other) const;
 
-    TVector operator-() const noexcept;
+    TVector operator-() const;
 
-    TVector operator+(const TVector& other) const noexcept;
-    TVector operator-(const TVector& other) const noexcept;
-    TVector operator*(TSafeDouble n) const noexcept;
+    TVector operator+(const TVector& other) const;
+    TVector operator-(const TVector& other) const;
+    TVector operator*(TSafeDouble n) const;
     TVector operator/(TSafeDouble n) const;
 
-    TVector& operator+=(const TVector& other) noexcept;
-    TVector& operator-=(const TVector& other) noexcept;
-    TVector& operator*=(TSafeDouble n) noexcept;
+    TVector& operator+=(const TVector& other);
+    TVector& operator-=(const TVector& other);
+    TVector& operator*=(TSafeDouble n);
     TVector& operator/=(TSafeDouble n);
 
-    TSafeDouble operator*(const TVector& other) const noexcept;
-    TVector operator^(const TVector& other) const noexcept;
+    TSafeDouble operator*(const TVector& other) const;
+    TVector operator^(const TVector& other) const;
 
-    TSafeDouble length() const noexcept;
-    bool isZero() const noexcept;
+    TSafeDouble length() const;
+    bool isZero() const;
 
     void normalize();
     TVector getNormalized() const;

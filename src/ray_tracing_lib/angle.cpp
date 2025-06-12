@@ -5,19 +5,23 @@
 
 namespace NRayTracingLib {
 
+static constexpr double FULL_CIRCLE_DEGREES = 360.0;
+static constexpr double FULL_CIRCLE_RADIANS = 2 * std::numbers::pi;
+static constexpr double DEGREES_IN_RADIAN = FULL_CIRCLE_DEGREES / FULL_CIRCLE_RADIANS;
+
 TAngle::TAngle(TSafeDouble angle, bool fromDegrees) {
     if (fromDegrees) {
-        Degrees_ = fmod(angle.Value, 360.0);
+        Degrees_ = fmod(angle.Value, FULL_CIRCLE_DEGREES);
         if (Degrees_ < 0.0) {
-            Degrees_ += 360.0;
+            Degrees_ += FULL_CIRCLE_DEGREES;
         }
-        Radians_ = Degrees_ / (180.0 / std::numbers::pi);
+        Radians_ = Degrees_ / DEGREES_IN_RADIAN;
     } else {
-        Radians_ = fmod(angle.Value, 2 * std::numbers::pi);
+        Radians_ = fmod(angle.Value, FULL_CIRCLE_RADIANS);
         if (Radians_ < 0.0) {
-            Radians_ += 2 * std::numbers::pi;
+            Radians_ += FULL_CIRCLE_RADIANS;
         }
-        Degrees_ = Radians_ * (180.0 / std::numbers::pi);
+        Degrees_ = Radians_ * DEGREES_IN_RADIAN;
     }
 }
 

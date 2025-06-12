@@ -1,12 +1,14 @@
 #include "../ray_tracing_lib/all.h"
 
+#include <algorithm>
 #include <gtest/gtest.h>
+#include <random>
 #include <unordered_set>
 
 using namespace NRayTracingLib;
 
-const double TINY = ACCURACY / 2.0;
-const double NOT_TINY = ACCURACY * 2.0;
+static constexpr double TINY = ACCURACY / 2.0;
+static constexpr double NOT_TINY = ACCURACY * 2.0;
 
 //=== TPoint Tests ===
 
@@ -199,4 +201,71 @@ TEST(TPoint, HashesForDifferentPoints) {
     TPoint p2{1.0 + NOT_TINY, 2.0, 3.0};
     std::hash<TPoint> hasher;
     EXPECT_NE(hasher(p1), hasher(p2));
+}
+
+TEST(TPoint, LessDifferentX) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{1.0, 0.0, 0.0};
+    EXPECT_TRUE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+}
+
+TEST(TPoint, LessDifferentY) {
+    TPoint p1{1.0, 0.0, 0.0};
+    TPoint p2{1.0, 1.0, 0.0};
+    EXPECT_TRUE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+}
+
+TEST(TPoint, LessDifferentZ) {
+    TPoint p1{1.0, 1.0, 0.0};
+    TPoint p2{1.0, 1.0, 1.0};
+    EXPECT_TRUE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+}
+
+TEST(TPoint, EqualPoints) {
+    TPoint p1{2.0, 3.0, 4.0};
+    TPoint p2{2.0, 3.0, 4.0};
+    EXPECT_FALSE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(TPoint, LessWithNegativeValues) {
+    TPoint p1{-1.0, 0.0, 0.0};
+    TPoint p2{0.0, 0.0, 0.0};
+    EXPECT_TRUE(p1 < p2);
+}
+
+TEST(TPoint, SortingOrder) {
+    std::vector<TPoint> points = {TPoint{1.0, 2.0, 3.0}, TPoint{0.0, 5.0, 6.0}, TPoint{1.0, 2.0, 2.0},
+                                  TPoint{0.0, 4.0, 7.0}};
+
+    std::vector<TPoint> expected_sorted = {TPoint{0.0, 4.0, 7.0}, TPoint{0.0, 5.0, 6.0}, TPoint{1.0, 2.0, 2.0},
+                                           TPoint{1.0, 2.0, 3.0}};
+
+    std::sort(points.begin(), points.end());
+    EXPECT_EQ(points, expected_sorted);
+}
+
+TEST(TPoint, NoInfiniteLoopOnSort) {
+    std::vector<TPoint> points;
+    for (int i = 0; i < 1000; ++i) {
+        points.push_back(TPoint{static_cast<double>(i), static_cast<double>(i * 2), static_cast<double>(i * 3)});
+    }
+    std::vector<TPoint> shuffled_points = points;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(shuffled_points.begin(), shuffled_points.end(), gen);
+    std::sort(shuffled_points.begin(), shuffled_points.end());
+    EXPECT_EQ(shuffled_points, points);
+}
+
+TEST(TPoint, ConsistencyWithEquality) {
+    TPoint p1{5.2, -3.1, 0.0};
+    TPoint p2{5.2, -3.1, 0.0};
+    EXPECT_FALSE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+    EXPECT_FALSE(p1 < p1);
 }

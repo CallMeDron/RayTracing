@@ -1,4 +1,5 @@
 #include "polygon.h"
+#include "angle.h"
 #include "line.h"
 
 #include <algorithm>
@@ -12,18 +13,10 @@ void TPolygon::primalInit(const std::unordered_set<TPoint>& points) {
         throw std::runtime_error("Error: creating polygon by < 3 unique points");
     }
     Points_ = std::vector<TPoint>(points.begin(), points.end());
-    std::sort(Points_.begin(), Points_.end(), [](const TPoint& lhs, const TPoint& rhs) {
-        if (lhs.X != rhs.X) {
-            return lhs.X < rhs.X;
-        }
-        if (lhs.Y != rhs.Y) {
-            return lhs.Y < rhs.Y;
-        }
-        return lhs.Z < rhs.Z;
-    });
+    std::sort(Points_.begin(), Points_.end());
 }
 
-TPlane TPolygon::findAnyPlane() const {
+void TPolygon::findAnyPlane() {
     const TLine line{Points_[0], Points_[1]};
     TPoint thirdPoint;
     bool thirdPointFound = false;
@@ -38,18 +31,18 @@ TPlane TPolygon::findAnyPlane() const {
         throw std::runtime_error("Error: creating polygon by points that all lie on the same line");
     }
 
-    return TPlane{Points_[0], Points_[1], thirdPoint};
+    Plane_ = TPlane{Points_[0], Points_[1], thirdPoint};
 }
 
-void TPolygon::checkComplanarity(const TPlane& plane) const {
+void TPolygon::checkComplanarity() const {
     for (size_t i = 3; i < Points_.size(); i++) {
-        if (!plane.containsPoint(Points_[i])) {
+        if (!Plane_.containsPoint(Points_[i])) {
             throw std::runtime_error("Error: creating polygon by points that do not lie in the same plane");
         }
     }
 }
 
-void TPolygon::sortByPolarAngle(const TPlane& plane) {
+void TPolygon::sortByPolarAngle() {
     TVector centerVector;
     for (const auto& point : Points_) {
         centerVector += TVector{point};
@@ -59,7 +52,7 @@ void TPolygon::sortByPolarAngle(const TPlane& plane) {
 
     TVector xAxis = Points_[0] - center; // here used fact what Points_[0] is not a center
     xAxis.normalize();
-    TVector yAxis = xAxis ^ plane.Normal;
+    TVector yAxis = xAxis ^ Plane_.Normal;
     yAxis.normalize();
 
     std::vector<std::pair<TPoint, double>> pointsWithAngles;
@@ -113,8 +106,10 @@ void TPolygon::removeExtraPoints() {
     Points_ = cleanPoints;
 }
 
-void TPolygon::convexityCheck() const {
+void TPolygon::checkConvexityAndType() {
     std::unordered_set<bool> anglesSigns;
+    TSafeDouble regularLength = (Points_[1] - Points_[0]).length();
+    TSafeDouble regularCos = TAngle{360.0 / Points_.size()}.cos();
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
         size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
@@ -127,6 +122,14 @@ void TPolygon::convexityCheck() const {
         if (anglesSigns.size() > 1) {
             throw std::runtime_error("Error: creating not convex polygon");
         }
+
+        if (lhs.length() != regularLength) {
+            EdgesIsEqual_ = false;
+        }
+
+        if (lhs.cos(rhs) != regularCos) {
+            AnglesIsEqual_ = false;
+        }
     }
 }
 
@@ -134,23 +137,66 @@ TPolygon::TPolygon(const std::unordered_set<TPoint>& points) {
     primalInit(points);
     // now we have >= 3 unique points, independency from order and Points_[0] is not a center
 
-    const TPlane plane = findAnyPlane();
+    findAnyPlane();
     // now we know what not all points lie on the same line
 
-    checkComplanarity(plane);
+    checkComplanarity();
     // now we know what all points lie on the same plane
 
-    sortByPolarAngle(plane);
+    sortByPolarAngle();
     // now all points are sorted by polar angle from center
 
     removeExtraPoints();
     // now all points are edges
 
-    convexityCheck();
+    checkConvexityAndType();
     // now all points make up a сonvexity polygon
 }
 
+bool TPolygon::operator==(const TPolygon& other) const {
+    auto sortedCopy = Points_;
+    std::sort(sortedCopy.begin(), sortedCopy.end());
+
+    auto otherSortedCopy = other.Points_;
+    std::sort(otherSortedCopy.begin(), otherSortedCopy.end());
+
+    return sortedCopy == otherSortedCopy;
+}
+
 std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
+TPlane TPolygon::getPlane() const { return Plane_; }
+bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
+bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
+
+bool TPolygon::containsPoint(const TPoint& point) const {
+    if (!Plane_.containsPoint(point)) {
+        return false;
+    }
+
+    std::unordered_set<bool> anglesSigns;
+
+    for (size_t i = 0; i < Points_.size(); i++) {
+        size_t nextIdx = (i + 1) % Points_.size();
+
+        TSafeDouble sign = ((Points_[nextIdx] - Points_[i]) ^ (point - Points_[i])) * Plane_.Normal;
+
+        anglesSigns.insert(sign > 0.0);
+        if (anglesSigns.size() > 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+std::optional<TPoint> TPolygon::intersection(const TLine& line) const {
+    std::optional<TPoint> planeIntersectionPoint = Plane_.intersection(line);
+    if ((planeIntersectionPoint == std::nullopt) || !containsPoint(planeIntersectionPoint.value())) {
+        return std::nullopt;
+    } else {
+        return planeIntersectionPoint.value();
+    }
+}
 
 std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     os << "polygon:\n";
@@ -160,11 +206,5 @@ std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     return os;
 }
 void TPolygon::print() const { std::cout << *this; }
-
-TRectangle::TRectangle(const std::unordered_set<TPoint>& points) : TPolygon(points) {
-    if (Points_.size() != 4) {
-        throw std::runtime_error("Rectangle must have exactly 4 points");
-    }
-}
 
 } // namespace NRayTracingLib

@@ -2,6 +2,7 @@
 
 #include "angle.h"
 #include "camera.h"
+#include "figure.h"
 #include "line.h"
 #include "plane.h"
 #include "point.h"
