@@ -51,17 +51,7 @@ using namespace NRayTracingLib;
 
 template <>
 struct hash<TPolygon> {
-    size_t operator()(const TPolygon& polygon) const {
-        vector<TPoint> pointsStableSorted = polygon.getPoints();
-        sort(pointsStableSorted.begin(), pointsStableSorted.end());
-
-        size_t seed = 0;
-        auto hashFunction = hash<TPoint>();
-        for (const auto& point : pointsStableSorted) {
-            seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
-    }
+    size_t operator()(const TPolygon& polygon) const;
 };
 
 } // namespace std

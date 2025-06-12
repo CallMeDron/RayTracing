@@ -208,3 +208,21 @@ std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
 void TPolygon::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib
+
+namespace std {
+
+using namespace NRayTracingLib;
+
+size_t hash<TPolygon>::operator()(const TPolygon& polygon) const {
+    vector<TPoint> pointsStableSorted = polygon.getPoints();
+    sort(pointsStableSorted.begin(), pointsStableSorted.end());
+
+    size_t seed = 0;
+    auto hashFunction = hash<TPoint>();
+    for (const auto& point : pointsStableSorted) {
+        seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    return seed;
+}
+
+} // namespace std
