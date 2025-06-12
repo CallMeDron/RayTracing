@@ -153,6 +153,16 @@ TPolygon::TPolygon(const std::unordered_set<TPoint>& points) {
     // now all points make up a сonvexity polygon
 }
 
+bool TPolygon::operator==(const TPolygon& other) const {
+    auto sortedCopy = Points_;
+    std::sort(sortedCopy.begin(), sortedCopy.end());
+
+    auto otherSortedCopy = other.Points_;
+    std::sort(otherSortedCopy.begin(), otherSortedCopy.end());
+
+    return sortedCopy == otherSortedCopy;
+}
+
 std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
 TPlane TPolygon::getPlane() const { return Plane_; }
 bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }

@@ -220,3 +220,123 @@ TEST(TPolygon, ObliqueRectangleWithDiagonalSides) {
     EXPECT_FALSE(polygon.getEdgesIsEqual());
     EXPECT_FALSE(polygon.getAnglesIsEqual());
 }
+
+TEST(TPolygon, EqualSameOrder) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    TPolygon poly2{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    EXPECT_TRUE(poly1 == poly2);
+}
+
+TEST(TPolygon, EqualDifferentOrder) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    TPolygon poly2{{TPoint{0, 0, 1}, TPoint{0, 0, 0}, TPoint{0, 1, 0}}};
+    EXPECT_TRUE(poly1 == poly2);
+}
+
+TEST(TPolygon, DifferentNumberOfPoints) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{1, 1, 0}}};
+    TPolygon poly2{{TPoint{-1, 0, 0}, TPoint{1, 0, 0}, TPoint{0, 1, 0}, TPoint{0, -1, 0}}};
+    EXPECT_FALSE(poly1 == poly2);
+}
+
+TEST(TPolygon, DifferentPoints) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    TPolygon poly2{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{3, 3, 3}}};
+    EXPECT_FALSE(poly1 == poly2);
+}
+
+TEST(TPolygon, SlightDifference) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    TPolygon poly2{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{2, 2, 2.0001}}};
+    EXPECT_FALSE(poly1 == poly2);
+}
+
+TEST(TPolygon, SamePointsDifferentOrderWithDuplicates) {
+    TPolygon poly1{{TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    TPolygon poly2{{TPoint{0, 1, 0}, TPoint{0, 0, 0}, TPoint{0, 1, 0}, TPoint{0, 0, 1}}};
+    EXPECT_TRUE(poly1 == poly2);
+}
+
+TEST(TPolygon, EqualPolygonsHaveSameHash) {
+    std::unordered_set<TPoint> points1 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{1.0, 1.0, 0.0},
+                                          TPoint{0.0, 1.0, 0.0}};
+
+    std::unordered_set<TPoint> points2 = {TPoint{1.0, 1.0, 0.0}, TPoint{0.0, 1.0, 0.0}, TPoint{0.0, 0.0, 0.0},
+                                          TPoint{1.0, 0.0, 0.0}};
+
+    TPolygon polygon1 = TPolygon(points1);
+    TPolygon polygon2 = TPolygon(points2);
+
+    EXPECT_EQ(polygon1, polygon2);
+
+    std::hash<TPolygon> hash_fn;
+    size_t hash1 = hash_fn(polygon1);
+    size_t hash2 = hash_fn(polygon2);
+
+    EXPECT_EQ(hash1, hash2);
+}
+
+TEST(TPolygon, DifferentPolygonsHaveDifferentHash) {
+    std::unordered_set<TPoint> points1 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{1.0, 1.0, 0.0},
+                                          TPoint{0.0, 1.0, 0.0}};
+
+    std::unordered_set<TPoint> points2 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{2.0, 2.0, 0.0},
+                                          TPoint{0.0, 1.0, 0.0}};
+
+    TPolygon polygon1 = TPolygon(points1);
+    TPolygon polygon2 = TPolygon(points2);
+
+    EXPECT_NE(polygon1, polygon2);
+
+    std::hash<TPolygon> hash_fn;
+    size_t hash1 = hash_fn(polygon1);
+    size_t hash2 = hash_fn(polygon2);
+
+    EXPECT_NE(hash1, hash2);
+}
+
+TEST(TPolygon, HashConsistency) {
+    std::unordered_set<TPoint> points = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 2.0, 3.0}, TPoint{4.0, 5.0, 6.0}};
+
+    TPolygon polygon = TPolygon(points);
+    std::hash<TPolygon> hash_fn;
+
+    size_t h1 = hash_fn(polygon);
+    size_t h2 = hash_fn(polygon);
+
+    EXPECT_EQ(h1, h2);
+}
+
+TEST(TPolygon, HashInUnorderedSetWorksCorrectly) {
+    std::unordered_set<TPolygon> polygonSet;
+
+    std::unordered_set<TPoint> points1 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{1.0, 1.0, 0.0}};
+
+    std::unordered_set<TPoint> points2 = {TPoint{1.0, 1.0, 0.0}, TPoint{0.0, 1.0, 0.0}, TPoint{0.0, 0.0, 0.0}};
+
+    TPolygon poly1 = TPolygon(points1);
+    TPolygon poly2 = TPolygon(points2);
+
+    auto result1 = polygonSet.insert(poly1);
+    EXPECT_TRUE(result1.second);
+
+    EXPECT_FALSE(polygonSet.contains(poly2));
+
+    std::unordered_set<TPoint> points3 = {TPoint{2.0, 0.0, 0.0}, TPoint{0.0, 3.0, 0.0}, TPoint{0.0, 0.0, 1.0}};
+    TPolygon poly3 = TPolygon(points3);
+    auto result2 = polygonSet.insert(poly3);
+    EXPECT_TRUE(result2.second);
+    EXPECT_NE(polygonSet.find(poly3), polygonSet.end());
+}
+
+TEST(TPolygon, PolygonsWithDifferentPointsAreNotEqual) {
+    std::unordered_set<TPoint> points1 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{1.0, 1.0, 0.0}};
+
+    std::unordered_set<TPoint> points2 = {TPoint{0.0, 0.0, 0.0}, TPoint{1.0, 0.0, 0.0}, TPoint{2.0, 1.0, 0.0}};
+
+    TPolygon poly1 = TPolygon(points1);
+    TPolygon poly2 = TPolygon(points2);
+
+    EXPECT_NE(poly1, poly2);
+    EXPECT_NE(std::hash<TPolygon>()(poly1), std::hash<TPolygon>()(poly2));
+}

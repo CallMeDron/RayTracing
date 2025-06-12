@@ -4,6 +4,7 @@
 #include "plane.h"
 #include "point.h"
 
+#include <algorithm>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
@@ -13,6 +14,8 @@ namespace NRayTracingLib {
 class TPolygon : TFigure {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
+
+    bool operator==(const TPolygon& other) const;
 
     std::vector<TPoint> getPoints() const;
     TPlane getPlane() const;
@@ -41,3 +44,24 @@ class TPolygon : TFigure {
 };
 
 } // namespace NRayTracingLib
+
+namespace std {
+
+using namespace NRayTracingLib;
+
+template <>
+struct hash<TPolygon> {
+    size_t operator()(const TPolygon& polygon) const {
+        vector<TPoint> pointsStableSorted = polygon.getPoints();
+        sort(pointsStableSorted.begin(), pointsStableSorted.end());
+
+        size_t seed = 0;
+        auto hashFunction = hash<TPoint>();
+        for (const auto& point : pointsStableSorted) {
+            seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        }
+        return seed;
+    }
+};
+
+} // namespace std
