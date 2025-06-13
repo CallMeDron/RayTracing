@@ -163,8 +163,8 @@ bool TPolygon::operator==(const TPolygon& other) const {
     return sortedCopy == otherSortedCopy;
 }
 
-std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
-TPlane TPolygon::getPlane() const { return Plane_; }
+const std::vector<TPoint>& TPolygon::getPoints() const { return Points_; }
+const TPlane& TPolygon::getPlane() const { return Plane_; }
 bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
 bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
 

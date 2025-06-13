@@ -1,7 +1,6 @@
 #pragma once
 
 #include "point.h"
-#include "safe_double.h"
 
 #include <iostream>
 

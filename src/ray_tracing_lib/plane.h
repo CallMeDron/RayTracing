@@ -11,7 +11,7 @@ namespace NRayTracingLib {
 
 class TLine;
 
-class TPlane : TFigure {
+class TPlane : public TFigure {
   public:
     TPoint Point;
     TVector Normal;

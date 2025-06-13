@@ -3,12 +3,13 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(googletest)
 
 set(TEST_SOURCES
-    tests_safe_double.cpp
-    tests_point.cpp
-    tests_vector.cpp
-    tests_line.cpp
-    tests_plane.cpp
-    tests_polygon.cpp
+    edge.cpp 
+    line.cpp
+    plane.cpp
+    point.cpp
+    polygon.cpp
+    safe_double.cpp
+    vector.cpp
 )
 
 add_executable(tests ${TEST_SOURCES})

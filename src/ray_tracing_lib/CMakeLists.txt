@@ -1,6 +1,7 @@
 set(RAY_TRACING_LIB_SOURCES
     angle.cpp
     camera.cpp
+    edge.cpp
     line.cpp
     plane.cpp
     point.cpp

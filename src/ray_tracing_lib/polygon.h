@@ -11,14 +11,14 @@
 
 namespace NRayTracingLib {
 
-class TPolygon : TFigure {
+class TPolygon : public TFigure {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
     bool operator==(const TPolygon& other) const;
 
-    std::vector<TPoint> getPoints() const;
-    TPlane getPlane() const;
+    const std::vector<TPoint>& getPoints() const;
+    const TPlane& getPlane() const;
     bool getEdgesIsEqual() const;
     bool getAnglesIsEqual() const;
 
