@@ -63,17 +63,7 @@ TSafeDouble TPlane::cos(const TPlane& other) const { return Normal.cos(other.Nor
 bool TPlane::isParallel(const TPlane& other) const { return Normal.isParallel(other.Normal); }
 bool TPlane::isPerpendicular(const TPlane& other) const { return Normal.isPerpendicular(other.Normal); }
 
-std::optional<TPoint> TPlane::intersection(const TLine& line) const {
-    if (Normal.isPerpendicular(line.Vector)) {
-        if (containsLine(line)) {
-            throw std::runtime_error("Error: itersection of plane and line in it");
-        } else {
-            return std::nullopt;
-        }
-    }
-
-    return line.Point + line.Vector * (((Point - line.Point) * Normal) / (line.Vector * Normal));
-}
+std::optional<TPoint> TPlane::intersection(const TLine& line) const { return line.intersection(*this); }
 std::optional<TLine> TPlane::intersection(const TPlane& plane) const {
     if (Normal.isParallel(plane.Normal)) {
         if (*this == plane) {

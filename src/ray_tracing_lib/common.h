@@ -13,5 +13,5 @@
 
 template <typename T>
 void print(const T& x) {
-    std::cout << x;
+    std::cout << x << std::endl;
 }
