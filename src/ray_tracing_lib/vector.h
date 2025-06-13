@@ -48,7 +48,6 @@ class TVector {
     TVector projectTo(const TVector& other) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TVector& vector);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

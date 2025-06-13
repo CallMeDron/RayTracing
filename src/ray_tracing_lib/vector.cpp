@@ -64,6 +64,5 @@ TVector TVector::projectTo(const TVector& other) const {
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
     return os << "vector = {" << vector.X << ", " << vector.Y << ", " << vector.Z << "}\n";
 }
-void TVector::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib

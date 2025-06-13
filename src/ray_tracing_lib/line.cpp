@@ -62,8 +62,8 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
 
     return result;
 }
+std::optional<TPoint> TLine::intersection(const TPlane& plane) const { return plane.intersection(*this); }
 
 std::ostream& operator<<(std::ostream& os, const TLine& line) { return os << "line:\n" << line.Point << line.Vector; }
-void TLine::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib

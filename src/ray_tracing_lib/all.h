@@ -9,5 +9,6 @@
 #include "point.h"
 #include "polygon.h"
 #include "polyhedron.h"
+#include "ray.h"
 #include "safe_double.h"
 #include "vector.h"

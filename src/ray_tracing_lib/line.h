@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "plane.h"
 #include "point.h"
 #include "vector.h"
 
@@ -25,9 +26,9 @@ class TLine {
     bool operator!=(const TLine& other) const;
 
     std::optional<TPoint> intersection(const TLine& other) const;
+    std::optional<TPoint> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TLine& line);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

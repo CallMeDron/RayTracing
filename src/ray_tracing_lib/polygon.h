@@ -23,7 +23,6 @@ class TPolygon : public TFigure {
     std::optional<TPoint> intersection(const TLine& line) const override;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
-    void print() const;
 
   protected:
     std::vector<TPoint> Points_;

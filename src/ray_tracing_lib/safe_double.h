@@ -45,7 +45,6 @@ class TSafeDouble {
     TSafeDouble pow(const TSafeDouble& exponent) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

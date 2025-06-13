@@ -26,7 +26,6 @@ bool TPoint::operator<(const TPoint& other) const {
 std::ostream& operator<<(std::ostream& os, const TPoint& point) {
     return os << "point = {" << point.X << ", " << point.Y << ", " << point.Z << "}\n";
 }
-void TPoint::print() const { std::cout << *this; }
 
 TSafeDouble TPoint::distToPoint(const TPoint& point) const {
     return ((X - point.X).pow(2.0) + (Y - point.Y).pow(2.0) + (Z - point.Z).pow(2.0)).pow(0.5);

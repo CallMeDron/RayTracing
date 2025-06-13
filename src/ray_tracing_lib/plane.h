@@ -36,7 +36,6 @@ class TPlane : public TFigure {
     std::optional<TLine> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPlane& plane);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

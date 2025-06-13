@@ -26,7 +26,6 @@ class TPoint {
     bool operator<(const TPoint& other) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPoint& point);
-    void print() const;
 
     TSafeDouble distToPoint(const TPoint& point) const;
     TSafeDouble distToLine(const TLine& line) const;

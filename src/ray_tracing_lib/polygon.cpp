@@ -201,7 +201,6 @@ std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     }
     return os;
 }
-void TPolygon::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib
 
