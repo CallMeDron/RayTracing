@@ -1,9 +1,8 @@
 #pragma once
 
+#include "common.h"
 #include "safe_double.h"
 #include "vector.h"
-
-#include <iostream>
 
 namespace NRayTracingLib {
 

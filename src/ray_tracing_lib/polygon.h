@@ -1,13 +1,9 @@
 #pragma once
 
+#include "common.h"
 #include "figure.h"
 #include "plane.h"
 #include "point.h"
-
-#include <algorithm>
-#include <iostream>
-#include <unordered_set>
-#include <vector>
 
 namespace NRayTracingLib {
 

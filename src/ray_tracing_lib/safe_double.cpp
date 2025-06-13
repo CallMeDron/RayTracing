@@ -1,9 +1,5 @@
 #include "safe_double.h"
 
-#include <cmath>
-#include <iomanip>
-#include <stdexcept>
-
 namespace NRayTracingLib {
 
 TSafeDouble::TSafeDouble() : Value(0.0) {}

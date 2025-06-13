@@ -1,7 +1,5 @@
 #include "line.h"
 
-#include <optional>
-
 namespace NRayTracingLib {
 
 TLine::TLine(const TPoint& point1, const TPoint& point2) : Point(point1), Vector(point2 - point1) {

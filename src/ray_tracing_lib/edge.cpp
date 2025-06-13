@@ -1,7 +1,5 @@
 #include "edge.h"
 
-#include <algorithm>
-
 namespace NRayTracingLib {
 
 TEdge::TEdge(const TPoint& point1, const TPoint& point2) : Points_{{point1, point2}} {

@@ -1,8 +1,6 @@
 #include "plane.h"
 #include "line.h"
 
-#include <optional>
-
 namespace NRayTracingLib {
 
 TPlane::TPlane() : Point(), Normal() {}

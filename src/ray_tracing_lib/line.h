@@ -1,10 +1,8 @@
 #pragma once
 
+#include "common.h"
 #include "point.h"
 #include "vector.h"
-
-#include <iostream>
-#include <optional>
 
 namespace NRayTracingLib {
 

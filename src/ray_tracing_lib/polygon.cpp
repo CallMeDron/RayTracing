@@ -2,10 +2,6 @@
 #include "angle.h"
 #include "line.h"
 
-#include <algorithm>
-#include <cmath>
-#include <unordered_set>
-
 namespace NRayTracingLib {
 
 void TPolygon::primalInit(const std::unordered_set<TPoint>& points) {
