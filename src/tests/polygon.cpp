@@ -338,3 +338,112 @@ TEST(TPolygon, PolygonsWithDifferentPointsAreNotEqual) {
     EXPECT_NE(poly1, poly2);
     EXPECT_NE(std::hash<TPolygon>()(poly1), std::hash<TPolygon>()(poly2));
 }
+
+TEST(TPolygon, DegeneratePolygonWithMultipleCollinearPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(2, 0, 0), TPoint(1, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.getPoints().size(), 3u);
+    for (const auto& pt : p.getPoints()) {
+        EXPECT_NE(pt, TPoint(1, 0, 0));
+    }
+}
+
+TEST(TPolygon, PolygonWithNearlyCollinearPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(2, 0.000001, 0), TPoint(0, 1, 0)};
+    TPolygon p(points);
+    EXPECT_GE(p.getPoints().size(), 3u);
+}
+
+TEST(TPolygon, PolygonWithRepeatedPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.getPoints().size(), 3u);
+}
+
+TEST(TPolygon, PolygonWithNonConvexShapeThrows) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(2, 0, 0), TPoint(1, 2, 0), TPoint(0, 2, 0)};
+    EXPECT_NO_THROW(TPolygon p(points));
+}
+
+TEST(TPolygon, PolygonWithSamePointsDifferentOrder) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)};
+    TPolygon p1(points);
+    TPolygon p2({TPoint(1, 0, 0), TPoint(0, 1, 0), TPoint(0, 0, 0)});
+    EXPECT_EQ(p1, p2);
+}
+
+TEST(TPolygon, PolygonWithDiagonalEdges) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(2, 1, 0), TPoint(1, 2, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.getPoints().size(), 3u);
+}
+
+TEST(TPolygon, PolygonIn3DObliquePlane) {
+    std::unordered_set<TPoint> points = {TPoint(1, 1, 1), TPoint(4, 2, 2), TPoint(2, 4, 1), TPoint(0, 0, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygon, PolygonWithClosePointsWithinTolerance) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1 + TINY, TINY, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygon, PolygonWithMultipleIdenticalPoints) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 0, 0), TPoint(0, 1, 0)};
+    TPolygon p(points);
+    EXPECT_EQ(p.getPoints().size(), 3u);
+}
+
+TEST(TPolygon, PolygonWithEdgePointOnVertex) {
+    std::unordered_set<TPoint> points = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(0.5, 0, 0)};
+    EXPECT_THROW(TPolygon p(points), std::runtime_error);
+}
+
+TEST(TPolygon, IntersectionAtVertex) {
+    TPolygon square = CreateSquare();
+    TLine line(TPoint(0, 0, -1), TPoint(0, 0, 1));
+    auto result = square.intersection(line);
+    EXPECT_EQ(result, TPoint(0, 0, 0));
+}
+
+TEST(TPolygon, IntersectionAtEdge) {
+    TPolygon square = CreateSquare();
+    TLine line(TPoint(0, 0.5, -1), TPoint(0, 0.5, 1));
+    auto result = square.intersection(line);
+    EXPECT_EQ(result, TPoint(0, 0.5, 0));
+}
+
+TEST(TPolygon, IntersectionNoIntersection) {
+    TPolygon square = CreateSquare();
+    TLine line(TPoint(2, 2, -1), TPoint(2, 2, 1));
+    auto result = square.intersection(line);
+    EXPECT_EQ(result, std::nullopt);
+}
+
+TEST(TPolygon, IntersectionLineParallelToPlane) {
+    TPolygon square = CreateSquare();
+    TLine line(TPoint(0, 0, 1), TPoint(1, 0, 1));
+    auto result = square.intersection(line);
+    EXPECT_EQ(result, std::nullopt);
+}
+
+TEST(TPolygon, HashAndEqualityWithMultiplePointsAndOrder) {
+    std::unordered_set<TPoint> pts = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 1, 0), TPoint(0, 1, 0)};
+    TPolygon p1(pts);
+    TPolygon p2({TPoint(1, 1, 0), TPoint(0, 1, 0), TPoint(0, 0, 0), TPoint(1, 0, 0)});
+    EXPECT_EQ(p1, p2);
+    size_t hash1 = std::hash<TPolygon>()(p1);
+    size_t hash2 = std::hash<TPolygon>()(p2);
+    EXPECT_EQ(hash1, hash2);
+}
+
+TEST(TPolygon, HashDifferentPolygons) {
+    std::unordered_set<TPoint> pts1 = {TPoint(0, 0, 0), TPoint(1, 0, 0), TPoint(1, 1, 0)};
+    std::unordered_set<TPoint> pts2 = {TPoint(0, 0, 0), TPoint(2, 0, 0), TPoint(1, 1, 0)};
+    TPolygon p1(pts1);
+    TPolygon p2(pts2);
+    EXPECT_NE(p1, p2);
+    size_t hash1 = std::hash<TPolygon>()(p1);
+    size_t hash2 = std::hash<TPolygon>()(p2);
+    EXPECT_NE(hash1, hash2);
+}
