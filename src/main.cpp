@@ -18,6 +18,9 @@ int main() {
         const TPolyhedron dodecahedron = CreateRegularDodecahedron(TPoint(), 10.0);
         print(dodecahedron);
 
+        const TPolyhedron icosahedron = CreateRegularIcosahedron(TPoint(), 10.0);
+        print(icosahedron);
+
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }

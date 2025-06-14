@@ -203,6 +203,59 @@ TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLeng
 
     return TPolyhedron{faces};
 }
-// TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {}
+TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {
+    const double phi = (1.0 + std::sqrt(5.0)) / 2.0;
+    const double scale = edgeLength.Value / 2.0;
+
+    const TPoint p0 = center + TVector{0.0, 1.0, phi} * scale;
+    const TPoint p1 = center + TVector{0.0, 1.0, -phi} * scale;
+    const TPoint p2 = center + TVector{0.0, -1.0, phi} * scale;
+    const TPoint p3 = center + TVector{0.0, -1.0, -phi} * scale;
+    const TPoint p4 = center + TVector{1.0, phi, 0.0} * scale;
+    const TPoint p5 = center + TVector{-1.0, phi, 0.0} * scale;
+    const TPoint p6 = center + TVector{1.0, -phi, 0.0} * scale;
+    const TPoint p7 = center + TVector{-1.0, -phi, 0.0} * scale;
+    const TPoint p8 = center + TVector{phi, 0.0, 1.0} * scale;
+    const TPoint p9 = center + TVector{phi, 0.0, -1.0} * scale;
+    const TPoint p10 = center + TVector{-phi, 0.0, 1.0} * scale;
+    const TPoint p11 = center + TVector{-phi, 0.0, -1.0} * scale;
+
+    const TPolygon f0{{p0, p2, p8}};
+    const TPolygon f1{{p7, p10, p11}};
+    const TPolygon f2{{p0, p2, p10}};
+    const TPolygon f3{{p0, p4, p5}};
+    const TPolygon f4{{p0, p4, p8}};
+    const TPolygon f5{{p0, p5, p10}};
+    const TPolygon f6{{p1, p3, p9}};
+    const TPolygon f7{{p1, p3, p11}};
+    const TPolygon f8{{p1, p4, p5}};
+    const TPolygon f9{{p1, p4, p9}};
+    const TPolygon f10{{p1, p5, p11}};
+    const TPolygon f11{{p2, p6, p7}};
+    const TPolygon f12{{p2, p6, p8}};
+    const TPolygon f13{{p2, p7, p10}};
+    const TPolygon f14{{p3, p6, p7}};
+    const TPolygon f15{{p3, p6, p9}};
+    const TPolygon f16{{p3, p7, p11}};
+    const TPolygon f17{{p4, p8, p9}};
+    const TPolygon f18{{p5, p10, p11}};
+    const TPolygon f19{{p6, p8, p9}};
+
+    for (const auto& face :
+         {f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19}) {
+        if ((face.getPoints().size() != 3) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
+            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
+            throw std::runtime_error("Error: creating regular icosahedron with broken face");
+        }
+    }
+
+    const std::unordered_set<TPolygon> faces{f0,  f1,  f2,  f3,  f4,  f5,  f6,  f7,  f8,  f9,
+                                             f10, f11, f12, f13, f14, f15, f16, f17, f18, f19};
+    if (faces.size() != 20) {
+        throw std::runtime_error("Error: creating regular icosahedron with != 20 faces");
+    }
+
+    return TPolyhedron{faces};
+}
 
 } // namespace NRayTracingLib

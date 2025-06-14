@@ -26,6 +26,6 @@ TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLengt
 TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength);
 TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength);
 TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength);
-// TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength);
 
 } // namespace NRayTracingLib
