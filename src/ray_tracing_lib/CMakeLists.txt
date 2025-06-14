@@ -7,7 +7,6 @@ set(RAY_TRACING_LIB_SOURCES
     point.cpp
     polygon.cpp
     polyhedron.cpp
-    ray.cpp
     safe_double.cpp
     vector.cpp
 )
