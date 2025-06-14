@@ -15,8 +15,8 @@ TEST(TRay, CosineOfAngle_ComputesCorrectly) {
     TVector y{3.0, 2.0, 1.0};
     TRay ray{origin, x};
     TRay rayY{origin, y};
-    EXPECT_DOUBLE_EQ(ray.cos(rayY).Value, 5.0 / 7.0);
-    EXPECT_DOUBLE_EQ(rayY.cos(ray).Value, 5.0 / 7.0);
+    EXPECT_EQ(ray.cos(rayY).Value, 5.0 / 7.0);
+    EXPECT_EQ(rayY.cos(ray).Value, 5.0 / 7.0);
 }
 
 TEST(TRay, IsParallel_ReturnsCorrectly) {
@@ -72,11 +72,11 @@ TEST(TRay, DistToPoint_ComputesCorrectly) {
     TVector dir{1.0, 0.0, 0.0};
     TRay ray{origin, dir};
 
-    EXPECT_DOUBLE_EQ(ray.distToPoint(TPoint{1.0, 0.0, 0.0}).Value, 0.0);
-    EXPECT_DOUBLE_EQ(ray.distToPoint(TPoint{0.0, 0.0, 0.0}).Value, 0.0);
-    EXPECT_DOUBLE_EQ(ray.distToPoint(TPoint{10000.0, 0.0, 0.0}).Value, 0.0);
-    EXPECT_DOUBLE_EQ(ray.distToPoint(TPoint{10000.0, 5.0, 0.0}).Value, 5.0);
-    EXPECT_DOUBLE_EQ(ray.distToPoint(TPoint{10000.0, 3.0, 4.0}).Value, 5.0);
+    EXPECT_EQ(ray.distToPoint(TPoint{1.0, 0.0, 0.0}).Value, 0.0);
+    EXPECT_EQ(ray.distToPoint(TPoint{0.0, 0.0, 0.0}).Value, 0.0);
+    EXPECT_EQ(ray.distToPoint(TPoint{10000.0, 0.0, 0.0}).Value, 0.0);
+    EXPECT_EQ(ray.distToPoint(TPoint{10000.0, 5.0, 0.0}).Value, 5.0);
+    EXPECT_EQ(ray.distToPoint(TPoint{10000.0, 3.0, 4.0}).Value, 5.0);
 }
 
 TEST(TRay, ContainsPoint_ReturnsCorrectly) {
@@ -89,7 +89,8 @@ TEST(TRay, ContainsPoint_ReturnsCorrectly) {
     EXPECT_FALSE(ray.containsPoint(TPoint{-1.0, 0.0, 0.0}));
     EXPECT_FALSE(ray.containsPoint(TPoint{0.0, 1.0, 0.0}));
     EXPECT_TRUE(ray.containsPoint(TPoint{TINY, 0.0, 0.0}));
-    EXPECT_FALSE(ray.containsPoint(TPoint{-TINY, 0.0, 0.0}));
+    EXPECT_TRUE(ray.containsPoint(TPoint{-TINY, 0.0, 0.0}));
+    EXPECT_FALSE(ray.containsPoint(TPoint{-NOT_TINY, 0.0, 0.0}));
 }
 
 TEST(TRay, EqualityOperators_WorkCorrectly) {
@@ -107,11 +108,10 @@ TEST(TRay, Intersection_ReturnsCorrectPointOrNullopt) {
     TVector v1{1.0, 1.0, 1.0};
     TRay ray1{p1, v1};
 
-    TPoint p2{1.0, 0.0, 0.0};
-    TVector v2{0.0, 1.0, 1.0};
-    TRay ray2{p2, v2};
+    TPoint p2{1.0, 1.0, 1.0};
+    TVector v2{1.0, 1.0, 1.0};
 
-    EXPECT_EQ(ray1.intersection(TPlane{p1, v1}).value(), TPoint(1.0, 1.0, 1.0));
+    EXPECT_EQ(ray1.intersection(TPlane{p2, v2}).value(), TPoint(1.0, 1.0, 1.0));
 
     TPoint p3{0.0, 0.0, 0.0};
     TVector v3{1.0, 1.0, 1.0};
@@ -121,5 +121,5 @@ TEST(TRay, Intersection_ReturnsCorrectPointOrNullopt) {
     TVector v4{1.0, 1.0, 1.0};
     TRay ray4{p4, v4};
 
-    EXPECT_EQ(ray3.intersection(TPlane{p4, v4}), std::nullopt);
+    EXPECT_EQ(ray3.intersection(TPlane{p4, v4}), TPoint(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0));
 }

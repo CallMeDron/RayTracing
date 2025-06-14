@@ -6,6 +6,9 @@ TRay::TRay(const TPoint& point1, const TPoint& point2) : TLine(point1, point2) {
 TRay::TRay(const TPoint& point, const TVector& vector) : TLine(point, vector) {}
 
 TSafeDouble TRay::distToPoint(const TPoint& point) const {
+    if (Point == point) {
+        return 0.0;
+    }
     if ((point - Point).cos(Vector) >= 0) {
         return TLine::distToPoint(point);
     }

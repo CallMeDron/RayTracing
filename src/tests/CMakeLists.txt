@@ -8,6 +8,8 @@ set(TEST_SOURCES
     plane.cpp
     point.cpp
     polygon.cpp
+    polyhedron.cpp
+    ray.cpp
     safe_double.cpp
     vector.cpp
 )

@@ -1,8 +1,6 @@
 #include "../ray_tracing_lib/all.h"
 
-#include <cmath>
 #include <gtest/gtest.h>
-#include <unordered_set>
 
 using namespace NRayTracingLib;
 
