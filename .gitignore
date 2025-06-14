@@ -1,4 +1,2 @@
 .git
-.vscode/settings.json
 src/build
-src/tests/build
