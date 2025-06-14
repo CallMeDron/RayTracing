@@ -30,6 +30,7 @@ class TPlane : public TFigure {
 
     TSafeDouble cos(const TPlane& other) const;
     bool isParallel(const TPlane& other) const;
+    bool isParallel(const TVector& vector) const;
     bool isPerpendicular(const TPlane& other) const;
 
     std::optional<TPoint> intersection(const TLine& line) const override;

@@ -27,5 +27,6 @@ TSafeDouble TAngle::getRadians() const { return Radians_; }
 
 TSafeDouble TAngle::cos() const { return std::cos(Radians_.Value); }
 TSafeDouble TAngle::sin() const { return std::sin(Radians_.Value); }
+TSafeDouble TAngle::tg() const { return std::tan(Radians_.Value); }
 
 } // namespace NRayTracingLib
