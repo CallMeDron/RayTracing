@@ -16,8 +16,16 @@ class TPolyhedron : public TFigure {
 
     std::optional<TPoint> intersection(const TLine& line) const override;
 
+    friend std::ostream& operator<<(std::ostream& os, const TPolyhedron& polyhedron);
+
   private:
     std::unordered_set<TPolygon> Faces_;
 };
+
+TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength);
+// TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength);
 
 } // namespace NRayTracingLib
