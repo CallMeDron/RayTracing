@@ -3,7 +3,7 @@
 
 namespace NRayTracingLib {
 
-TPoint::TPoint() : X(0.0), Y(0.0), Z(0.0) {}
+TPoint::TPoint() {}
 TPoint::TPoint(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 TPoint::TPoint(const TVector& vector) : X(vector.X), Y(vector.Y), Z(vector.Z) {}
 

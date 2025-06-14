@@ -3,7 +3,7 @@
 
 namespace NRayTracingLib {
 
-TVector::TVector() : X(0.0), Y(0.0), Z(0.0) {}
+TVector::TVector() {}
 TVector::TVector(TSafeDouble x, TSafeDouble y, TSafeDouble z) : X(x), Y(y), Z(z) {}
 TVector::TVector(const TPoint& point) : X(point.X), Y(point.Y), Z(point.Z) {}
 TVector::TVector(const TPoint& start, const TPoint& end) : TVector{end - start} {}
@@ -57,7 +57,7 @@ bool TVector::isPerpendicular(const TVector& other) const { return cos(other) ==
 
 TVector TVector::projectTo(const TVector& other) const {
     if (isZero() || other.isZero()) {
-        return TVector{};
+        return TVector{0.0, 0.0, 0.0};
     }
     return other * ((*this * other) / (other * other));
 }

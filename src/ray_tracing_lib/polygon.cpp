@@ -39,7 +39,7 @@ void TPolygon::checkComplanarity() const {
 }
 
 void TPolygon::sortByPolarAngle() {
-    TVector centerVector;
+    TVector centerVector{0.0, 0.0, 0.0};
     for (const auto& point : Points_) {
         centerVector += TVector{point};
     }
