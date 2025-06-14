@@ -52,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const TPolyhedron& polyhedron) {
     return os;
 }
 
-TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength) {
     if (edgeLength <= 0.0) {
         throw std::runtime_error("Error: trying to create regular tetrahedron with edge length <= 0");
     }
@@ -75,7 +75,7 @@ TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLengt
 
     return TPolyhedron{{f1, f2, f3, f4}};
 }
-TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularHexahedron(const TPoint& center, TSafeDouble edgeLength) {
     if (edgeLength <= 0.0) {
         throw std::runtime_error("Error: trying to create regular hexahedron with edge length <= 0");
     }
@@ -100,7 +100,7 @@ TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength
 
     return TPolyhedron{{f1, f2, f3, f4, f5, f6}};
 }
-TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularOctahedron(const TPoint& center, TSafeDouble edgeLength) {
     if (edgeLength <= 0.0) {
         throw std::runtime_error("Error: trying to create regular octahedron with edge length <= 0");
     }
@@ -125,7 +125,7 @@ TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength
 
     return TPolyhedron{{f1, f2, f3, f4, f5, f6, f7, f8}};
 }
-TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength) {
     if (edgeLength <= 0.0) {
         throw std::runtime_error("Error: trying to create regular dodecahedron with edge length <= 0");
     }
@@ -171,7 +171,7 @@ TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLeng
 
     return TPolyhedron{{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12}};
 }
-TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {
     if (edgeLength <= 0.0) {
         throw std::runtime_error("Error: trying to create regular icosahedron with edge length <= 0");
     }

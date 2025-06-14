@@ -22,10 +22,10 @@ class TPolyhedron : public TFigure {
     std::unordered_set<TPolygon> Faces_;
 };
 
-TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength);
-TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength);
-TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength);
-TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength);
-TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron createRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron createRegularHexahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron createRegularOctahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron createRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength);
+TPolyhedron createRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength);
 
 } // namespace NRayTracingLib

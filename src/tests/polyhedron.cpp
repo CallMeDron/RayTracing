@@ -153,7 +153,7 @@ TEST(TPolyhedron, IntersectionFromInsidePoint) {
 }
 
 TEST(TPolyhedron, CreateRegularTetrahedron) {
-    const TPolyhedron tetrahedron = CreateRegularTetrahedron(TPoint(), 10.0);
+    const TPolyhedron tetrahedron = createRegularTetrahedron(TPoint{1, 2, 3}, 1.0);
 
     EXPECT_EQ(tetrahedron.getFaces().size(), 4u);
 
@@ -161,12 +161,12 @@ TEST(TPolyhedron, CreateRegularTetrahedron) {
         EXPECT_EQ(face.getPoints().size(), 3u);
         EXPECT_TRUE(face.getAnglesIsEqual());
         EXPECT_TRUE(face.getEdgesIsEqual());
-        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 10.0);
+        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 1.0);
     }
 }
 
 TEST(TPolyhedron, CreateRegularHexahedron) {
-    const TPolyhedron hexahedron = CreateRegularHexahedron(TPoint(), 10.0);
+    const TPolyhedron hexahedron = createRegularHexahedron(TPoint{100, 200, 300}, 2.0);
 
     EXPECT_EQ(hexahedron.getFaces().size(), 6u);
 
@@ -174,12 +174,12 @@ TEST(TPolyhedron, CreateRegularHexahedron) {
         EXPECT_EQ(face.getPoints().size(), 4u);
         EXPECT_TRUE(face.getAnglesIsEqual());
         EXPECT_TRUE(face.getEdgesIsEqual());
-        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 10.0);
+        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 2.0);
     }
 }
 
 TEST(TPolyhedron, CreateRegularOctahedron) {
-    const TPolyhedron octahedron = CreateRegularOctahedron(TPoint(), 10.0);
+    const TPolyhedron octahedron = createRegularOctahedron(TPoint(), 4.0);
 
     EXPECT_EQ(octahedron.getFaces().size(), 8u);
 
@@ -187,12 +187,12 @@ TEST(TPolyhedron, CreateRegularOctahedron) {
         EXPECT_EQ(face.getPoints().size(), 3u);
         EXPECT_TRUE(face.getAnglesIsEqual());
         EXPECT_TRUE(face.getEdgesIsEqual());
-        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 10.0);
+        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 4.0);
     }
 }
 
 TEST(TPolyhedron, CreateRegularDodecahedron) {
-    const TPolyhedron dodecahedron = CreateRegularDodecahedron(TPoint(), 10.0);
+    const TPolyhedron dodecahedron = createRegularDodecahedron(TPoint{-1, 2, -3.2}, 8.0);
 
     EXPECT_EQ(dodecahedron.getFaces().size(), 12u);
 
@@ -200,12 +200,12 @@ TEST(TPolyhedron, CreateRegularDodecahedron) {
         EXPECT_EQ(face.getPoints().size(), 5u);
         EXPECT_TRUE(face.getAnglesIsEqual());
         EXPECT_TRUE(face.getEdgesIsEqual());
-        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 10.0);
+        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 8.0);
     }
 }
 
 TEST(TPolyhedron, CreateRegularIcosahedron) {
-    const TPolyhedron icosahedron = CreateRegularIcosahedron(TPoint(), 10.0);
+    const TPolyhedron icosahedron = createRegularIcosahedron(TPoint(), 16.0);
 
     EXPECT_EQ(icosahedron.getFaces().size(), 20u);
 
@@ -213,6 +213,6 @@ TEST(TPolyhedron, CreateRegularIcosahedron) {
         EXPECT_EQ(face.getPoints().size(), 3u);
         EXPECT_TRUE(face.getAnglesIsEqual());
         EXPECT_TRUE(face.getEdgesIsEqual());
-        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 10.0);
+        EXPECT_EQ(face.getPoints()[0].distToPoint(face.getPoints()[1]), 16.0);
     }
 }
