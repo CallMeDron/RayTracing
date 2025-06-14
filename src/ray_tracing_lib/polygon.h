@@ -1,24 +1,20 @@
 #pragma once
 
+#include "common.h"
 #include "figure.h"
 #include "plane.h"
 #include "point.h"
 
-#include <algorithm>
-#include <iostream>
-#include <unordered_set>
-#include <vector>
-
 namespace NRayTracingLib {
 
-class TPolygon : TFigure {
+class TPolygon : public TFigure {
   public:
     explicit TPolygon(const std::unordered_set<TPoint>& points);
 
     bool operator==(const TPolygon& other) const;
 
-    std::vector<TPoint> getPoints() const;
-    TPlane getPlane() const;
+    const std::vector<TPoint>& getPoints() const;
+    const TPlane& getPlane() const;
     bool getEdgesIsEqual() const;
     bool getAnglesIsEqual() const;
 
@@ -27,7 +23,6 @@ class TPolygon : TFigure {
     std::optional<TPoint> intersection(const TLine& line) const override;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
-    void print() const;
 
   protected:
     std::vector<TPoint> Points_;
@@ -51,17 +46,7 @@ using namespace NRayTracingLib;
 
 template <>
 struct hash<TPolygon> {
-    size_t operator()(const TPolygon& polygon) const {
-        vector<TPoint> pointsStableSorted = polygon.getPoints();
-        sort(pointsStableSorted.begin(), pointsStableSorted.end());
-
-        size_t seed = 0;
-        auto hashFunction = hash<TPoint>();
-        for (const auto& point : pointsStableSorted) {
-            seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
-    }
+    size_t operator()(const TPolygon& polygon) const;
 };
 
 } // namespace std

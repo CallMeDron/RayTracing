@@ -1,17 +1,15 @@
 #pragma once
 
+#include "common.h"
 #include "figure.h"
 #include "point.h"
 #include "vector.h"
-
-#include <iostream>
-#include <optional>
 
 namespace NRayTracingLib {
 
 class TLine;
 
-class TPlane : TFigure {
+class TPlane : public TFigure {
   public:
     TPoint Point;
     TVector Normal;
@@ -38,7 +36,6 @@ class TPlane : TFigure {
     std::optional<TLine> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPlane& plane);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

@@ -1,10 +1,9 @@
 #pragma once
 
+#include "common.h"
+#include "plane.h"
 #include "point.h"
 #include "vector.h"
-
-#include <iostream>
-#include <optional>
 
 namespace NRayTracingLib {
 
@@ -20,16 +19,16 @@ class TLine {
     bool isParallel(const TLine& other) const;
     bool isPerpendicular(const TLine& other) const;
 
-    TSafeDouble distToPoint(const TPoint& point) const;
+    virtual TSafeDouble distToPoint(const TPoint& point) const;
     bool containsPoint(const TPoint& point) const;
 
     bool operator==(const TLine& other) const;
     bool operator!=(const TLine& other) const;
 
     std::optional<TPoint> intersection(const TLine& other) const;
+    virtual std::optional<TPoint> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TLine& line);
-    void print() const;
 };
 
 } // namespace NRayTracingLib

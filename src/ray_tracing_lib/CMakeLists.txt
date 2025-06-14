@@ -1,11 +1,13 @@
 set(RAY_TRACING_LIB_SOURCES
     angle.cpp
     camera.cpp
+    edge.cpp
     line.cpp
     plane.cpp
     point.cpp
     polygon.cpp
     polyhedron.cpp
+    ray.cpp
     safe_double.cpp
     vector.cpp
 )

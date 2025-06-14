@@ -1,8 +1,5 @@
 #include "angle.h"
 
-#include <cmath>
-#include <numbers>
-
 namespace NRayTracingLib {
 
 static constexpr double FULL_CIRCLE_DEGREES = 360.0;

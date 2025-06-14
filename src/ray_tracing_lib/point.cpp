@@ -26,7 +26,6 @@ bool TPoint::operator<(const TPoint& other) const {
 std::ostream& operator<<(std::ostream& os, const TPoint& point) {
     return os << "point = {" << point.X << ", " << point.Y << ", " << point.Z << "}\n";
 }
-void TPoint::print() const { std::cout << *this; }
 
 TSafeDouble TPoint::distToPoint(const TPoint& point) const {
     return ((X - point.X).pow(2.0) + (Y - point.Y).pow(2.0) + (Z - point.Z).pow(2.0)).pow(0.5);
@@ -34,3 +33,19 @@ TSafeDouble TPoint::distToPoint(const TPoint& point) const {
 TSafeDouble TPoint::distToLine(const TLine& line) const { return line.distToPoint(*this); }
 
 } // namespace NRayTracingLib
+
+namespace std {
+
+using namespace NRayTracingLib;
+
+size_t hash<TPoint>::operator()(const TPoint& point) const {
+    size_t seed = 0;
+    auto hashFunction = hash<int64_t>();
+    for (const auto& arg : {point.X, point.Y, point.Z}) {
+        int64_t rounded = static_cast<int64_t>(llround(arg.Value / (ACCURACY * 2)));
+        seed ^= hashFunction(rounded) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    return seed;
+}
+
+} // namespace std

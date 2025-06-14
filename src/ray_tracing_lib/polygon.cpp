@@ -2,10 +2,6 @@
 #include "angle.h"
 #include "line.h"
 
-#include <algorithm>
-#include <cmath>
-#include <unordered_set>
-
 namespace NRayTracingLib {
 
 void TPolygon::primalInit(const std::unordered_set<TPoint>& points) {
@@ -163,8 +159,8 @@ bool TPolygon::operator==(const TPolygon& other) const {
     return sortedCopy == otherSortedCopy;
 }
 
-std::vector<TPoint> TPolygon::getPoints() const { return Points_; }
-TPlane TPolygon::getPlane() const { return Plane_; }
+const std::vector<TPoint>& TPolygon::getPoints() const { return Points_; }
+const TPlane& TPolygon::getPlane() const { return Plane_; }
 bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
 bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
 
@@ -205,6 +201,23 @@ std::ostream& operator<<(std::ostream& os, const TPolygon& polygon) {
     }
     return os;
 }
-void TPolygon::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib
+
+namespace std {
+
+using namespace NRayTracingLib;
+
+size_t hash<TPolygon>::operator()(const TPolygon& polygon) const {
+    vector<TPoint> pointsStableSorted = polygon.getPoints();
+    sort(pointsStableSorted.begin(), pointsStableSorted.end());
+
+    size_t seed = 0;
+    auto hashFunction = hash<TPoint>();
+    for (const auto& point : pointsStableSorted) {
+        seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    return seed;
+}
+
+} // namespace std

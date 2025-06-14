@@ -1,9 +1,7 @@
 #include "../ray_tracing_lib/all.h"
 
-#include <algorithm>
 #include <gtest/gtest.h>
 #include <random>
-#include <unordered_set>
 
 using namespace NRayTracingLib;
 

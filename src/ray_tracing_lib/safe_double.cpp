@@ -1,9 +1,5 @@
 #include "safe_double.h"
 
-#include <cmath>
-#include <iomanip>
-#include <stdexcept>
-
 namespace NRayTracingLib {
 
 TSafeDouble::TSafeDouble() : Value(0.0) {}
@@ -66,6 +62,5 @@ std::ostream& operator<<(std::ostream& os, const TSafeDouble& sdouble) {
     os << std::setprecision(COUT_PRECISION);
     return os << sdouble.Value;
 }
-void TSafeDouble::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib

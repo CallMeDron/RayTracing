@@ -2,8 +2,6 @@
 
 #include "point.h"
 
-#include <optional>
-
 namespace NRayTracingLib {
 
 class TFigure {

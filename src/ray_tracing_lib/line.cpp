@@ -1,7 +1,5 @@
 #include "line.h"
 
-#include <optional>
-
 namespace NRayTracingLib {
 
 TLine::TLine(const TPoint& point1, const TPoint& point2) : Point(point1), Vector(point2 - point1) {
@@ -58,14 +56,24 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
 
     const TPoint result{Point.X + t * a11, Point.Y + t * a21, Point.Z + t * a31};
 
-    if (other.distToPoint(result) > (10.0 * ACCURACY)) {
+    if ((distToPoint(result) > (10.0 * ACCURACY)) || (other.distToPoint(result) > (10.0 * ACCURACY))) {
         return std::nullopt;
     }
 
     return result;
 }
+std::optional<TPoint> TLine::intersection(const TPlane& plane) const {
+    if (plane.Normal.isPerpendicular(Vector)) {
+        if (plane.containsLine(*this)) {
+            throw std::runtime_error("Error: itersection of plane and line in it");
+        } else {
+            return std::nullopt;
+        }
+    }
+
+    return Point + Vector * (((plane.Point - Point) * plane.Normal) / (Vector * plane.Normal));
+}
 
 std::ostream& operator<<(std::ostream& os, const TLine& line) { return os << "line:\n" << line.Point << line.Vector; }
-void TLine::print() const { std::cout << *this; }
 
 } // namespace NRayTracingLib
