@@ -250,7 +250,7 @@ TEST(TPoint, SortingOrder) {
 TEST(TPoint, NoInfiniteLoopOnSort) {
     std::vector<TPoint> points;
     for (int i = 0; i < 1000; ++i) {
-        points.push_back(TPoint{static_cast<double>(i), static_cast<double>(i * 2), static_cast<double>(i * 3)});
+        points.push_back(TPoint{i, i * 2, i * 3});
     }
     std::vector<TPoint> shuffled_points = points;
     std::random_device rd;
@@ -266,4 +266,142 @@ TEST(TPoint, ConsistencyWithEquality) {
     EXPECT_FALSE(p1 < p2);
     EXPECT_FALSE(p2 < p1);
     EXPECT_FALSE(p1 < p1);
+}
+
+TEST(TPoint, LongDistanceCalculation) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{1e6, -1e6, 1e6};
+    auto dist = p1.distToPoint(p2);
+    EXPECT_EQ(dist.Value, std::sqrt(3 * 1e12));
+}
+
+TEST(TPoint, DistanceToLine_PerpendicularPoint) {
+    TPoint p{0.0, 1.0, 0.0};
+    TLine line{TPoint{0.0, 0.0, 0.0}, TVector{1.0, 0.0, 0.0}};
+    EXPECT_EQ(p.distToLine(line).Value, 1.0);
+}
+
+TEST(TPoint, DistanceToLine_AlongLine) {
+    TPoint p{5.0, 0.0, 0.0};
+    TLine line{TPoint{0.0, 0.0, 0.0}, TVector{1.0, 0.0, 0.0}};
+    EXPECT_EQ(p.distToLine(line).Value, 0.0);
+}
+
+TEST(TPoint, DistanceToLine_FarAway) {
+    TPoint p{0.0, 100.0, 100.0};
+    TLine line{TPoint{0.0, 0.0, 0.0}, TVector{1.0, 0.0, 0.0}};
+    EXPECT_EQ(p.distToLine(line).Value, sqrt(100.0 * 100.0 + 100.0 * 100.0));
+}
+
+TEST(TPoint, InsertAndFindClosePoints) {
+    std::unordered_set<TPoint> points;
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0 + TINY / 2.0, 2.0, 3.0};
+    points.insert(p1);
+    EXPECT_TRUE(points.find(p2) != points.end());
+    TPoint p3{1.0 + NOT_TINY, 2.0, 3.0};
+    EXPECT_TRUE(points.find(p3) == points.end());
+}
+
+TEST(TPoint, HashConsistencyForClosePoints) {
+    TPoint p1{1.23456, 7.89012, 3.45678};
+    TPoint p2{1.23456 + TINY / 2, 7.89012, 3.45678};
+    std::hash<TPoint> hasher;
+    EXPECT_EQ(hasher(p1), hasher(p2));
+}
+
+TEST(TPoint, HashDivergesForDistinctPoints) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0 + NOT_TINY, 2.0, 3.0};
+    std::hash<TPoint> hasher;
+    EXPECT_NE(hasher(p1), hasher(p2));
+}
+
+TEST(TPoint, LessOrderForVariousPoints) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{0.0, 0.0, 1.0};
+    TPoint p3{0.0, 1.0, 0.0};
+    TPoint p4{1.0, 0.0, 0.0};
+    EXPECT_TRUE(p1 < p2);
+    EXPECT_TRUE(p2 < p3);
+    EXPECT_TRUE(p3 < p4);
+    EXPECT_FALSE(p4 < p1);
+}
+
+TEST(TPoint, SortingMultiplePoints) {
+    std::vector<TPoint> pts = {TPoint{2.0, 0.0, 0.0}, TPoint{0.0, 3.0, 0.0}, TPoint{0.0, 0.0, 4.0},
+                               TPoint{1.0, 1.0, 1.0}};
+    std::vector<TPoint> sortedPts = pts;
+    std::sort(sortedPts.begin(), sortedPts.end());
+    EXPECT_EQ(sortedPts[0], (TPoint{0.0, 0.0, 4.0}));
+    EXPECT_EQ(sortedPts[1], (TPoint{0.0, 3.0, 0.0}));
+    EXPECT_EQ(sortedPts[2], (TPoint{1.0, 1.0, 1.0}));
+    EXPECT_EQ(sortedPts[3], (TPoint{2.0, 0.0, 0.0}));
+}
+
+TEST(TPoint, InsertMultipleCloseAndFarPoints) {
+    std::unordered_set<TPoint> set;
+    set.insert(TPoint{1.0, 2.0, 3.0});
+    set.insert(TPoint{1.0 + TINY / 2, 2.0, 3.0});
+    set.insert(TPoint{1.0 + NOT_TINY, 2.0, 3.0});
+    EXPECT_EQ(set.size(), 2u);
+}
+
+TEST(TPoint, DistToPointZeroDistance) {
+    TPoint p{5.0, -3.0, 10.0};
+    EXPECT_EQ(p.distToPoint(p).Value, 0.0);
+}
+
+TEST(TPoint, DistToLineWithNegativeCoordinates) {
+    TPoint p{-10.0, -10.0, -10.0};
+    TLine line{TPoint{-20.0, 0.0, 0.0}, TVector{1.0, 0.0, 0.0}};
+    EXPECT_EQ(p.distToLine(line).Value, sqrt(200));
+}
+
+TEST(TPoint, LargeCoordinatesDistance) {
+    TPoint p1{1e12, -1e12, 1e12};
+    TPoint p2{-1e12, 1e12, -1e12};
+    auto dist = p1.distToPoint(p2);
+    EXPECT_EQ(dist.Value, std::sqrt(3 * 4e24));
+}
+
+TEST(TPoint, DistanceBetweenClosePointsIsCorrect) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{TINY, TINY, TINY};
+    auto dist = p1.distToPoint(p2);
+    auto expected = TSafeDouble{std::sqrt(3.0 * TINY * TINY)};
+    EXPECT_EQ(dist.Value, expected.Value);
+}
+
+TEST(TPoint, EqualityWithCoordinatesCloseToZero) {
+    TPoint p1{TINY / 2, TINY / 2, TINY / 2};
+    TPoint p2{TINY / 2 + ACCURACY / 4, TINY / 2 + ACCURACY / 4, TINY / 2 + ACCURACY / 4};
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(TPoint, InequalityWithCoordinatesExceedingTolerance) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0 + TINY, 2.0, 3.0};
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(TPoint, ComparisonOperatorsOnEdgeCases) {
+    TPoint p1{0.0, 0.0, 0.0};
+    TPoint p2{0.0, 0.0, TINY / 2};
+    EXPECT_FALSE(p1 < p2);
+    EXPECT_FALSE(p2 < p1);
+}
+
+TEST(TPoint, HashingConsistentForEqualPoints) {
+    TPoint p1{9.8, -7.6, 5.4};
+    TPoint p2{9.8 + TINY / 2, -7.6, 5.4};
+    std::hash<TPoint> hasher;
+    EXPECT_EQ(hasher(p1), hasher(p2));
+}
+
+TEST(TPoint, HashingDifferentForDifferentPoints) {
+    TPoint p1{1.0, 2.0, 3.0};
+    TPoint p2{1.0 + NOT_TINY, 2.0, 3.0};
+    std::hash<TPoint> hasher;
+    EXPECT_NE(hasher(p1), hasher(p2));
 }

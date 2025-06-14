@@ -186,3 +186,157 @@ TEST(TLine, Equality_CloseLines) {
 
     EXPECT_TRUE(line1 == line2);
 }
+
+TEST(TLine, CrossProductPerpendicularLines) {
+    TPoint origin{0.0, 0.0, 0.0};
+    TVector x{1.0, 0.0, 0.0};
+    TVector y{0.0, 1.0, 0.0};
+    TLine lineX{origin, x};
+    TLine lineY{origin, y};
+    EXPECT_TRUE(lineX.isPerpendicular(lineY));
+}
+
+TEST(TLine, IntersectionOfParallelLinesThrows) {
+    TPoint p1{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line1{p1, v};
+    TLine line2{p1 + TVector{0, TINY, 0}, v};
+    EXPECT_THROW(line1.intersection(line2), std::runtime_error);
+}
+
+TEST(TLine, IntersectionLineAndPlane) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    TPlane plane{TPoint{0, 0, 1}, TVector{0, 0, 1}};
+    EXPECT_EQ(line.intersection(plane), std::nullopt);
+}
+
+TEST(TLine, IntersectionLineAndPlaneParallelAndContainsLine) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    EXPECT_THROW(line.intersection(plane), std::runtime_error);
+}
+
+TEST(TLine, IntersectionLineAndPlaneNoIntersection) {
+    TPoint p{0, 0, 1};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    TPlane plane{TPoint{0, 0, 0}, TVector{0, 0, 1}};
+    EXPECT_EQ(line.intersection(plane), std::nullopt);
+}
+
+TEST(TLine, ContainsPoint_ReturnsCorrectly2) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    EXPECT_TRUE(line.containsPoint(TPoint{0, 0, 0}));
+    EXPECT_TRUE(line.containsPoint(TPoint{10, 0, 0}));
+    EXPECT_FALSE(line.containsPoint(TPoint{0, 1, 0}));
+    EXPECT_FALSE(line.containsPoint(TPoint{0, 0, 1}));
+}
+
+TEST(TLine, EqualityAndInequality_WorkCorrectly) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line1{p, v};
+    TLine line2{p + TVector{TINY, 0, 0}, v};
+    TLine line3{p + TVector{0, TINY, 0}, v};
+    EXPECT_EQ(line1, line2);
+    EXPECT_EQ(line1, line3);
+}
+
+TEST(TLine, IntersectionOfIntersectingLines) {
+    TPoint p1{0, 0, 0};
+    TVector v1{1, 1, 0};
+    TLine line1{p1, v1};
+    TPoint p2{1, 0, 0};
+    TVector v2{-1, 1, 0};
+    TLine line2{p2, v2};
+    EXPECT_EQ(line1.intersection(line2).value(), (TPoint{0.5, 0.5, 0}));
+}
+
+TEST(TLine, IntersectionOfSkewLinesReturnsNullopt) {
+    TPoint p1{0, 0, 0};
+    TVector v1{1, 0, 0};
+    TLine line1{p1, v1};
+    TPoint p2{0, 1, 1};
+    TVector v2{0, 1, 0};
+    TLine line2{p2, v2};
+    EXPECT_EQ(line1.intersection(line2), std::nullopt);
+}
+
+TEST(TLine, IntersectionOfCoincidentLinesThrows) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 1, 1};
+    TLine line1{p, v};
+    TLine line2{p + TVector{TINY, TINY, TINY}, v};
+    EXPECT_THROW(line1.intersection(line2), std::runtime_error);
+}
+
+TEST(TLine, DistToPointOnLine) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    EXPECT_EQ(line.distToPoint(TPoint{0.0, 0.0, 0.0}), 0.0);
+    EXPECT_EQ(line.distToPoint(TPoint{5.0, 0.0, 0.0}), 0.0);
+}
+
+TEST(TLine, DistToPointOffLine) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    TPoint off{0, 1, 0};
+    EXPECT_EQ(line.distToPoint(off), 1.0);
+}
+
+TEST(TLine, DistToPointFarAway) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    TPoint far{100, 100, 100};
+    EXPECT_EQ(line.distToPoint(far), std::sqrt(100 * 100 + 100 * 100));
+}
+
+TEST(TLine, ContainsPoint_ReturnsFalseForOffLinePoints) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line{p, v};
+    EXPECT_FALSE(line.containsPoint(TPoint{1, 1, 0}));
+}
+
+TEST(TLine, IsParallel_AndNotParallel) {
+    TPoint p{0, 0, 0};
+    TVector v1{1, 0, 0};
+    TVector v2{0, 1, 0};
+    TLine line1{p, v1};
+    TLine line2{p, v2};
+    EXPECT_FALSE(line1.isParallel(line2));
+    TVector v3{1, 1, 0};
+    TLine line3{p, v3};
+    EXPECT_FALSE(line1.isParallel(line3));
+}
+
+TEST(TLine, IsPerpendicular_AndNotPerpendicular) {
+    TPoint p{0, 0, 0};
+    TVector v1{1, 0, 0};
+    TVector v2{0, 1, 0};
+    TLine line1{p, v1};
+    TLine line2{p, v2};
+    EXPECT_TRUE(line1.isPerpendicular(line2));
+    TVector v3{1, 1, 0};
+    TLine line3{p, v3};
+    EXPECT_FALSE(line1.isPerpendicular(line3));
+}
+
+TEST(TLine, OperatorEqualityAndInequality) {
+    TPoint p{0, 0, 0};
+    TVector v{1, 0, 0};
+    TLine line1{p, v};
+    TLine line2{p + TVector{TINY, 0, 0}, v};
+    TLine line3{p + TVector{0, TINY, 0}, v};
+    EXPECT_EQ(line1, line2);
+    EXPECT_EQ(line1, line3);
+}
