@@ -1,4 +1,5 @@
 #include "vector.h"
+#include "plane.h"
 
 namespace NRayTracingLib {
 
@@ -59,6 +60,14 @@ TVector TVector::projectTo(const TVector& other) const {
         return TVector{};
     }
     return other * ((*this * other) / (other * other));
+}
+std::pair<TVector, TVector> TVector::projectedVectors(const TPlane& plane, const TAngle& angle) const {
+    TVector perp = *this ^ plane.Normal;
+
+    TVector v1 = *this + perp * angle.tg();
+    TVector v2 = *this - perp * angle.tg();
+
+    return {v1, v2};
 }
 
 std::ostream& operator<<(std::ostream& os, const TVector& vector) {
