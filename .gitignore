@@ -1,5 +1,5 @@
-src/build
-src/tests/googletest
 *.git
-*.png
-*.gif
+src/build
+src/images
+src/ray_tracing_lib/stb
+src/tests/googletest
