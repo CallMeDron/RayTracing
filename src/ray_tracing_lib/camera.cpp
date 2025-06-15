@@ -2,6 +2,7 @@
 
 namespace NRayTracingLib {
 
+const TRay& TCamera::getRayConst(size_t i, size_t j) const { return Rays_[i * Resolution_.first + j]; }
 TRay& TCamera::getRay(size_t i, size_t j) { return Rays_[i * Resolution_.first + j]; }
 
 TVector TCamera::getHalfUpVector() const {
@@ -50,5 +51,13 @@ TCamera::TCamera(const TPoint& position, const TVector& direction, const std::pa
     : Position_{position}, Direction_{direction}, ViewAngles_{viewAngles}, Resolution_{resolution} {
     initRays();
 };
+
+void TCamera::makePicture(const TFigure& figure) const {
+    for (size_t i = 0; i < Resolution_.second; i++) {
+        for (size_t j = 0; j < Resolution_.first; j++) {
+            figure.intersection(getRayConst(i, j));
+        }
+    }
+}
 
 } // namespace NRayTracingLib
