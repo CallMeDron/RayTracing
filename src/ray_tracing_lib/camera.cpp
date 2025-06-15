@@ -52,6 +52,7 @@ void TCamera::makePicture(const TFigure& figure) {
 
     for (size_t i = 0; i < HeightResolution_; i++) {
         const double upProgress = static_cast<double>(i) / iMax;
+        print("Progress =", upProgress * 100, "%");
         const double upCoeff = 1.0 - 2.0 * upProgress;
         for (size_t j = 0; j < WidthResolution_; j++) {
             const double leftProgress = static_cast<double>(j) / jMax;

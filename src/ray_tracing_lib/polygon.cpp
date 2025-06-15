@@ -163,7 +163,7 @@ bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
 bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
 
 TPointContainment TPolygon::containsPoint(const TPoint& point) const {
-    const TSafeDouble ON_BORDER_CHECK = 1e-2;
+    const TSafeDouble onBorderTreshold = 5e-3;
 
     if (!Plane_.containsPoint(point)) {
         return TPointContainment::Outside;
@@ -177,20 +177,20 @@ TPointContainment TPolygon::containsPoint(const TPoint& point) const {
         const TVector edge = Points_[nextIdx] - Points_[i];
         const TVector toPoint = point - Points_[i];
 
-        if (toPoint.length() < ON_BORDER_CHECK) {
+        if (toPoint.length() < onBorderTreshold) {
             return TPointContainment::OnBoundary;
         }
 
         const TSafeDouble sign = (edge ^ toPoint) * Plane_.Normal;
 
-        if (sign.abs() < ON_BORDER_CHECK) {
+        if (sign.abs() < onBorderTreshold) {
             const TSafeDouble scalar = toPoint * edge;
-            if ((scalar >= 0.0) && (scalar <= edge * edge)) {
+            if ((scalar >= -onBorderTreshold) && (scalar <= edge * edge + onBorderTreshold)) {
                 return TPointContainment::OnBoundary;
             } else {
                 return TPointContainment::Outside;
             }
-        } else if (sign > ON_BORDER_CHECK) {
+        } else if (sign > onBorderTreshold) {
             hasPositive = true;
         } else {
             hasNegative = true;

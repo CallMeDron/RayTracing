@@ -12,7 +12,7 @@ int main() {
             TPoint{10.0, 10.0, 10.0},
             TVector{-10.0, -10.0, -10.0},
             {TAngle{10.0}, TAngle{10.0}},
-            {700, 700},
+            {2000, 2000},
         };
 
         const TPolyhedron figure = createRegularDodecahedron(TPoint{0.0, 0.0, 0.0}, 1.0);
@@ -23,7 +23,7 @@ int main() {
 
         auto end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        print(duration.count());
+        print("Program work time =", duration.count(), "ms");
 
     } catch (const std::exception& e) {
         print(e.what());
