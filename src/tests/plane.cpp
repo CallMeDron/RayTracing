@@ -206,15 +206,15 @@ TEST(TPlane, NearDifferentPlanesBeyondTolerance) {
 TEST(TPlane, PlaneLineIntersectsAtSinglePoint) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TLine line(TPoint{1, 1, 1}, TVector{0, 0, -1});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result.value(), (TPoint{1, 1, 0}));
+    EXPECT_EQ(result.value().first, (TPoint{1, 1, 0}));
 }
 
 TEST(TPlane, PlaneLineParallelNoIntersection) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TLine line(TPoint{0, 0, 1}, TVector{1, 0, 0});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     EXPECT_FALSE(result.has_value());
 }
 
@@ -227,31 +227,31 @@ TEST(TPlane, LineLiesInPlane) {
 TEST(TPlane, PerpendicularIntersection) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 1, 0});
     TLine line(TPoint{0, 1, 0}, TVector{0, -1, 0});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+    EXPECT_EQ(result.value().first, (TPoint{0, 0, 0}));
 }
 
 TEST(TPlane, IntersectionAtOrigin) {
     TPlane plane(TPoint{0, 0, 0}, TVector{-1, 1, 1});
     TLine line(TPoint{1, -1, 0}, TVector{-1, 1, 0});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+    EXPECT_EQ(result.value().first, (TPoint{0, 0, 0}));
 }
 
 TEST(TPlane, SkewLineIntersects) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 1, 0});
     TLine line(TPoint{1, 1, 1}, TVector{-1, -1, -1});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result.value(), (TPoint{0, 0, 0}));
+    EXPECT_EQ(result.value().first, (TPoint{0, 0, 0}));
 }
 
 TEST(TPlane, LineParallelAndAbovePlane) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 1, 0});
     TLine line(TPoint{0, 1, 0}, TVector{1, 0, 0});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     EXPECT_FALSE(result.has_value());
 }
 
@@ -264,7 +264,7 @@ TEST(TPlane, LineParallelAndInPlane) {
 TEST(TPlane, TPlanePlaneIntersectsInLine) {
     TPlane plane1(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TPlane plane2(TPoint{0, 0, 1}, TVector{0, 1, -1});
-    auto result = plane1.intersection(plane2);
+    std::optional<TLine> result = plane1.intersection(plane2);
     ASSERT_TRUE(result.has_value());
     TPoint p = result->Point;
     EXPECT_EQ(p.Z, 0);
@@ -283,14 +283,14 @@ TEST(TPlane, PlanesAreEqual_Throws) {
 TEST(TPlane, PlanesAreParallelNoIntersection) {
     TPlane p1(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TPlane p2(TPoint{0, 0, 1}, TVector{0, 0, 1});
-    auto result = p1.intersection(p2);
+    std::optional<TLine> result = p1.intersection(p2);
     EXPECT_FALSE(result.has_value());
 }
 
 TEST(TPlane, Intersection_WithPerpendicularPlanes) {
     TPlane plane1(TPoint{0, 0, 0}, TVector{1, 0, 0});
     TPlane plane2(TPoint{0, 0, 0}, TVector{0, 1, 0});
-    auto result = plane1.intersection(plane2);
+    std::optional<TLine> result = plane1.intersection(plane2);
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(result->Point, (TPoint{0, 0, 0}));
     EXPECT_EQ(result->Vector, (TVector{1, 0, 0} ^ TVector{0, 1, 0}));
@@ -299,7 +299,7 @@ TEST(TPlane, Intersection_WithPerpendicularPlanes) {
 TEST(TPlane, Intersection_WithSkewPlanes) {
     TPlane plane1(TPoint{0, 0, 0}, TVector{1, 1, 0});
     TPlane plane2(TPoint{0, 0, 1}, TVector{1, -1, 0});
-    auto result = plane1.intersection(plane2);
+    std::optional<TLine> result = plane1.intersection(plane2);
     ASSERT_TRUE(result.has_value());
     TPoint p = result->Point;
     EXPECT_EQ(plane1.Normal ^ plane2.Normal, result->Vector);
@@ -308,7 +308,7 @@ TEST(TPlane, Intersection_WithSkewPlanes) {
 TEST(TPlane, Intersection_WithPlanesSharingLine) {
     TPlane plane1(TPoint{0, 0, 0}, TVector{0, 1, 0});
     TPlane plane2(TPoint{0, 0, 0}, TVector{1, 0, 0});
-    auto result = plane1.intersection(plane2);
+    std::optional<TLine> result = plane1.intersection(plane2);
     ASSERT_TRUE(result.has_value());
     TLine line = result.value();
     EXPECT_EQ(line.Point, (TPoint{0, 0, 0}));
@@ -324,9 +324,9 @@ TEST(TPlane, Intersection_ParallelAndDifferentPoints) {
 TEST(TPlane, Intersection_PerpendicularLineCrossingPlane) {
     TPlane plane(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TLine line(TPoint{1, 1, 1}, TVector{0, 0, -1});
-    auto result = plane.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = plane.intersection(line);
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result.value(), (TPoint{1, 1, 0}));
+    EXPECT_EQ(result.value().first, (TPoint{1, 1, 0}));
 }
 
 TEST(TPlane, Intersection_LineLiesInPlane) {
@@ -356,14 +356,14 @@ TEST(TPlane, Intersection_TwoPlanesAreIdentical) {
 TEST(TPlane, Intersection_TwoPlanesAreParallelButNotSame) {
     TPlane p1(TPoint{0, 0, 0}, TVector{0, 0, 1});
     TPlane p2(TPoint{0, 0, 1}, TVector{0, 0, 1});
-    auto result = p1.intersection(p2);
+    std::optional<TLine> result = p1.intersection(p2);
     EXPECT_FALSE(result.has_value());
 }
 
 TEST(TPlane, Intersection_ObliquePlanesCrossing) {
     TPlane p1(TPoint{0, 0, 0}, TVector{1, 0, 1});
     TPlane p2(TPoint{0, 0, 0}, TVector{0, 1, 1});
-    auto result = p1.intersection(p2);
+    std::optional<TLine> result = p1.intersection(p2);
     ASSERT_TRUE(result.has_value());
     TLine line = result.value();
     EXPECT_EQ(line.Point, (TPoint{0, 0, 0}));
@@ -373,7 +373,7 @@ TEST(TPlane, Intersection_ObliquePlanesCrossing) {
 TEST(TPlane, Intersection_WithVerticalPlaneAndHorizontalPlane) {
     TPlane vertical(TPoint{0, 0, 0}, TVector{1, 0, 0});
     TPlane horizontal(TPoint{0, 0, 0}, TVector{0, 0, 1});
-    auto result = vertical.intersection(horizontal);
+    std::optional<TLine> result = vertical.intersection(horizontal);
     ASSERT_TRUE(result.has_value());
     TLine line = result.value();
     EXPECT_EQ(line.Point, (TPoint{0, 0, 0}));

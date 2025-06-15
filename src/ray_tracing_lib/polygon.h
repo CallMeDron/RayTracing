@@ -18,9 +18,9 @@ class TPolygon : public TFigure {
     bool getEdgesIsEqual() const;
     bool getAnglesIsEqual() const;
 
-    bool containsPoint(const TPoint& point) const;
+    TPointContainment containsPoint(const TPoint& point) const;
 
-    std::optional<TPoint> intersection(const TLine& line) const override;
+    std::optional<std::pair<TPoint, TPointContainment>> intersection(const TLine& line) const override;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolygon& polygon);
 

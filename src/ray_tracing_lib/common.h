@@ -11,7 +11,13 @@
 #include <unordered_set>
 #include <vector>
 
-template <typename T>
-void print(const T& x) {
-    std::cout << x << std::endl;
+template <typename T, typename... Args>
+void print(const T& first, const Args&... args) {
+    std::cout << first;
+    if constexpr (sizeof...(args) > 0) {
+        std::cout << " ";
+        print(args...);
+    } else {
+        std::cout << std::endl;
+    }
 }

@@ -189,7 +189,7 @@ TEST(TVector, NormalizationOfNonZeroVector) {
 
 TEST(TVector, GetNormalizedReturnsNormalizedVector) {
     TVector v{0.0, 0.0, 5.0};
-    auto n = v.getNormalized();
+    TVector n = v.getNormalized();
     EXPECT_EQ(n, (TVector{0.0, 0.0, 1.0}));
 }
 
@@ -230,7 +230,7 @@ TEST(TVector, IsPerpendicularDetectsPerpendicularVectors) {
 TEST(TVector, ProjectionOfVectorOntoAnother) {
     TVector v{3.0, 4.0, 0.0};
     TVector u{1.0, 0.0, 0.0};
-    auto proj = v.projectTo(u);
+    TVector proj = v.projectTo(u);
     EXPECT_EQ(proj, (TVector{3.0, 0.0, 0.0}));
     TVector zeroVec;
     EXPECT_EQ(zeroVec.projectTo(v), zeroVec);
@@ -281,15 +281,15 @@ TEST(TVector, SinOfAngleBetweenParallelVectorsZero) {
 
 TEST(TVector, GetNormalizedOfParallelVectorsEqualsOriginalNormalized) {
     TVector a{1.0, 2.0, 3.0};
-    auto na1 = a.getNormalized();
-    auto na2 = a.getNormalized();
+    TVector na1 = a.getNormalized();
+    TVector na2 = a.getNormalized();
     EXPECT_EQ(na1, na2);
 }
 
 TEST(TVector, MultipleOperationsChain) {
     TVector a{1.0, 2.0, 3.0};
     TVector b{4.0, 5.0, 6.0};
-    auto c = ((a + b) * 2.0) - (b / 2.0);
+    TVector c = ((a + b) * 2.0) - (b / 2.0);
     EXPECT_EQ(c, (TVector{(1 + 4) * 2 - 4 / 2.0, (2 + 5) * 2 - 5 / 2.0, (3 + 6) * 2 - 6 / 2.0}));
 }
 
@@ -306,7 +306,7 @@ TEST(TVector, ProjectOntoZeroVectorReturnsZero) {
 
 TEST(TVector, NormalizeAlreadyNormalizedVectorRemainsSame) {
     TVector a{0.6, 0.8, 0.0};
-    auto norm = a.getNormalized();
+    TVector norm = a.getNormalized();
     EXPECT_EQ(norm, a);
 }
 
@@ -324,8 +324,8 @@ TEST(TVector, ScalarProductOfOrthogonalVectorsIsZero) {
 TEST(TVector, MultiplyByScalarAndDivideByScalarInverse) {
     TVector a{1.0, -2.0, 3.0};
     TSafeDouble scalar{4.0};
-    auto scaled = a * scalar;
-    auto divided = scaled / scalar;
+    TVector scaled = a * scalar;
+    TVector divided = scaled / scalar;
     EXPECT_EQ(divided, a);
 }
 
@@ -333,7 +333,7 @@ TEST(TVector, ProjectedVectors) {
     TVector vector{-1, -1, -1};
     TPlane plane{TPoint{1, 1, 1}, vector, TVector{0, 0, 1}};
 
-    auto result = vector.projectedVectors(plane, TAngle{30});
+    std::pair<TVector, TVector> result = vector.projectedVectors(plane, TAngle{30});
 
     EXPECT_EQ(result.first + result.second, vector * 2);
     EXPECT_EQ(result.first.cos(vector), sqrt(3.0) / 2.0);
@@ -348,7 +348,7 @@ TEST(TVector, ProjectedVectors2) {
     TVector vector{1, 2, 3};
     TPlane plane{TPoint{0, 0, 0}, vector, TVector{1, -1, 0}};
 
-    auto result = vector.projectedVectors(plane, TAngle{60});
+    std::pair<TVector, TVector> result = vector.projectedVectors(plane, TAngle{60});
 
     EXPECT_EQ(result.first + result.second, vector * 2);
     EXPECT_EQ(result.first.cos(vector), 0.5);

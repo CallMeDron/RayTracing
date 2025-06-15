@@ -1,2 +1,5 @@
-.git
 src/build
+src/tests/googletest
+*.git
+*.png
+*.gif

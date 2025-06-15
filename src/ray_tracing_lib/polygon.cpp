@@ -162,33 +162,58 @@ const TPlane& TPolygon::getPlane() const { return Plane_; }
 bool TPolygon::getEdgesIsEqual() const { return EdgesIsEqual_; }
 bool TPolygon::getAnglesIsEqual() const { return AnglesIsEqual_; }
 
-bool TPolygon::containsPoint(const TPoint& point) const {
+TPointContainment TPolygon::containsPoint(const TPoint& point) const {
+    const TSafeDouble onBorderTreshold = 5e-3;
+
     if (!Plane_.containsPoint(point)) {
-        return false;
+        return TPointContainment::Outside;
     }
 
-    std::unordered_set<bool> anglesSigns;
+    bool hasPositive = false;
+    bool hasNegative = false;
 
     for (size_t i = 0; i < Points_.size(); i++) {
         const size_t nextIdx = (i + 1) % Points_.size();
+        const TVector edge = Points_[nextIdx] - Points_[i];
+        const TVector toPoint = point - Points_[i];
 
-        const TSafeDouble sign = ((Points_[nextIdx] - Points_[i]) ^ (point - Points_[i])) * Plane_.Normal;
+        if (toPoint.length() < onBorderTreshold) {
+            return TPointContainment::OnBoundary;
+        }
 
-        anglesSigns.insert(sign > 0.0);
-        if (anglesSigns.size() > 1) {
-            return false;
+        const TSafeDouble sign = (edge ^ toPoint) * Plane_.Normal;
+
+        if (sign.abs() < onBorderTreshold) {
+            const TSafeDouble scalar = toPoint * edge;
+            if ((scalar >= -onBorderTreshold) && (scalar <= edge * edge + onBorderTreshold)) {
+                return TPointContainment::OnBoundary;
+            } else {
+                return TPointContainment::Outside;
+            }
+        } else if (sign > onBorderTreshold) {
+            hasPositive = true;
+        } else {
+            hasNegative = true;
+        }
+
+        if (hasPositive && hasNegative) {
+            return TPointContainment::Outside;
         }
     }
 
-    return true;
+    return TPointContainment::Inside;
 }
 
-std::optional<TPoint> TPolygon::intersection(const TLine& line) const {
-    std::optional<TPoint> planeIntersectionPoint = Plane_.intersection(line);
-    if ((planeIntersectionPoint == std::nullopt) || !containsPoint(planeIntersectionPoint.value())) {
+std::optional<std::pair<TPoint, TPointContainment>> TPolygon::intersection(const TLine& line) const {
+    const std::optional<std::pair<TPoint, TPointContainment>> planeIntersection = Plane_.intersection(line);
+    if (planeIntersection == std::nullopt) {
+        return std::nullopt;
+    }
+    const TPointContainment pointContainment = containsPoint(planeIntersection.value().first);
+    if (pointContainment == TPointContainment::Outside) {
         return std::nullopt;
     } else {
-        return planeIntersectionPoint.value();
+        return std::make_pair(planeIntersection.value().first, pointContainment);
     }
 }
 

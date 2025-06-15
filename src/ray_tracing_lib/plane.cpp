@@ -64,7 +64,13 @@ bool TPlane::isParallel(const TPlane& other) const { return Normal.isParallel(ot
 bool TPlane::isParallel(const TVector& vector) const { return Normal.isPerpendicular(vector); }
 bool TPlane::isPerpendicular(const TPlane& other) const { return Normal.isPerpendicular(other.Normal); }
 
-std::optional<TPoint> TPlane::intersection(const TLine& line) const { return line.intersection(*this); }
+std::optional<std::pair<TPoint, TPointContainment>> TPlane::intersection(const TLine& line) const {
+    const std::optional<TPoint> intersection = line.intersection(*this);
+    if (intersection.has_value()) {
+        return std::make_pair(intersection.value(), TPointContainment::Inside);
+    }
+    return std::nullopt;
+}
 std::optional<TLine> TPlane::intersection(const TPlane& plane) const {
     if (Normal.isParallel(plane.Normal)) {
         if (*this == plane) {

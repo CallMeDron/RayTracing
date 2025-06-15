@@ -33,7 +33,7 @@ class TPlane : public TFigure {
     bool isParallel(const TVector& vector) const;
     bool isPerpendicular(const TPlane& other) const;
 
-    std::optional<TPoint> intersection(const TLine& line) const override;
+    std::optional<std::pair<TPoint, TPointContainment>> intersection(const TLine& line) const override;
     std::optional<TLine> intersection(const TPlane& plane) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TPlane& plane);

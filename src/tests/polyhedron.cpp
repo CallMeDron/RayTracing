@@ -34,25 +34,25 @@ TEST(TPolyhedron, CreationAndFaceCount) {
 TEST(TPolyhedron, IntersectionThroughCenter) {
     TPolyhedron poly(FACES);
     TLine line(TPoint(0.5, 0.5, -1), TPoint(0.5, 0.5, 2));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     ASSERT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.5);
-    EXPECT_EQ(intersection->Y, 0.5);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.5);
+    EXPECT_EQ(intersection.value().first.Y, 0.5);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, NoIntersection) {
     TPolyhedron poly(FACES);
     TLine line(TPoint(2, 2, 2), TPoint(3, 3, 3));
-    EXPECT_EQ(poly.intersection(line).value(), TPoint(1, 1, 1));
+    EXPECT_EQ(poly.intersection(line).value().first, TPoint(1, 1, 1));
 }
 
 TEST(TPolyhedron, TangentLine) {
     TPolyhedron poly(FACES);
     TLine line(TPoint(0.5, 0.5, -1), TPoint(0.5, 0.5, 0));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, NotClosedPolyhedronThrows) {
@@ -84,11 +84,11 @@ TEST(TPolyhedron, IntersectionThroughComplexObliquePyramid) {
                                           TPolygon{{p000, p010, p011, p001}}, TPolygon{{p001, p101, p111, p011}}};
     TPolyhedron poly(faces);
     TLine line(TPoint(0.5, 0.5, -1), TPoint(0.5, 0.5, 2));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.5);
-    EXPECT_EQ(intersection->Y, 0.5);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.5);
+    EXPECT_EQ(intersection.value().first.Y, 0.5);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, IntersectionWithDiagonalTiltedBox) {
@@ -97,11 +97,11 @@ TEST(TPolyhedron, IntersectionWithDiagonalTiltedBox) {
                                           TPolygon{{p000, p010, p011, p001}}, TPolygon{{p100, p110, p111, p101}}};
     TPolyhedron poly(faces);
     TLine line(TPoint(0.2, 0.3, -1), TPoint(0.8, 0.7, 3));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.35);
-    EXPECT_EQ(intersection->Y, 0.4);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.35);
+    EXPECT_EQ(intersection.value().first.Y, 0.4);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, IntersectionWithTiltedParallelepiped) {
@@ -110,11 +110,11 @@ TEST(TPolyhedron, IntersectionWithTiltedParallelepiped) {
                                           TPolygon{{p000, p020, p021, p001}}, TPolygon{{p100, p120, p121, p101}}};
     TPolyhedron poly(faces);
     TLine line(TPoint(0.3, 0.4, -1), TPoint(0.7, 0.6, 2));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.4333333333);
-    EXPECT_EQ(intersection->Y, 0.4666666667);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.4333333333);
+    EXPECT_EQ(intersection.value().first.Y, 0.4666666667);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, NoIntersectionWithObliqueTiltedShape) {
@@ -132,11 +132,11 @@ TEST(TPolyhedron, IntersectionAlongDiagonalEdge) {
                                           TPolygon{{p000, p010, p011, p001}}, TPolygon{{p100, p110, p111, p101}}};
     TPolyhedron poly(faces);
     TLine line(TPoint(0, 0, -1), TPoint(1, 1, 1));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.5);
-    EXPECT_EQ(intersection->Y, 0.5);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.5);
+    EXPECT_EQ(intersection.value().first.Y, 0.5);
+    EXPECT_EQ(intersection.value().first.Z, 0.0);
 }
 
 TEST(TPolyhedron, IntersectionFromInsidePoint) {
@@ -145,11 +145,11 @@ TEST(TPolyhedron, IntersectionFromInsidePoint) {
                                           TPolygon{{p000, p010, p011, p001}}, TPolygon{{p100, p110, p111, p101}}};
     TPolyhedron poly(faces);
     TLine line(TPoint(0.5, 0.5, 0.5), TPoint(0.5, 0.5, 2));
-    auto intersection = poly.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> intersection = poly.intersection(line);
     EXPECT_TRUE(intersection.has_value());
-    EXPECT_EQ(intersection->X, 0.5);
-    EXPECT_EQ(intersection->Y, 0.5);
-    EXPECT_EQ(intersection->Z, 0);
+    EXPECT_EQ(intersection.value().first.X, 0.5);
+    EXPECT_EQ(intersection.value().first.Y, 0.5);
+    EXPECT_EQ(intersection.value().first.Z, 0);
 }
 
 TEST(TPolyhedron, CreateRegularTetrahedron) {
