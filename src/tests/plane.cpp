@@ -367,7 +367,7 @@ TEST(TPlane, Intersection_ObliquePlanesCrossing) {
     ASSERT_TRUE(result.has_value());
     TLine line = result.value();
     EXPECT_EQ(line.Point, (TPoint{0, 0, 0}));
-    EXPECT_EQ(line.Vector, (TVector{1, 0, 1} ^ TVector{0, 1, 1}).getNormalized());
+    EXPECT_TRUE(line.Vector.isParallel(TVector{1, 0, 1} ^ TVector{0, 1, 1}));
 }
 
 TEST(TPlane, Intersection_WithVerticalPlaneAndHorizontalPlane) {

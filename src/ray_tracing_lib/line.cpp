@@ -7,13 +7,11 @@ TLine::TLine(const TPoint& point1, const TPoint& point2) : Point(point1), Vector
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
-    Vector.normalize();
 }
 TLine::TLine(const TPoint& point, const TVector& vector) : Point(point), Vector(vector) {
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
-    Vector.normalize();
 }
 
 TSafeDouble TLine::cos(const TLine& other) const { return Vector.cos(other.Vector); }
