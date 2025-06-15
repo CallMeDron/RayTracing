@@ -33,10 +33,13 @@ void TCamera::initRays() {
     const TVector halfUp = getHalfUpVector();
     const TVector halfLeft = getHalfLeftVector();
 
+    const size_t iMax = Resolution_.second - 1;
+    const size_t jMax = Resolution_.first - 1;
+
     for (size_t i = 0; i < Resolution_.second; i++) {
-        double upCoeff = 1.0 - 2.0 * (static_cast<double>(i) / (Resolution_.second - 1));
+        const double upCoeff = 1.0 - 2.0 * (static_cast<double>(i) / iMax);
         for (size_t j = 0; j < Resolution_.first; j++) {
-            double leftCoeff = 1.0 - 2.0 * (static_cast<double>(j) / (Resolution_.first - 1));
+            const double leftCoeff = 1.0 - 2.0 * (static_cast<double>(j) / jMax);
             getRay(i, j) = TRay{Position_, Direction_ + halfUp * upCoeff + halfLeft * leftCoeff};
         }
     }

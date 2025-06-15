@@ -41,17 +41,17 @@ std::optional<TPoint> TLine::intersection(const TLine& other) const {
         throw std::runtime_error("Error: itersection of equal lines");
     }
 
-    TSafeDouble a11 = Vector.X, a12 = -other.Vector.X, b1 = other.Point.X - Point.X;
-    TSafeDouble a21 = Vector.Y, a22 = -other.Vector.Y, b2 = other.Point.Y - Point.Y;
-    TSafeDouble a31 = Vector.Z, a32 = -other.Vector.Z, b3 = other.Point.Z - Point.Z;
+    const TSafeDouble a11 = Vector.X, a12 = -other.Vector.X, b1 = other.Point.X - Point.X;
+    const TSafeDouble a21 = Vector.Y, a22 = -other.Vector.Y, b2 = other.Point.Y - Point.Y;
+    const TSafeDouble a31 = Vector.Z, a32 = -other.Vector.Z, b3 = other.Point.Z - Point.Z;
 
-    TSafeDouble det = det2x2(a11, a12, a21, a22);
+    const TSafeDouble det = det2x2(a11, a12, a21, a22);
     if (det == 0.0) {
         return std::nullopt;
     }
 
-    TSafeDouble t = det2x2(b1, a12, b2, a22) / det;
-    TSafeDouble s = det2x2(a11, b1, a21, b2) / det;
+    const TSafeDouble t = det2x2(b1, a12, b2, a22) / det;
+    const TSafeDouble s = det2x2(a11, b1, a21, b2) / det;
 
     const TPoint result{Point.X + t * a11, Point.Y + t * a21, Point.Z + t * a31};
 

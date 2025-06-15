@@ -21,7 +21,7 @@ using namespace NRayTracingLib;
 
 size_t hash<TEdge>::operator()(const TEdge& edge) const {
     size_t seed = 0;
-    auto hashFunction = hash<TPoint>();
+    const auto hashFunction = hash<TPoint>();
     for (const auto& point : edge.getPoints()) {
         seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }

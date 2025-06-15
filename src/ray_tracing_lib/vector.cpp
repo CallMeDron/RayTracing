@@ -62,10 +62,10 @@ TVector TVector::projectTo(const TVector& other) const {
     return other * ((*this * other) / (other * other));
 }
 std::pair<TVector, TVector> TVector::projectedVectors(const TPlane& plane, const TAngle& angle) const {
-    TVector perp = *this ^ plane.Normal;
+    const TVector perp = *this ^ plane.Normal;
 
-    TVector v1 = *this + perp * angle.tg();
-    TVector v2 = *this - perp * angle.tg();
+    const TVector v1 = *this + perp * angle.tg();
+    const TVector v2 = *this - perp * angle.tg();
 
     return {v1, v2};
 }

@@ -32,7 +32,7 @@ TPlane::TPlane(const TPoint& point, const TLine& line)
     Normal.normalize();
 }
 TPlane::TPlane(const TLine& line1, const TLine& line2) : Point(line1.Point), Normal(TVector{0.0, 0.0, 0.0}) {
-    std::optional<TPoint> intersection = line1.intersection(line2);
+    const std::optional<TPoint> intersection = line1.intersection(line2);
 
     if (intersection.has_value()) {
         Point = *intersection;
@@ -76,15 +76,15 @@ std::optional<TLine> TPlane::intersection(const TPlane& plane) const {
 
     const TVector direction = Normal ^ plane.Normal;
 
-    TSafeDouble A1 = Normal.X;
-    TSafeDouble B1 = Normal.Y;
-    TSafeDouble C1 = Normal.Z;
-    TSafeDouble D1 = -(A1 * Point.X + B1 * Point.Y + C1 * Point.Z);
+    const TSafeDouble A1 = Normal.X;
+    const TSafeDouble B1 = Normal.Y;
+    const TSafeDouble C1 = Normal.Z;
+    const TSafeDouble D1 = -(A1 * Point.X + B1 * Point.Y + C1 * Point.Z);
 
-    TSafeDouble A2 = plane.Normal.X;
-    TSafeDouble B2 = plane.Normal.Y;
-    TSafeDouble C2 = plane.Normal.Z;
-    TSafeDouble D2 = -(A2 * plane.Point.X + B2 * plane.Point.Y + C2 * plane.Point.Z);
+    const TSafeDouble A2 = plane.Normal.X;
+    const TSafeDouble B2 = plane.Normal.Y;
+    const TSafeDouble C2 = plane.Normal.Z;
+    const TSafeDouble D2 = -(A2 * plane.Point.X + B2 * plane.Point.Y + C2 * plane.Point.Z);
 
     TSafeDouble x, y, z;
 
