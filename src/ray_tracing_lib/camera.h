@@ -10,6 +10,10 @@ class TCamera {
     TCamera(const TPoint& position, const TVector& direction, const std::pair<TAngle, TAngle>& viewAngles,
             const std::pair<uint16_t, uint16_t>& resolution);
 
+    const TRay& getRayConst(size_t i, size_t j) const;
+
+    void makePicture(const TFigure& figure) const;
+
   private:
     TPoint Position_;
     TVector Direction_;
