@@ -14,7 +14,7 @@ class TPolyhedron : public TFigure {
 
     const std::unordered_set<TPolygon>& getFaces() const;
 
-    std::optional<TPoint> intersection(const TLine& line) const override;
+    std::optional<std::pair<TPoint, TPointContainment>> intersection(const TLine& line) const override;
 
     friend std::ostream& operator<<(std::ostream& os, const TPolyhedron& polyhedron);
 

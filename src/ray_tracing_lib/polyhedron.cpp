@@ -22,26 +22,29 @@ TPolyhedron::TPolyhedron(const std::unordered_set<TPolygon>& polygons) : Faces_(
 
 const std::unordered_set<TPolygon>& TPolyhedron::getFaces() const { return Faces_; }
 
-std::optional<TPoint> TPolyhedron::intersection(const TLine& line) const {
+std::optional<std::pair<TPoint, TPointContainment>> TPolyhedron::intersection(const TLine& line) const {
     // closest to line.Point intersection point
 
-    std::vector<std::pair<TPoint, double>> intersectionsWithDistances;
+    std::vector<std::tuple<TPoint, TPointContainment, double>> intersectionsWithDistances;
 
     for (const auto& face : Faces_) {
-        std::optional<TPoint> intersection = face.intersection(line);
+        std::optional<std::pair<TPoint, TPointContainment>> intersection = face.intersection(line);
         if (intersection != std::nullopt) {
-            intersectionsWithDistances.push_back(
-                {intersection.value(), line.Point.distToPoint(intersection.value()).Value});
+            intersectionsWithDistances.push_back({
+                intersection.value().first,
+                intersection.value().second,
+                line.Point.distToPoint(intersection.value().first).Value,
+            });
         }
     }
 
     sort(intersectionsWithDistances.begin(), intersectionsWithDistances.end(),
-         [&line](const auto& lhs, const auto& rhs) { return lhs.second < rhs.second; });
+         [&line](const auto& lhs, const auto& rhs) { return std::get<2>(lhs) < std::get<2>(rhs); });
 
     if (intersectionsWithDistances.empty()) {
         return std::nullopt;
     }
-    return intersectionsWithDistances[0].first;
+    return std::make_pair(std::get<0>(intersectionsWithDistances[0]), std::get<1>(intersectionsWithDistances[0]));
 }
 
 std::ostream& operator<<(std::ostream& os, const TPolyhedron& polyhedron) {
