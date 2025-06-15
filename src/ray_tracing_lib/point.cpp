@@ -40,7 +40,7 @@ using namespace NRayTracingLib;
 
 size_t hash<TPoint>::operator()(const TPoint& point) const {
     size_t seed = 0;
-    auto hashFunction = hash<int64_t>();
+    const auto hashFunction = hash<int64_t>();
     for (const auto& arg : {point.X, point.Y, point.Z}) {
         int64_t rounded = static_cast<int64_t>(llround(arg.Value / (ACCURACY * 2)));
         seed ^= hashFunction(rounded) + 0x9e3779b9 + (seed << 6) + (seed >> 2);

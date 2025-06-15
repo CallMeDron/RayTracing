@@ -7,8 +7,8 @@ TPolyhedron::TPolyhedron(const std::unordered_set<TPolygon>& polygons) : Faces_(
 
     for (const auto& face : Faces_) {
         for (size_t i = 0; i < face.getPoints().size(); i++) {
-            size_t nextIdx = (i + 1) % face.getPoints().size();
-            TEdge edge{face.getPoints()[i], face.getPoints()[nextIdx]};
+            const size_t nextIdx = (i + 1) % face.getPoints().size();
+            const TEdge edge{face.getPoints()[i], face.getPoints()[nextIdx]};
             edgesCount[edge] += 1;
         }
     }

@@ -46,22 +46,20 @@ void TPolygon::sortByPolarAngle() {
     centerVector /= static_cast<double>(Points_.size());
     const TPoint center{centerVector};
 
-    TVector xAxis = Points_[0] - center; // here used fact what Points_[0] is not a center
-    xAxis.normalize();
-    TVector yAxis = xAxis ^ Plane_.Normal;
-    yAxis.normalize();
+    const TVector xAxis = (Points_[0] - center).getNormalized(); // here used fact what Points_[0] is not a center
+    const TVector yAxis = (xAxis ^ Plane_.Normal).getNormalized();
 
     std::vector<std::pair<TPoint, double>> pointsWithAngles;
     pointsWithAngles.reserve(Points_.size());
 
     for (const auto& point : Points_) {
-        TVector centerToPoint = point - center;
+        const TVector centerToPoint = point - center;
         if (centerToPoint.isZero()) {
             throw std::runtime_error("Error: creating polygon with point in center");
         }
-        double x = (centerToPoint * xAxis).Value;
-        double y = (centerToPoint * yAxis).Value;
-        double angle = std::atan2(y, x);
+        const double x = (centerToPoint * xAxis).Value;
+        const double y = (centerToPoint * yAxis).Value;
+        const double angle = std::atan2(y, x);
         pointsWithAngles.emplace_back(point, angle);
     }
 
@@ -77,8 +75,8 @@ void TPolygon::removeExtraPoints() {
     std::unordered_set<size_t> extraPoints;
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
-        size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
-        size_t nextIdx = (i + 1) % Points_.size();
+        const size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
+        const size_t nextIdx = (i + 1) % Points_.size();
 
         const TVector lhs = Points_[i] - Points_[prevIdx];
         const TVector rhs = Points_[nextIdx] - Points_[i];
@@ -104,12 +102,12 @@ void TPolygon::removeExtraPoints() {
 
 void TPolygon::checkConvexityAndType() {
     std::unordered_set<bool> anglesSigns;
-    TSafeDouble regularLength = (Points_[1] - Points_[0]).length();
-    TSafeDouble regularCos = TAngle{360.0 / Points_.size()}.cos();
+    const TSafeDouble regularLength = (Points_[1] - Points_[0]).length();
+    const TSafeDouble regularCos = TAngle{360.0 / Points_.size()}.cos();
 
     for (size_t i = 0; i < Points_.size(); i++) { // here we use what all points are sorted by polar angle from center
-        size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
-        size_t nextIdx = (i + 1) % Points_.size();
+        const size_t prevIdx = (i == 0) ? (Points_.size() - 1) : (i - 1);
+        const size_t nextIdx = (i + 1) % Points_.size();
 
         const TVector lhs = Points_[i] - Points_[prevIdx];
         const TVector rhs = Points_[nextIdx] - Points_[i];
@@ -172,9 +170,9 @@ bool TPolygon::containsPoint(const TPoint& point) const {
     std::unordered_set<bool> anglesSigns;
 
     for (size_t i = 0; i < Points_.size(); i++) {
-        size_t nextIdx = (i + 1) % Points_.size();
+        const size_t nextIdx = (i + 1) % Points_.size();
 
-        TSafeDouble sign = ((Points_[nextIdx] - Points_[i]) ^ (point - Points_[i])) * Plane_.Normal;
+        const TSafeDouble sign = ((Points_[nextIdx] - Points_[i]) ^ (point - Points_[i])) * Plane_.Normal;
 
         anglesSigns.insert(sign > 0.0);
         if (anglesSigns.size() > 1) {
@@ -213,7 +211,7 @@ size_t hash<TPolygon>::operator()(const TPolygon& polygon) const {
     sort(pointsStableSorted.begin(), pointsStableSorted.end());
 
     size_t seed = 0;
-    auto hashFunction = hash<TPoint>();
+    const auto hashFunction = hash<TPoint>();
     for (const auto& point : pointsStableSorted) {
         seed ^= hashFunction(point) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
