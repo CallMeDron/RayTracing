@@ -46,6 +46,13 @@ TCamera::TCamera(const TPoint& position, const TVector& direction, const std::pa
     initHalfLeftVector();
 };
 
+uint8_t coordinateToByte(double coord) {
+    const double minCoord = -1.5;
+    const double maxCoord = 1.5;
+    double normalized = (coord - minCoord) / (maxCoord - minCoord);
+    return static_cast<uint8_t>(normalized * 255.0);
+}
+
 void TCamera::makePicture(const TFigure& figure) {
     const size_t iMax = HeightResolution_ - 1;
     const size_t jMax = WidthResolution_ - 1;
@@ -68,9 +75,10 @@ void TCamera::makePicture(const TFigure& figure) {
                 ImageData_[idx + 1] = 255;
                 ImageData_[idx + 2] = 128;
             } else if (intersection.value().second == TPointContainment::Inside) {
-                ImageData_[idx] = static_cast<uint8_t>(upProgress * 256);
-                ImageData_[idx + 1] = static_cast<uint8_t>(leftProgress * 256);
-                ImageData_[idx + 2] = 128;
+                const TPoint point = intersection.value().first;
+                ImageData_[idx] = coordinateToByte(point.X.Value);     // static_cast<uint8_t>(upProgress * 256);
+                ImageData_[idx + 1] = coordinateToByte(point.Y.Value); // static_cast<uint8_t>(leftProgress * 256);
+                ImageData_[idx + 2] = coordinateToByte(point.Z.Value); // 128;
             }
         }
     }

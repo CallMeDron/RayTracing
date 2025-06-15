@@ -11,6 +11,14 @@
             "preLaunchTask": "Build"
         },
         {
+            "name": "Run Tests (без сборки)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/build/tests/Release/tests.exe",
+            "cwd": "${workspaceFolder}/src/build",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Run Main",
             "type": "cppvsdbg",
             "request": "launch",
