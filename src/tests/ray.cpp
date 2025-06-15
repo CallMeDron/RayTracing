@@ -227,7 +227,7 @@ TEST(TRay, Intersection_WrongSide) {
     TVector v{0.0, 0.0, 1.0};
     TRay ray{p, v};
     TPlane plane{TPoint{0, 0, 1}, TVector{0, 0, 1}};
-    auto result = ray.intersection(plane);
+    std::optional<TPoint> result = ray.intersection(plane);
     EXPECT_EQ(result.value(), (TPoint{0, 0, 1}));
 }
 

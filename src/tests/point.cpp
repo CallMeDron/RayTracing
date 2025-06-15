@@ -45,7 +45,7 @@ TEST(TPoint, DistToPoint_ComputesDistanceCorrectly) {
     TPoint p1{0.0, 0.0, 0.0};
     TPoint p2{3.0, 4.0, 0.0};
 
-    auto dist = p1.distToPoint(p2);
+    TSafeDouble dist = p1.distToPoint(p2);
     EXPECT_DOUBLE_EQ(dist.Value, 5.0);
 }
 
@@ -149,7 +149,7 @@ TEST(TPoint, DistToLine_PointFarAway) {
 TEST(TPoint, NegativeCoordinates) {
     TPoint p1{-1.0, -2.0, -3.0};
     TPoint p2{-4.0, -5.0, -6.0};
-    auto dist = p1.distToPoint(p2);
+    TSafeDouble dist = p1.distToPoint(p2);
     EXPECT_NEAR(dist.Value, std::sqrt(3 * 3 + 3 * 3 + 3 * 3), TINY);
 }
 
@@ -165,7 +165,7 @@ TEST(TPoint, ZeroVector) {
 TEST(TPoint, LargeCoordinates) {
     TPoint p{1e9, -1e9, 1e9};
     TPoint q{-1e9, 1e9, -1e9};
-    auto dist = p.distToPoint(q);
+    TSafeDouble dist = p.distToPoint(q);
     EXPECT_NEAR(dist.Value, std::sqrt(12 * 1e18), TINY);
 }
 
@@ -271,7 +271,7 @@ TEST(TPoint, ConsistencyWithEquality) {
 TEST(TPoint, LongDistanceCalculation) {
     TPoint p1{0.0, 0.0, 0.0};
     TPoint p2{1e6, -1e6, 1e6};
-    auto dist = p1.distToPoint(p2);
+    TSafeDouble dist = p1.distToPoint(p2);
     EXPECT_EQ(dist.Value, std::sqrt(3 * 1e12));
 }
 
@@ -361,15 +361,15 @@ TEST(TPoint, DistToLineWithNegativeCoordinates) {
 TEST(TPoint, LargeCoordinatesDistance) {
     TPoint p1{1e12, -1e12, 1e12};
     TPoint p2{-1e12, 1e12, -1e12};
-    auto dist = p1.distToPoint(p2);
+    TSafeDouble dist = p1.distToPoint(p2);
     EXPECT_EQ(dist.Value, std::sqrt(3 * 4e24));
 }
 
 TEST(TPoint, DistanceBetweenClosePointsIsCorrect) {
     TPoint p1{0.0, 0.0, 0.0};
     TPoint p2{TINY, TINY, TINY};
-    auto dist = p1.distToPoint(p2);
-    auto expected = TSafeDouble{std::sqrt(3.0 * TINY * TINY)};
+    TSafeDouble dist = p1.distToPoint(p2);
+    TSafeDouble expected = TSafeDouble{std::sqrt(3.0 * TINY * TINY)};
     EXPECT_EQ(dist.Value, expected.Value);
 }
 

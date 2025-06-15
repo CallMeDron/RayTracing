@@ -101,51 +101,51 @@ TPolygon CreateSquare() {
 TEST(TPolygon, ContainsPointInside) {
     TPolygon square = CreateSquare();
     TPoint insidePoint(0.5, 0.5, 0);
-    EXPECT_TRUE(square.containsPoint(insidePoint));
+    EXPECT_TRUE(square.containsPoint(insidePoint) == TPointContainment::Inside);
 }
 
 TEST(TPolygon, ContainsPointOnEdge) {
     TPolygon square = CreateSquare();
     TPoint onEdge(1, 0.5, 0);
-    EXPECT_TRUE(square.containsPoint(onEdge));
+    EXPECT_TRUE(square.containsPoint(onEdge) == TPointContainment::OnBoundary);
 }
 
 TEST(TPolygon, ContainsPointOnVertex) {
     TPolygon square = CreateSquare();
     TPoint vertex(0, 0, 0);
-    EXPECT_TRUE(square.containsPoint(vertex));
+    EXPECT_TRUE(square.containsPoint(vertex) == TPointContainment::OnBoundary);
 }
 
 TEST(TPolygon, ContainsPointOutside) {
     TPolygon square = CreateSquare();
     TPoint outsidePoint(2, 2, 0);
-    EXPECT_FALSE(square.containsPoint(outsidePoint));
+    EXPECT_TRUE(square.containsPoint(outsidePoint) == TPointContainment::Outside);
 }
 
 TEST(TPolygon, ContainsPointOnPlaneButOutsidePolygon) {
     TPolygon square = CreateSquare();
     TPoint outsideOnPlane(1.5, 0.5, 0);
-    EXPECT_FALSE(square.containsPoint(outsideOnPlane));
+    EXPECT_TRUE(square.containsPoint(outsideOnPlane) == TPointContainment::Outside);
 }
 
 TEST(TPolygon, IntersectionInsidePolygon) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0.5, 0.5, -1), TPoint(0.5, 0.5, 1));
-    auto result = square.intersection(line);
+    TPoint result = square.intersection(line).value().first;
     ExpectOptionalPointsEqual(TPoint(0.5, 0.5, 0), result);
 }
 
 TEST(TPolygon, IntersectionOutsidePolygon) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(2, 2, -1), TPoint(2, 2, 1));
-    auto result = square.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = square.intersection(line);
     EXPECT_FALSE(result.has_value());
 }
 
 TEST(TPolygon, IntersectionLineMissesPlane) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0, 0, 1), TPoint(1, 1, 1));
-    auto result = square.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = square.intersection(line);
     EXPECT_FALSE(result.has_value());
 }
 
@@ -196,7 +196,7 @@ TEST(TPolygon, NonPerpendicularAngles) {
 }
 
 TEST(TPolygon, ObliqueRectangleIn3D) {
-    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 0, 3), TPoint(4, 3, 3), TPoint(0, 3, 0)};
+    std::unordered_set<TPoint> points{TPoint(0, 0, 0), TPoint(4, 0, 3), TPoint(4, 3, 3), TPoint(0, 3, 0)};
     TPolygon polygon(points);
     EXPECT_TRUE(polygon.getPoints().size() == 4u);
     EXPECT_FALSE(polygon.getEdgesIsEqual());
@@ -204,7 +204,7 @@ TEST(TPolygon, ObliqueRectangleIn3D) {
 }
 
 TEST(TPolygon, SlightNumericalDeviation) {
-    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(0, 3 + TINY, 0)};
+    std::unordered_set<TPoint> points{TPoint(0, 0, 0), TPoint(4, 0, 0), TPoint(4, 3, 0), TPoint(0, 3 + TINY, 0)};
     TPolygon polygon(points);
     EXPECT_TRUE(polygon.getPoints().size() == 4u);
     EXPECT_FALSE(polygon.getEdgesIsEqual());
@@ -212,7 +212,7 @@ TEST(TPolygon, SlightNumericalDeviation) {
 }
 
 TEST(TPolygon, ObliqueRectangleWithDiagonalSides) {
-    auto points = std::unordered_set<TPoint>{TPoint(0, 0, 0), TPoint(4, 1, 0), TPoint(4, 4, 0), TPoint(0, 3, 0)};
+    std::unordered_set<TPoint> points{TPoint(0, 0, 0), TPoint(4, 1, 0), TPoint(4, 4, 0), TPoint(0, 3, 0)};
     TPolygon polygon(points);
     EXPECT_TRUE(polygon.getPoints().size() == 4u);
     EXPECT_FALSE(polygon.getEdgesIsEqual());
@@ -402,28 +402,28 @@ TEST(TPolygon, PolygonWithEdgePointOnVertex) {
 TEST(TPolygon, IntersectionAtVertex) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0, 0, -1), TPoint(0, 0, 1));
-    auto result = square.intersection(line);
+    TPoint result = square.intersection(line).value().first;
     EXPECT_EQ(result, TPoint(0, 0, 0));
 }
 
 TEST(TPolygon, IntersectionAtEdge) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0, 0.5, -1), TPoint(0, 0.5, 1));
-    auto result = square.intersection(line);
+    TPoint result = square.intersection(line).value().first;
     EXPECT_EQ(result, TPoint(0, 0.5, 0));
 }
 
 TEST(TPolygon, IntersectionNoIntersection) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(2, 2, -1), TPoint(2, 2, 1));
-    auto result = square.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = square.intersection(line);
     EXPECT_EQ(result, std::nullopt);
 }
 
 TEST(TPolygon, IntersectionLineParallelToPlane) {
     TPolygon square = CreateSquare();
     TLine line(TPoint(0, 0, 1), TPoint(1, 0, 1));
-    auto result = square.intersection(line);
+    std::optional<std::pair<TPoint, TPointContainment>> result = square.intersection(line);
     EXPECT_EQ(result, std::nullopt);
 }
 
