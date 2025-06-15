@@ -14,6 +14,9 @@ class TAngle {
 
     TSafeDouble cos() const;
     TSafeDouble sin() const;
+    TSafeDouble tg() const;
+
+    TAngle operator/(TSafeDouble x) const;
 
   private:
     TSafeDouble Degrees_;

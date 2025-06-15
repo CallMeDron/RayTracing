@@ -52,7 +52,11 @@ std::ostream& operator<<(std::ostream& os, const TPolyhedron& polyhedron) {
     return os;
 }
 
-TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularTetrahedron(const TPoint& center, TSafeDouble edgeLength) {
+    if (edgeLength <= 0.0) {
+        throw std::runtime_error("Error: trying to create regular tetrahedron with edge length <= 0");
+    }
+
     const double sqrt_3 = std::sqrt(3.0);
     const double sqrt_6 = std::sqrt(6.0);
     const double r = edgeLength.Value / sqrt_3;
@@ -69,21 +73,13 @@ TPolyhedron CreateRegularTetrahedron(const TPoint& center, TSafeDouble edgeLengt
     const TPolygon f3{{p1, p3, p4}};
     const TPolygon f4{{p2, p3, p4}};
 
-    for (const auto& face : {f1, f2, f3, f4}) {
-        if ((face.getPoints().size() != 3) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
-            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
-            throw std::runtime_error("Error: creating regular tetrahedron with broken face");
-        }
-    }
-
-    const std::unordered_set<TPolygon> faces{f1, f2, f3, f4};
-    if (faces.size() != 4) {
-        throw std::runtime_error("Error: creating regular tetrahedron with != 4 faces");
-    }
-
-    return TPolyhedron{faces};
+    return TPolyhedron{{f1, f2, f3, f4}};
 }
-TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularHexahedron(const TPoint& center, TSafeDouble edgeLength) {
+    if (edgeLength <= 0.0) {
+        throw std::runtime_error("Error: trying to create regular hexahedron with edge length <= 0");
+    }
+
     const TSafeDouble multiplier = edgeLength / 2.0;
 
     const TPoint p1 = center + TVector{1.0, 1.0, 1.0} * multiplier;
@@ -102,21 +98,13 @@ TPolyhedron CreateRegularHexahedron(const TPoint& center, TSafeDouble edgeLength
     const TPolygon f5{{p5, p7, p8, p6}};
     const TPolygon f6{{p1, p2, p4, p3}};
 
-    for (const auto& face : {f1, f2, f3, f4, f5, f6}) {
-        if ((face.getPoints().size() != 4) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
-            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
-            throw std::runtime_error("Error: creating regular hexahedron with broken face");
-        }
-    }
-
-    const std::unordered_set<TPolygon> faces{f1, f2, f3, f4, f5, f6};
-    if (faces.size() != 6) {
-        throw std::runtime_error("Error: creating regular hexahedron with != 6 faces");
-    }
-
-    return TPolyhedron{faces};
+    return TPolyhedron{{f1, f2, f3, f4, f5, f6}};
 }
-TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularOctahedron(const TPoint& center, TSafeDouble edgeLength) {
+    if (edgeLength <= 0.0) {
+        throw std::runtime_error("Error: trying to create regular octahedron with edge length <= 0");
+    }
+
     const TSafeDouble multiplier = edgeLength / sqrt(2.0);
 
     const TPoint p1 = center + TVector{1.0, 0.0, 0.0} * multiplier;
@@ -135,21 +123,13 @@ TPolyhedron CreateRegularOctahedron(const TPoint& center, TSafeDouble edgeLength
     const TPolygon f7{{p2, p4, p6}};
     const TPolygon f8{{p4, p1, p6}};
 
-    for (const auto& face : {f1, f2, f3, f4, f5, f6, f7, f8}) {
-        if ((face.getPoints().size() != 3) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
-            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
-            throw std::runtime_error("Error: creating regular octahedron with broken face");
-        }
-    }
-
-    const std::unordered_set<TPolygon> faces{f1, f2, f3, f4, f5, f6, f7, f8};
-    if (faces.size() != 8) {
-        throw std::runtime_error("Error: creating regular octahedron with != 8 faces");
-    }
-
-    return TPolyhedron{faces};
+    return TPolyhedron{{f1, f2, f3, f4, f5, f6, f7, f8}};
 }
-TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularDodecahedron(const TPoint& center, TSafeDouble edgeLength) {
+    if (edgeLength <= 0.0) {
+        throw std::runtime_error("Error: trying to create regular dodecahedron with edge length <= 0");
+    }
+
     const double phi = (1.0 + std::sqrt(5.0)) / 2.0;
     const double inv_phi = 1.0 / phi;
     const double baseEdgeLength = sqrt(5) - 1;
@@ -189,21 +169,13 @@ TPolyhedron CreateRegularDodecahedron(const TPoint& center, TSafeDouble edgeLeng
     const TPolygon f11{{p5, p7, p9, p11, p19}};
     const TPolygon f12{{p6, p7, p15, p18, p19}};
 
-    for (const auto& face : {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12}) {
-        if ((face.getPoints().size() != 5) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
-            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
-            throw std::runtime_error("Error: creating regular dodecahedron with broken face");
-        }
-    }
-
-    const std::unordered_set<TPolygon> faces{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12};
-    if (faces.size() != 12) {
-        throw std::runtime_error("Error: creating regular dodecahedron with != 12 faces");
-    }
-
-    return TPolyhedron{faces};
+    return TPolyhedron{{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12}};
 }
-TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {
+TPolyhedron createRegularIcosahedron(const TPoint& center, TSafeDouble edgeLength) {
+    if (edgeLength <= 0.0) {
+        throw std::runtime_error("Error: trying to create regular icosahedron with edge length <= 0");
+    }
+
     const double phi = (1.0 + std::sqrt(5.0)) / 2.0;
     const double scale = edgeLength.Value / 2.0;
 
@@ -241,21 +213,7 @@ TPolyhedron CreateRegularIcosahedron(const TPoint& center, TSafeDouble edgeLengt
     const TPolygon f18{{p5, p10, p11}};
     const TPolygon f19{{p6, p8, p9}};
 
-    for (const auto& face :
-         {f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19}) {
-        if ((face.getPoints().size() != 3) || !face.getAnglesIsEqual() || !face.getEdgesIsEqual() ||
-            (face.getPoints()[0].distToPoint(face.getPoints()[1]) != edgeLength)) {
-            throw std::runtime_error("Error: creating regular icosahedron with broken face");
-        }
-    }
-
-    const std::unordered_set<TPolygon> faces{f0,  f1,  f2,  f3,  f4,  f5,  f6,  f7,  f8,  f9,
-                                             f10, f11, f12, f13, f14, f15, f16, f17, f18, f19};
-    if (faces.size() != 20) {
-        throw std::runtime_error("Error: creating regular icosahedron with != 20 faces");
-    }
-
-    return TPolyhedron{faces};
+    return TPolyhedron{{f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19}};
 }
 
 } // namespace NRayTracingLib

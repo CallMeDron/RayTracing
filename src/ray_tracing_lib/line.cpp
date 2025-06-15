@@ -2,17 +2,16 @@
 
 namespace NRayTracingLib {
 
+TLine::TLine() {}
 TLine::TLine(const TPoint& point1, const TPoint& point2) : Point(point1), Vector(point2 - point1) {
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
-    Vector.normalize();
 }
 TLine::TLine(const TPoint& point, const TVector& vector) : Point(point), Vector(vector) {
     if (Vector.isZero()) {
         throw std::runtime_error("Error: creating line by equal points");
     }
-    Vector.normalize();
 }
 
 TSafeDouble TLine::cos(const TLine& other) const { return Vector.cos(other.Vector); }
@@ -76,6 +75,7 @@ std::optional<TPoint> TLine::intersection(const TPlane& plane) const {
 
 std::ostream& operator<<(std::ostream& os, const TLine& line) { return os << "line:\n" << line.Point << line.Vector; }
 
+TRay::TRay() {}
 TRay::TRay(const TPoint& point1, const TPoint& point2) : TLine(point1, point2) {}
 TRay::TRay(const TPoint& point, const TVector& vector) : TLine(point, vector) {}
 

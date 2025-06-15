@@ -12,6 +12,7 @@ class TLine {
     TPoint Point;
     TVector Vector;
 
+    TLine();
     explicit TLine(const TPoint& point1, const TPoint& point2);
     explicit TLine(const TPoint& point, const TVector& vector);
 
@@ -33,6 +34,7 @@ class TLine {
 
 class TRay : public TLine {
   public:
+    TRay();
     explicit TRay(const TPoint& point1, const TPoint& point2);
     explicit TRay(const TPoint& point, const TVector& vector);
 

@@ -328,3 +328,33 @@ TEST(TVector, MultiplyByScalarAndDivideByScalarInverse) {
     auto divided = scaled / scalar;
     EXPECT_EQ(divided, a);
 }
+
+TEST(TVector, ProjectedVectors) {
+    TVector vector{-1, -1, -1};
+    TPlane plane{TPoint{1, 1, 1}, vector, TVector{0, 0, 1}};
+
+    auto result = vector.projectedVectors(plane, TAngle{30});
+
+    EXPECT_EQ(result.first + result.second, vector * 2);
+    EXPECT_EQ(result.first.cos(vector), sqrt(3.0) / 2.0);
+    EXPECT_EQ(result.second.cos(vector), sqrt(3.0) / 2.0);
+    EXPECT_TRUE(plane.isParallel(result.first));
+    EXPECT_TRUE(plane.isParallel(result.second));
+    EXPECT_EQ(result.first.projectTo(vector), vector);
+    EXPECT_EQ(result.second.projectTo(vector), vector);
+}
+
+TEST(TVector, ProjectedVectors2) {
+    TVector vector{1, 2, 3};
+    TPlane plane{TPoint{0, 0, 0}, vector, TVector{1, -1, 0}};
+
+    auto result = vector.projectedVectors(plane, TAngle{60});
+
+    EXPECT_EQ(result.first + result.second, vector * 2);
+    EXPECT_EQ(result.first.cos(vector), 0.5);
+    EXPECT_EQ(result.second.cos(vector), 0.5);
+    EXPECT_TRUE(plane.isParallel(result.first));
+    EXPECT_TRUE(plane.isParallel(result.second));
+    EXPECT_EQ(result.first.projectTo(vector), vector);
+    EXPECT_EQ(result.second.projectTo(vector), vector);
+}

@@ -1,11 +1,13 @@
 #pragma once
 
+#include "angle.h"
 #include "common.h"
 #include "point.h"
 
 namespace NRayTracingLib {
 
 class TPoint;
+class TPlane;
 
 class TVector {
   public:
@@ -46,6 +48,7 @@ class TVector {
     bool isPerpendicular(const TVector& other) const;
 
     TVector projectTo(const TVector& other) const;
+    std::pair<TVector, TVector> projectedVectors(const TPlane& plane, const TAngle& angle) const;
 
     friend std::ostream& operator<<(std::ostream& os, const TVector& vector);
 };

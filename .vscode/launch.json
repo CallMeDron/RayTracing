@@ -18,6 +18,14 @@
             "cwd": "${workspaceFolder}/src/build",
             "console": "integratedTerminal",
             "preLaunchTask": "Build"
+        },
+        {
+            "name": "Run Main (без сборки)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/build/Release/main.exe",
+            "cwd": "${workspaceFolder}/src/build",
+            "console": "integratedTerminal"
         }
     ]
 }

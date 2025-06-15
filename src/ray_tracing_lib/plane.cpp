@@ -3,7 +3,7 @@
 
 namespace NRayTracingLib {
 
-TPlane::TPlane() : Point(), Normal() {}
+TPlane::TPlane() {}
 TPlane::TPlane(const TPoint& point, const TVector& normal) : Point(point), Normal(normal) {
     if (Normal.isZero()) {
         throw std::runtime_error("Error: creating plane by point and normal vector");
@@ -61,6 +61,7 @@ bool TPlane::operator!=(const TPlane& other) const { return !(*this == other); }
 
 TSafeDouble TPlane::cos(const TPlane& other) const { return Normal.cos(other.Normal); }
 bool TPlane::isParallel(const TPlane& other) const { return Normal.isParallel(other.Normal); }
+bool TPlane::isParallel(const TVector& vector) const { return Normal.isPerpendicular(vector); }
 bool TPlane::isPerpendicular(const TPlane& other) const { return Normal.isPerpendicular(other.Normal); }
 
 std::optional<TPoint> TPlane::intersection(const TLine& line) const { return line.intersection(*this); }
